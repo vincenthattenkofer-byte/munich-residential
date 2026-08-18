@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Munich Residential GmbH · Projektentwicklung in München</title>
+<meta name="description" content="Munich Residential entwickelt, baut und hält Wohn- und Gewerbeimmobilien in München und Umland. Seit 2007. Über 1.000 Einheiten übergeben.">
+<meta name="theme-color" content="#F2F1ED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232A5B65'/%3E%3Cpath d='M7 24V9h3.4l5.6 9.2L21.6 9H25v15h-3V14.6l-5 8.1h-2l-5-8.1V24z' fill='%23F2F1ED'/%3E%3C/svg%3E">
+<!-- DEPLOY STEP: patch og:url and og:image with the live absolute URL before zipping -->
+<meta property="og:title" content="Munich Residential GmbH">
+<meta property="og:description" content="Projektentwicklung, Bauträgerschaft und Bestandsmanagement in München und Umland. Seit 2007.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="PLACEHOLDER_URL">
+<meta property="og:image" content="PLACEHOLDER_URL/assets/hero-ending.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600&family=IBM+Plex+Mono:wght@400&family=Instrument+Sans:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#F2F1ED;
+  --panel:#FBFAF7;
+  --ink:#15181B;
+  --text-secondary:#6A6E72;
+  --accent:#2A5B65;
+  --accent-hover:#1E454D;
+  --accent-muted:#C6D2D5;
+  --display:'Archivo',system-ui,sans-serif;
+  --body:'Instrument Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-soft:cubic-bezier(.4,0,.2,1);
+  --tshadow:0 1px 2px rgba(5,8,10,.95),0 3px 12px rgba(5,8,10,.78),0 10px 44px rgba(5,8,10,.8);
+  --gut:clamp(20px,5vw,80px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{overflow-x:hidden;overflow-x:clip}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--canvas);color:var(--ink);
+  font-family:var(--body);font-size:clamp(16px,1.05vw,18px);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.03em;line-height:1.02;margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* the one fixed environment layer */
+.env{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(198,210,213,.45),transparent 60%),
+             radial-gradient(ellipse 70% 50% at 90% 80%,rgba(198,210,213,.3),transparent 65%);
+  animation:drift 74s var(--ease-soft) -12s infinite alternate}
+@keyframes drift{from{transform:translate3d(-2%,-1%,0) scale(1.02)}to{transform:translate3d(2%,1.5%,0) scale(1.08)}}
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--accent);color:#fff;padding:12px 18px;font-family:var(--mono);font-size:13px}
+.skip:focus{left:12px;top:12px}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;
+  justify-content:space-between;padding:18px var(--gut);
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:#F4F3EF;transition:background .5s var(--ease-soft),color .5s var(--ease-soft)}
+.nav a{text-decoration:none;opacity:.78;transition:opacity .4s var(--ease),color .4s var(--ease)}
+.nav a:hover{opacity:1}
+/* past the hero the bar goes solid, so nothing scrolls into it */
+.nav.solid{background:var(--canvas);color:var(--ink);border-bottom:1px solid var(--accent-muted)}
+.nav.solid a:hover{color:var(--accent)}
+.nav ul{display:flex;gap:clamp(14px,2.4vw,34px);list-style:none;margin:0;padding:0;align-items:baseline}
+.nav .brand{opacity:1;display:block;line-height:0}
+/* the mark is one flat petrol colour, so it can simply be forced white over the footage */
+.nav .brand img{height:26px;width:auto;display:block;
+  filter:brightness(0) invert(1);transition:filter .5s var(--ease-soft)}
+.nav.solid .brand img{filter:none}
+@media (max-width:640px){
+  .nav ul{gap:12px}.nav{font-size:10px;padding:14px var(--gut)}
+  .nav .brand img{height:21px}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:600vh;z-index:1}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#0d1113}
+.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  will-change:transform;transform:translateZ(0);opacity:0;transition:opacity .9s var(--ease-soft)}
+.stage.video-ready video{opacity:1}
+.stage.video-failed video{display:none}
+.poster{position:absolute;inset:0;background-size:cover;background-position:center;
+  transition:opacity .9s var(--ease-soft)}
+.stage.video-ready .poster{opacity:0}
+/* base scrim, two layers: a soft vignette, plus a ramp down the LEFT text lane only,
+   so the building on the right keeps its full dawn brightness. */
+.scrim{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(6,9,11,.62) 0%,rgba(6,9,11,.3) 7%,rgba(6,9,11,.08) 13%,rgba(6,9,11,0) 18%),
+             linear-gradient(96deg,rgba(6,9,11,.88) 0%,rgba(6,9,11,.78) 22%,rgba(6,9,11,.42) 42%,rgba(6,9,11,.12) 56%,rgba(6,9,11,0) 68%),
+             radial-gradient(ellipse 120% 90% at 50% 45%,rgba(8,11,13,0) 35%,rgba(8,11,13,.55) 100%)}
+
+.bands{position:absolute;inset:0}
+.band{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);
+  width:min(46ch,42vw);opacity:0;color:#F4F3EF;text-shadow:var(--tshadow)}
+/* the scrim paints ABOVE the video and BELOW the words. Never give it a negative
+   z-index: the sticky stage is its own stacking context, so -1 hides it behind the video. */
+.band::before{content:"";position:absolute;inset:-30% -34%;pointer-events:none;
+  opacity:calc(.25 + .75*var(--k,1));
+  background:radial-gradient(ellipse 76% 66% at 42% 50%,rgba(5,8,10,.82) 0%,rgba(5,8,10,.62) 48%,rgba(5,8,10,0) 78%)}
+.band > *{position:relative;z-index:1}
+.band h1,.band h2{font-size:clamp(34px,5.2vw,76px)}
+.band .sub{font-size:clamp(15px,1.3vw,19px);margin-top:1.1em;max-width:34ch;color:#DDDCD7}
+.band .cta-row{margin-top:1.8em}
+.band .btn{text-shadow:none}
+.w{display:inline-block;white-space:pre}
+.c{display:inline-block;will-change:transform,opacity}
+
+/* entrances */
+#b1 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);
+  transform:translateY(calc((1 - var(--kc))*-26px))}
+#b2 .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);
+  transform:translateX(calc((1 - var(--kc))*var(--jx,0px)))}
+#b3 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*3,1);
+  --ks:clamp(0,(var(--k,0) - var(--th,0) - var(--sd,.1))*var(--ss,3.2),1);
+  opacity:var(--kc);
+  transform:scale(calc(0.62 + (0.38 + var(--ov,.12))*var(--kc) - var(--ov,.12)*var(--ks)))}
+#b3 .w.em{--ov:.24;--sd:.16;--ss:2.6}
+#b4 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);
+  transform:translateY(calc((1 - var(--kc))*22px))}
+#b4 .sub{--ks:clamp(0,(var(--k,0) - .66)*4,1);opacity:var(--ks);
+  transform:translateY(calc((1 - var(--ks))*14px))}
+#b4 .cta-row{--kb:clamp(0,(var(--k,0) - .78)*5,1);opacity:var(--kb);
+  transform:translateY(calc((1 - var(--kb))*14px))}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* loading ring + fallback cue */
+.ring{position:absolute;right:var(--gut);bottom:36px;width:34px;height:34px;color:rgba(244,243,239,.7);
+  transform:rotate(-90deg)}
+.stage.video-ready .ring{opacity:0;transition:opacity .5s var(--ease-soft)}
+.cue{position:absolute;right:var(--gut);bottom:36px;width:24px;height:34px;color:rgba(244,243,239,.7)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.09em;
+  text-transform:uppercase;text-decoration:none;padding:15px 26px;border:0;cursor:pointer;
+  background:var(--accent);color:#F4F3EF;transition:background .45s var(--ease),transform .45s var(--ease)}
+.btn:hover{background:var(--accent-hover);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--accent-muted)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:transparent}
+@media (pointer:coarse){.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
+
+/* ---------- shared section furniture ---------- */
+main{position:relative;z-index:2;background:var(--canvas)}
+section{padding:clamp(90px,13vh,170px) var(--gut);position:relative;scroll-margin-top:72px}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-secondary);margin:0 0 2.4em}
+.lede{font-size:clamp(19px,1.7vw,25px);line-height:1.45;max-width:52ch;margin:0}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal.in > *{transition-delay:0s}
+
+/* a) Haus */
+.haus{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(30px,6vw,110px);align-items:start}
+.haus p + p{margin-top:1.2em}
+.facts{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:13px;line-height:1.5}
+.facts li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--accent-muted)}
+.facts li:first-child{border-top:1px solid var(--accent-muted)}
+.facts .v{color:var(--ink)}
+.facts .l{color:var(--text-secondary)}
+@media (max-width:860px){.haus{grid-template-columns:1fr;gap:44px}}
+
+/* b) Archiv */
+.filters{display:flex;gap:26px;font-family:var(--mono);font-size:12px;letter-spacing:.13em;
+  text-transform:uppercase;margin:0 0 clamp(40px,6vh,80px);padding:0;list-style:none;flex-wrap:wrap}
+.filters button{background:none;border:0;padding:4px 0;cursor:pointer;color:var(--text-secondary);
+  font:inherit;letter-spacing:inherit;text-transform:inherit;
+  border-bottom:1px solid transparent;transition:color .4s var(--ease),border-color .4s var(--ease)}
+.filters button[aria-pressed="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.filters button:hover{color:var(--ink)}
+
+.works{list-style:none;margin:0;padding:0}
+.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) minmax(0,.8fr);
+  gap:clamp(18px,3vw,44px);align-items:start;padding:clamp(26px,4vh,52px) 0;
+  border-top:1px solid var(--accent-muted)}
+.work:last-child{border-bottom:1px solid var(--accent-muted)}
+.work.hide{display:none}
+.work .label{text-align:right}
+.work .no{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--text-secondary);display:block;margin-bottom:.9em}
+.work h3{font-size:clamp(21px,2.3vw,34px)}
+.work .meta{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-secondary);margin-top:1em;display:block}
+.work .status{color:var(--accent)}
+/* two elements, two jobs: the wrap takes the scroll parallax with no transition,
+   the image takes the hover zoom with one. Composing both on one node makes the
+   per-frame parallax inherit the hover easing and lag. */
+.work figure{margin:0;overflow:hidden;aspect-ratio:16/11}
+.work .par{display:block;height:122%;will-change:transform;
+  transform:translate3d(0,var(--par,-9%),0)}
+.work img{width:100%;height:100%;object-fit:cover;
+  transform:scale(1.001);transition:transform 1.1s var(--ease)}
+.work:hover img{transform:scale(1.04)}
+@media (max-width:860px){
+  .work{grid-template-columns:1fr;gap:16px}
+  .work .label{text-align:left;order:2}
+  .work figure{order:1}
+}
+
+/* b2) Lageplan */
+.kartekopf{display:flex;justify-content:space-between;align-items:baseline;gap:30px;flex-wrap:wrap;
+  margin:0 0 clamp(34px,5vh,64px)}
+.kartehint{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--text-secondary);margin:0}
+.plan{margin:0;position:relative}
+.plan svg{width:100%;height:auto;display:block;overflow:visible}
+/* the data layer sits on real Sentinel-2 imagery, so everything on top goes light */
+.plan .basis{opacity:.92}
+.plan .grid line{stroke:#F2F1ED;stroke-width:1;opacity:.16}
+.plan .grid line.major{opacity:.34}
+.plan .cross line{stroke:#F2F1ED;stroke-width:1;opacity:0;
+  transition:opacity .35s var(--ease);stroke-dasharray:3 5}
+.plan.aim .cross line{opacity:.85}
+.plan .nord{stroke:#F2F1ED;stroke-width:1.4;fill:none;opacity:.8}
+.plan .scale{stroke:#F2F1ED;stroke-width:1.4;opacity:.8}
+.plan text.mlabel{font-family:var(--mono);font-size:13px;fill:#F2F1ED;letter-spacing:.08em;
+  paint-order:stroke;stroke:rgba(6,12,10,.75);stroke-width:3;stroke-linejoin:round}
+.plan text.deg{font-size:12px;opacity:.72}
+.plan text.stadt{font-family:var(--mono);font-size:21px;letter-spacing:.36em;
+  fill:#F2F1ED;opacity:.5;paint-order:stroke;stroke:rgba(6,12,10,.6);stroke-width:4;stroke-linejoin:round}
+
+.pin{cursor:pointer}
+.pin .halo{fill:#F2F1ED;opacity:0;transition:opacity .4s var(--ease),r .4s var(--ease)}
+.pin .dot{fill:#F2F1ED;stroke:rgba(6,12,10,.55);stroke-width:1.5;
+  transform-box:fill-box;transform-origin:center;
+  transform:scale(0);transition:transform .7s var(--ease)}
+.plan.drawn .pin .dot{transform:scale(1)}
+.pin .ring{fill:none;stroke:#F2F1ED;stroke-width:1.4;opacity:0}
+.pin.live .ring{opacity:.7;animation:puls 4.2s var(--ease-soft) -1.4s infinite}
+@keyframes puls{0%{r:9;opacity:.7}70%{r:28;opacity:0}100%{r:28;opacity:0}}
+.pin text{font-family:var(--mono);font-size:14px;fill:#F2F1ED;letter-spacing:.06em;
+  paint-order:stroke;stroke:rgba(6,12,10,.8);stroke-width:3.5;stroke-linejoin:round;
+  transition:fill .3s var(--ease)}
+.pin:hover .halo,.pin:focus-visible .halo,.pin.hover .halo{opacity:.22;r:30}
+.pin:hover text,.pin:focus-visible text,.pin.hover text{fill:#fff}
+.pin:focus-visible{outline:none}
+.plan.drawn .pin:hover .dot,.plan.drawn .pin:focus-visible .dot,
+.plan.drawn .pin.hover .dot{transform:scale(1.55);transition-delay:0s}
+/* stagger the pins in; index set from JS */
+.plan.drawn .pin .dot{transition-delay:calc(var(--i,0) * 55ms)}
+
+.kartewrap{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(0,.48fr);
+  gap:clamp(26px,4vw,64px);align-items:start}
+.planfuss{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--text-secondary);
+  border-top:1px solid var(--accent-muted);margin-top:20px;padding-top:14px}
+.planfuss .quelle{flex:0 0 100%;opacity:.8;line-height:1.6}
+.planfuss .quelle a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-muted)}
+.planfuss .quelle a:hover{border-bottom-color:var(--accent)}
+.legende{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:12.5px;
+  border-top:1px solid var(--accent-muted)}
+.legende li{border-bottom:1px solid var(--accent-muted)}
+.legende button{width:100%;display:flex;justify-content:space-between;gap:14px;align-items:baseline;
+  background:none;border:0;padding:11px 0;font:inherit;color:var(--text-secondary);cursor:pointer;
+  text-align:left;transition:color .3s var(--ease),padding-left .35s var(--ease)}
+.legende button:hover,.legende button:focus-visible,.legende li.an button{color:var(--accent);padding-left:8px}
+.legende .lnr{color:var(--ink);flex:none;letter-spacing:.06em}
+.legende li.an .lnr{color:var(--accent)}
+@media (max-width:900px){.kartewrap{grid-template-columns:1fr;gap:34px}}
+.planhinweis{font-family:var(--mono);font-size:12px;color:var(--text-secondary);
+  margin:18px 0 0;max-width:72ch;line-height:1.7}
+.work.ziel{background:rgba(42,91,101,.06)}
+@media (max-width:760px){
+  /* the SVG shrinks with the screen, so everything drawn in it has to grow back */
+  .plan text.mlabel{font-size:26px;stroke-width:5}
+  .plan text.stadt{font-size:34px}
+  .pin text{font-size:34px;stroke-width:6}
+  .pin .tort{display:none}
+  .pin .dot{r:9}
+  .pin .halo{r:36}
+  .kartehint{display:none}
+}
+
+/* c) Weg + hold */
+.weg{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,46px);margin-top:clamp(40px,6vh,74px)}
+.station{position:relative}
+.station figure{margin:0 0 18px;overflow:hidden}
+.station img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.station h3{font-size:clamp(18px,1.7vw,24px);margin-bottom:.6em}
+.station p{margin:0;color:var(--text-secondary);font-size:15px}
+.station .dot{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--text-secondary);
+  display:block;margin-bottom:1em}
+.station.lit .dot{color:var(--accent)}
+.station.lit h3{color:var(--accent)}
+.station{opacity:.55;transition:opacity .7s var(--ease)}
+.station.lit{opacity:1}
+@media (max-width:760px){.weg{grid-template-columns:1fr;gap:34px}}
+
+.holdwrap{margin-top:clamp(44px,7vh,84px);display:flex;align-items:center;gap:clamp(18px,3vw,40px);flex-wrap:wrap}
+.hold{position:relative;font-family:var(--mono);font-size:13px;letter-spacing:.09em;text-transform:uppercase;
+  padding:16px 30px;border:1px solid var(--accent);background:transparent;color:var(--accent);
+  cursor:pointer;overflow:hidden;touch-action:none}
+.hold span{position:relative;z-index:1}
+.hold::before{content:"";position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--accent);
+  transform:scaleX(var(--hp,0));transform-origin:left;transition:transform .12s linear}
+.hold.done span{color:#F4F3EF}
+.hold:not(.done) span{mix-blend-mode:difference;color:#F4F3EF}
+.holdline{flex:1;min-width:220px;height:32px}
+.holdline path{fill:none;stroke:var(--accent);stroke-width:1.5;
+  stroke-dasharray:var(--len,300);stroke-dashoffset:calc(var(--len,300) * (1 - var(--hp,0)))}
+.holdline circle{fill:var(--canvas);stroke:var(--accent-muted);stroke-width:1.5}
+.holdline circle.on{stroke:var(--accent);fill:var(--accent)}
+.holdhint{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--text-secondary)}
+
+/* d) Ankaufsprofil */
+.ankauf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(30px,6vw,100px);align-items:end}
+.kriterien{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:13px}
+.kriterien li{padding:13px 0;border-bottom:1px solid var(--accent-muted)}
+.kriterien li:first-child{border-top:1px solid var(--accent-muted)}
+@media (max-width:860px){.ankauf{grid-template-columns:1fr;gap:40px;align-items:start}}
+
+/* e) Fragen */
+.faq{border-top:1px solid var(--accent-muted);max-width:74ch}
+.faq details{border-bottom:1px solid var(--accent-muted)}
+.faq summary{cursor:pointer;padding:24px 0;font-family:var(--display);font-weight:600;
+  font-size:clamp(17px,1.6vw,22px);letter-spacing:-.02em;list-style:none;
+  display:flex;justify-content:space-between;gap:20px;align-items:baseline}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);font-size:17px;color:var(--accent);flex:none}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:0 0 26px;color:var(--text-secondary);max-width:62ch}
+
+/* f) Kontakt */
+.kontakt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(34px,6vw,100px);align-items:start}
+.form{display:grid;gap:18px}
+.field{display:grid;gap:7px}
+.field label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary)}
+.field input,.field textarea{font:inherit;font-size:16px;padding:13px 14px;background:var(--panel);
+  border:1px solid var(--accent-muted);color:var(--ink);border-radius:0;
+  transition:border-color .4s var(--ease)}
+.field input:focus,.field textarea:focus{border-color:var(--accent);outline:none}
+.field textarea{min-height:118px;resize:vertical}
+.formnote{font-family:var(--mono);font-size:12px;color:var(--text-secondary);margin:0;line-height:1.6}
+.formdone{font-family:var(--mono);font-size:13px;color:var(--accent);margin:0;display:none}
+.formdone.on{display:block}
+.adresse{font-family:var(--mono);font-size:13px;line-height:2;color:var(--text-secondary);margin:0}
+.adresse a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent-muted)}
+.adresse a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+@media (max-width:860px){.kontakt{grid-template-columns:1fr;gap:48px}}
+
+/* footer */
+footer{position:relative;z-index:2;background:var(--canvas);border-top:1px solid var(--accent-muted);
+  padding:44px var(--gut) 54px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--text-secondary);
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:baseline}
+footer a{text-decoration:none}
+footer a:hover{color:var(--accent)}
+.footrow{flex:0 0 100%;margin:0 0 26px}
+.footlogo{height:64px;width:auto;margin:0}
+@media (max-width:640px){.footlogo{height:52px}}
+.disclose{flex:0 0 100%;margin:20px 0 0;line-height:1.7;max-width:70ch}
+
+/* short screens: no room for the scroll furniture */
+@media (max-height:560px){.ring,.cue{display:none}}
+
+/* ---------- the five static-hero gates ---------- */
+@media (max-width:720px),
+       (orientation:portrait) and (max-width:1024px),
+       (orientation:portrait) and (pointer:coarse),
+       (orientation:landscape) and (pointer:coarse) and (max-height:560px),
+       (prefers-reduced-motion:reduce){
+  .hero{height:auto}
+  .stage{position:relative;height:min(94vh,760px)}
+  .stage video,.ring,.cue{display:none}
+  .poster{opacity:1 !important;background-image:url('assets/hero-ending.jpg')}
+  .bands{position:absolute;inset:auto 0 0 0;top:0}
+  .band{opacity:0 !important;pointer-events:none}
+  .band.static-hero{opacity:1 !important;pointer-events:auto;
+    top:auto;bottom:clamp(28px,6vh,64px);transform:none;width:min(46ch,86vw)}
+  .band.static-hero .w,.band.static-hero .c,
+  .band.static-hero .sub,.band.static-hero .cta-row{opacity:1 !important;transform:none !important}
+}
+
+/* ---------- reduced motion, honored completely ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;transition-delay:0s !important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .env{animation:none}
+  .station{opacity:1}
+  .holdline path{stroke-dashoffset:0}
+}
+body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused !important}
+</style>
+</head>
+<body>
+<div class="env" aria-hidden="true"></div>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<nav class="nav" aria-label="Hauptnavigation">
+  <a class="brand" href="#main" aria-label="Munich Residential, zum Seitenanfang">
+    <img src="assets/logo-mr-mark.png" alt="" width="336" height="150"></a>
+  <ul>
+    <li><a href="#arbeiten">Arbeiten</a></li>
+    <li><a href="#haus">Haus</a></li>
+    <li><a href="#ankauf">Ankauf</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="stage" id="stage">
+    <div class="poster" id="poster" aria-hidden="true"></div>
+    <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+    <div class="scrim" aria-hidden="true"></div>
+
+    <svg class="ring" id="ring" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/>
+    </svg>
+
+    <div class="bands" id="bands">
+      <div class="band" id="b1" data-a="0" data-b="0.18">
+        <h1 data-split="word">Wir entwickeln in München.</h1>
+      </div>
+      <div class="band" id="b2" data-a="0.2" data-b="0.4" data-spread="0.5">
+        <h2 data-split="char">Grundstück. Baurecht. Übergabe.</h2>
+      </div>
+      <div class="band" id="b3" data-a="0.42" data-b="0.62">
+        <h2 data-split="word" data-em="1.000">Über 1.000 Einheiten übergeben.</h2>
+      </div>
+      <div class="band static-hero" id="b4" data-a="0.64" data-b="1" data-ramp="0.05">
+        <h2 data-split="word">Der Abschluss hält.</h2>
+        <p class="sub">Zwei Familienunternehmen, seit 2007 gemeinsam. 250 Millionen Euro Projektvolumen.</p>
+        <p class="cta-row"><a class="btn" href="#kontakt">Grundstück anbieten</a></p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <section id="haus">
+    <p class="kicker">Das Haus</p>
+    <div class="haus">
+      <div class="reveal">
+        <p class="lede">2007 haben zwei Familienunternehmen in zweiter Generation ihre Arbeit zusammengelegt: die Krulich Immobiliengruppe und die Firmengruppe Opfergeld.</p>
+        <p>Seitdem entwickeln, bauen und halten wir Wohn- und Gewerbeimmobilien in München und Umland. Wir kaufen Grundstücke mit und ohne Baurecht, schaffen Baurecht selbst, bauen als Bauträger und verwalten den eigenen Bestand weiter.</p>
+        <p>Was wir zusagen, halten wir. Das ist der ganze Anspruch, und die Liste unten ist der Beleg dafür.</p>
+      </div>
+      <ul class="facts reveal">
+        <li><span class="l">Gegründet</span><span class="v">2007</span></li>
+        <li><span class="l">Erfahrung</span><span class="v">90 Jahre</span></li>
+        <li><span class="l">Einheiten übergeben</span><span class="v">1.000+</span></li>
+        <li><span class="l">Fläche entwickelt</span><span class="v">200.000+ m²</span></li>
+        <li><span class="l">Projektvolumen</span><span class="v">250 Mio. €</span></li>
+        <li><span class="l">Bestand in Verwaltung</span><span class="v">150.000+ m²</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="arbeiten">
+    <p class="kicker">Arbeiten</p>
+    <ul class="filters" id="filters" role="group" aria-label="Projekte filtern">
+      <li><button type="button" data-f="alle" aria-pressed="true">Alle</button></li>
+      <li><button type="button" data-f="im-bau" aria-pressed="false">Im Bau</button></li>
+      <li><button type="button" data-f="in-planung" aria-pressed="false">In Planung</button></li>
+      <li><button type="button" data-f="fertiggestellt" aria-pressed="false">Fertiggestellt</button></li>
+    </ul>
+    <ul class="works" id="works"></ul>
+  </section>
+
+  <section id="karte">
+    <p class="kicker">Wo wir bauen</p>
+    <div class="kartekopf reveal">
+      <p class="lede">München und Umland. Vierzehn Objekte innerhalb dieser Karte, vier darüber hinaus.</p>
+      <p class="kartehint">Punkt anfahren zeigt den Ort, anklicken springt ins Archiv.</p>
+    </div>
+
+    <div class="kartewrap reveal">
+      <figure class="plan" id="plan">
+        <svg viewBox="0 0 1000 785" role="img" aria-labelledby="plantitle">
+          <title id="plantitle">Satellitenkarte mit den Standorten von Munich Residential in München und Umland</title>
+          <!-- href is set from JS once the section approaches: an SVG image has no lazy attribute
+               and would otherwise be pulled on first paint, far above where it is needed -->
+          <image class="basis" id="basis" data-src="assets/karte-satellit.jpg"
+                 x="0" y="0" width="1000" height="785" preserveAspectRatio="none"></image>
+          <g class="grid" id="grid" aria-hidden="true"></g>
+          <g class="cross" aria-hidden="true">
+            <line id="cx" x1="0" y1="-99" x2="1000" y2="-99"></line>
+            <line id="cy" x1="-99" y1="0" x2="-99" y2="785"></line>
+          </g>
+          <g class="pins" id="pins"></g>
+          <g class="deko" id="deko" aria-hidden="true"></g>
+        </svg>
+        <figcaption class="planfuss">
+          <span>48.32 N bis 47.82 N &nbsp;·&nbsp; 11.05 E bis 12.00 E</span>
+          <span id="planort">&nbsp;</span>
+          <span class="quelle">Satellitenbild: <a href="https://s2maps.eu" rel="noopener">Sentinel-2 cloudless</a>
+            von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0</span>
+        </figcaption>
+      </figure>
+
+      <ol class="legende" id="legende"></ol>
+    </div>
+
+    <p class="planhinweis">Die Punkte sitzen auf Stadtteil- und Ortsebene, nicht auf der Hausnummer. Vier Objekte liegen außerhalb des Ausschnitts: Nürnberg (MR-004, MR-009), Landshut (MR-018) und Chemnitz (MR-017). Die Ringbergstraße (MR-008) ist noch nicht zugeordnet. Schicken Sie uns die genauen Adressen, dann setzen wir alle Punkte exakt.</p>
+  </section>
+
+  <section id="weg">
+    <p class="kicker">Vom Grundstück zur Übergabe</p>
+    <p class="lede reveal">Der häufigste Grund, warum ein Grundstücksverkauf platzt, ist nicht der Preis. Es ist die Zeit dazwischen. Diese drei Schritte gehen wir auf unser Risiko.</p>
+    <div class="weg" id="weg">
+      <article class="station reveal" data-i="0">
+        <span class="dot">01 · Ankauf</span>
+        <figure><img src="assets/station-ankauf.jpg" alt="Unbebautes Grundstück am Münchner Stadtrand im Morgenlicht" loading="lazy" width="1600" height="1200"></figure>
+        <h3>Ankauf</h3>
+        <p>Wir kaufen mit und ohne Baurecht. Der Preis steht vor der Prüfung, nicht danach.</p>
+      </article>
+      <article class="station reveal" data-i="1">
+        <span class="dot">02 · Baurecht</span>
+        <figure><img src="assets/station-baurecht.jpg" alt="Betonrohbau eines Wohngebäudes mit Kran im Gegenlicht" loading="lazy" width="1600" height="1200"></figure>
+        <h3>Baurecht</h3>
+        <p>Die Baurechtsprüfung führen wir selbst. Sie warten nicht auf unsere Finanzierung.</p>
+      </article>
+      <article class="station reveal" data-i="2">
+        <span class="dot">03 · Übergabe</span>
+        <figure><img src="assets/station-uebergabe.jpg" alt="Fertiggestellter Innenhof eines Wohngebäudes mit Bepflanzung" loading="lazy" width="1600" height="1200"></figure>
+        <h3>Übergabe</h3>
+        <p>Gebaut wird von uns, gehalten wird von uns. Über 1.000 Einheiten sind übergeben.</p>
+      </article>
+    </div>
+
+    <div class="holdwrap reveal">
+      <button class="hold" id="hold" type="button" aria-describedby="holdhint">
+        <span>Gedrückt halten</span>
+      </button>
+      <svg class="holdline" id="holdline" viewBox="0 0 400 32" preserveAspectRatio="none" aria-hidden="true">
+        <path id="holdpath" d="M8 16 H392"/>
+        <circle cx="8" cy="16" r="4"/><circle cx="200" cy="16" r="4"/><circle cx="392" cy="16" r="4"/>
+      </svg>
+      <p class="holdhint" id="holdhint">Halten, bis der Abschluss steht.</p>
+    </div>
+  </section>
+
+  <section id="ankauf">
+    <p class="kicker">Ankaufsprofil</p>
+    <div class="ankauf">
+      <p class="lede reveal">Wohn- und Gewerbeflächen in München und Umland, dazu Nürnberg, Landshut und Chemnitz. Grundstücke mit und ohne Baurecht. Bestandsobjekte zur Weiterentwicklung. Auch schwierige Lagen, auch mit Abbruch.</p>
+      <ul class="kriterien reveal">
+        <li>ab 1.000 m² Grundstücksfläche</li>
+        <li>ab 20 Einheiten</li>
+        <li>München und Umland, Nürnberg, Landshut, Chemnitz</li>
+        <li>Ankauf auch ohne Baurecht</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="fragen">
+    <p class="kicker">Fragen</p>
+    <div class="faq reveal">
+      <details>
+        <summary>Was passiert, wenn der Bauvorbescheid nicht kommt?</summary>
+        <p>Dann tragen wir das Risiko, nicht Sie. Wir kaufen auch ohne Baurecht und führen die Prüfung auf unsere Kosten.</p>
+      </details>
+      <details>
+        <summary>Können Sie vom Vertrag zurücktreten?</summary>
+        <p>Über 1.000 übergebene Einheiten seit 2007, und keine geplatzte Transaktion. Rücktrittsklauseln zu unseren Gunsten verhandeln wir nicht hinein.</p>
+      </details>
+      <details>
+        <summary>Wie lange dauert das?</summary>
+        <p>Die Baurechtsprüfung dauert, je nach Gemeinde, Monate bis Jahre. Was wir Ihnen vorher sagen, gilt: der Preis und der Zeitpunkt Ihrer Zahlung.</p>
+      </details>
+      <details>
+        <summary>Mein Nachbar müsste mitverkaufen. Geht das?</summary>
+        <p>Ja. Wir haben mehrfach mehrere Eigentümer gleichzeitig an einen Tisch gebracht. Sprechen Sie uns an, bevor Sie mit dem Nachbarn sprechen.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="kontakt">
+    <p class="kicker">Kontakt</p>
+    <div class="kontakt">
+      <form class="form reveal" id="form">
+        <div class="field">
+          <label for="f-name">Ihr Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="f-kontakt">E-Mail oder Telefon</label>
+          <input id="f-kontakt" name="kontakt" type="text" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="f-ort">Wo liegt das Grundstück?</label>
+          <input id="f-ort" name="ort" type="text">
+        </div>
+        <div class="field">
+          <label for="f-text">Was sollen wir wissen?</label>
+          <textarea id="f-text" name="text"></textarea>
+        </div>
+        <p><button class="btn" type="submit">Grundstück anbieten</button></p>
+        <p class="formnote">Der Knopf öffnet Ihr eigenes E-Mail-Programm mit einer fertigen Nachricht an info@munich-residential.com. Ihre Angaben werden nirgends zwischengespeichert.</p>
+        <p class="formdone" id="formdone">Ihre Nachricht ist an info@munich-residential.com adressiert. Wir melden uns.</p>
+      </form>
+      <div class="reveal">
+        <p class="adresse">
+          Munich Residential GmbH<br>
+          Gewerbeallee 3<br>
+          82343 Pöcking<br><br>
+          <a href="tel:+4981514463120">08151 446 3120</a><br>
+          <a href="mailto:info@munich-residential.com">info@munich-residential.com</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footrow"><img class="footlogo" src="assets/logo-mr.png" alt="Munich Residential" width="336" height="252" loading="lazy"></div>
+  <span>© <span id="jahr"></span> Munich Residential GmbH</span>
+  <span>
+    <a href="#">Impressum</a> &nbsp;·&nbsp; <a href="#">Datenschutz</a>
+  </span>
+  <p class="disclose">Das Bild im Kopf der Seite ist eine Visualisierung. Die Projektbilder zeigen echte Objekte.</p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------------- project data ---------------- */
+var PROJEKTE = [
+  {n:'01',name:'Hansastraße',ort:'München',status:'im-bau',f:'01_hansastrasse_muenchen'},
+  {n:'02',name:'Nymphenburger Straße',ort:'München',status:'im-bau',f:'02_nymphenburger-strasse_muenchen'},
+  {n:'03',name:'Äußere Münchner Straße',ort:'Wolfratshausen',status:'in-planung',f:'03_aeussere-muenchner-strasse_wolfratshausen'},
+  {n:'04',name:'Schanzäckerstraße',ort:'Nürnberg',status:'in-planung',f:'04_schanzaeckerstrasse_nuernberg'},
+  {n:'05',name:'Wielandstraße',ort:'Eching',status:'in-planung',f:'05_wielandstrasse_eching'},
+  {n:'06',name:'Schwedenstraße',ort:'München',status:'in-planung',f:'06_schwedenstrasse_muenchen'},
+  {n:'07',name:'Arnulfstraße',ort:'München',status:'fertiggestellt',f:'07_arnulfstrasse_muenchen'},
+  {n:'08',name:'Ringbergstraße',ort:'München',status:'fertiggestellt',f:'08_ringbergstrasse_muenchen'},
+  {n:'09',name:'Edisonstraße',ort:'Nürnberg',status:'fertiggestellt',f:'09_edisonstrasse_nuernberg'},
+  {n:'10',name:'Philipp-Helmer-Straße',ort:'Olching',status:'fertiggestellt',f:'10_philipp-helmer-strasse_olching'},
+  {n:'11',name:'Münchner Freiheit',ort:'München-Schwabing',status:'fertiggestellt',f:'11_muenchner-freiheit_schwabing'},
+  {n:'12',name:'Klenzestraße',ort:'München-Glockenbach',status:'fertiggestellt',f:'12_klenzestrasse_glockenbach'},
+  {n:'13',name:'Klenzestraße',ort:'Ismaning',status:'fertiggestellt',f:'13_klenzestrasse_ismaning'},
+  {n:'14',name:'Gustav-Heinemann-Ring',ort:'München',status:'fertiggestellt',f:'14_gustav-heinemann-ring_muenchen'},
+  {n:'15',name:'Haidelweg',ort:'München-Pasing',status:'fertiggestellt',f:'15_haidelweg_pasing'},
+  {n:'16',name:'Leibstraße',ort:'Haar',status:'fertiggestellt',f:'16_leibstrasse_haar'},
+  {n:'17',name:'Konradstraße / Richterstraße',ort:'Chemnitz',status:'fertiggestellt',f:'17_konradstrasse-richterstrasse_chemnitz'},
+  {n:'18',name:'Objekt Landshut',ort:'Landshut',status:'fertiggestellt',f:'18_objekt-landshut'},
+  {n:'19',name:'Adalbert-Stifter-Straße',ort:'Geretsried',status:'fertiggestellt',f:'19_adalbert-stifter-strasse_geretsried'}
+];
+var LABEL = {'im-bau':'Im Bau','in-planung':'In Planung','fertiggestellt':'Fertiggestellt'};
+
+var worksEl = document.getElementById('works');
+worksEl.innerHTML = PROJEKTE.map(function(p){
+  return '<li class="work reveal" id="mr-' + p.n + '" data-status="' + p.status + '">' +
+    '<figure><span class="par"><img src="assets/projekte/' + p.f + '.jpg" alt="' + p.name + ' in ' + p.ort +
+      ', Objekt von Munich Residential" loading="lazy" width="1280" height="880"></span></figure>' +
+    '<div class="label"><span class="no">MR-0' + p.n + '</span>' +
+      '<h3>' + p.name + '</h3>' +
+      '<span class="meta">' + p.ort + ' · <span class="status">' + LABEL[p.status] + '</span></span></div></li>';
+}).join('');
+
+document.getElementById('filters').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (!b) return;
+  var f = b.dataset.f;
+  [].forEach.call(this.querySelectorAll('button'), function(x){
+    x.setAttribute('aria-pressed', String(x === b));
+  });
+  [].forEach.call(worksEl.children, function(li){
+    li.classList.toggle('hide', f !== 'alle' && li.dataset.status !== f);
+  });
+});
+
+document.getElementById('jahr').textContent = new Date().getFullYear();
+
+/* ---------------- Lageplan (hand drawn, no map service, nothing leaves the page) ---------------- */
+var BOX = { latT:48.32, latB:47.82, lonL:11.05, lonR:12.00, w:1000, h:785 };
+function px(lon){ return (lon - BOX.lonL) / (BOX.lonR - BOX.lonL) * BOX.w; }
+function py(lat){ return (BOX.latT - lat) / (BOX.latT - BOX.latB) * BOX.h; }
+
+// Positions are district and town centres, not house numbers. Said plainly under the map.
+var ORTE = [
+  {ort:'Eching',          lat:48.2980, lon:11.6270, nrs:['05'], an:'start', live:true},
+  {ort:'Ismaning',        lat:48.2270, lon:11.6720, nrs:['13'], an:'start'},
+  {ort:'Olching',         lat:48.2060, lon:11.3270, nrs:['10'], an:'start'},
+  {ort:'München-Schwabing',lat:48.1620,lon:11.5860, nrs:['11'], an:'start'},
+  {ort:'München-Pasing',  lat:48.1490, lon:11.4600, nrs:['15'], an:'up'},
+  {ort:'München-Maxvorstadt',lat:48.1495,lon:11.5445,nrs:['02','07'], an:'end', live:true},
+  {ort:'München-Glockenbach',lat:48.1290,lon:11.5750,nrs:['12'], an:'start'},
+  {ort:'München-Sendling',lat:48.1270, lon:11.5150, nrs:['01'], an:'end', live:true},
+  {ort:'München-Obersendling',lat:48.1040,lon:11.5470,nrs:['06'], an:'down', live:true},
+  {ort:'München-Neuperlach',lat:48.1010,lon:11.6390, nrs:['14'], an:'start'},
+  {ort:'Haar',            lat:48.1050, lon:11.7270, nrs:['16'], an:'start'},
+  {ort:'Wolfratshausen',  lat:47.9110, lon:11.4260, nrs:['03'], an:'start', live:true},
+  {ort:'Geretsried',      lat:47.8580, lon:11.4790, nrs:['19'], an:'start'}
+];
+
+(function buildPlan(){
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var el = function(t, a){ var n = document.createElementNS(svgNS, t);
+    for (var k in a) n.setAttribute(k, a[k]); return n; };
+  var plan = document.getElementById('plan');
+  var grid = document.getElementById('grid');
+  var pins = document.getElementById('pins');
+  var deko = document.getElementById('deko');
+  var legende = document.getElementById('legende');
+  var ortOut = document.getElementById('planort');
+  var cx = document.getElementById('cx'), cy = document.getElementById('cy');
+
+  // graticule every tenth of a degree, the whole degrees drawn heavier
+  for (var lo = 11.1; lo < BOX.lonR; lo += 0.1){
+    grid.appendChild(el('line', {x1:px(lo), y1:0, x2:px(lo), y2:BOX.h,
+      'class': Math.abs(lo - Math.round(lo)) < 0.02 ? 'major' : ''}));
+  }
+  for (var la = 47.9; la < BOX.latT; la += 0.1){
+    grid.appendChild(el('line', {x1:0, y1:py(la), x2:BOX.w, y2:py(la),
+      'class': Math.abs(la - Math.round(la)) < 0.02 ? 'major' : ''}));
+  }
+
+  // scale bar, measured rather than guessed: 10 km of longitude at this latitude
+  var kmLon = 10 / (111.32 * Math.cos(48.1 * Math.PI / 180));
+  var barW = kmLon / (BOX.lonR - BOX.lonL) * BOX.w;
+  var bx = BOX.w - 40 - barW, by = BOX.h - 42;
+  deko.appendChild(el('line', {'class':'scale', x1:bx, y1:by, x2:bx + barW, y2:by}));
+  deko.appendChild(el('line', {'class':'scale', x1:bx, y1:by-7, x2:bx, y2:by+7}));
+  deko.appendChild(el('line', {'class':'scale', x1:bx+barW, y1:by-7, x2:bx+barW, y2:by+7}));
+  var sl = el('text', {'class':'mlabel', x:bx + barW/2, y:by-16, 'text-anchor':'middle'});
+  sl.textContent = '10 km'; deko.appendChild(sl);
+  deko.appendChild(el('path', {'class':'nord', d:'M56 '+(BOX.h-42)+' L56 '+(BOX.h-88)+
+    ' M56 '+(BOX.h-88)+' L50 '+(BOX.h-75)+' M56 '+(BOX.h-88)+' L62 '+(BOX.h-75)}));
+  var nl = el('text', {'class':'mlabel', x:56, y:BOX.h-22, 'text-anchor':'middle'});
+  nl.textContent = 'N'; deko.appendChild(nl);
+
+  // degree readings along the edges, so the grid is a real graticule and not decoration
+  for (var g1 = 47.9; g1 < BOX.latT; g1 += 0.2){
+    var la1 = Math.round(g1 * 10) / 10;
+    var tl = el('text', {'class':'mlabel deg', x:8, y:py(la1) - 7});
+    tl.textContent = la1.toFixed(1) + '° N'; deko.appendChild(tl);
+  }
+  for (var g2 = 11.2; g2 < BOX.lonR; g2 += 0.2){
+    var lo1 = Math.round(g2 * 10) / 10;
+    var tb = el('text', {'class':'mlabel deg', x:px(lo1) + 7, y:BOX.h - 8});
+    tb.textContent = lo1.toFixed(1) + '° E'; deko.appendChild(tb);
+  }
+  // one anchor label so the cluster reads as a city and not as scattered dots
+  var stadt = el('text', {'class':'stadt', x:px(11.5755), y:py(48.055), 'text-anchor':'middle'});
+  stadt.textContent = 'M Ü N C H E N'; deko.appendChild(stadt);
+
+  function aim(o){
+    if (!o){ plan.classList.remove('aim'); ortOut.innerHTML = '&nbsp;'; return; }
+    cx.setAttribute('y1', py(o.lat)); cx.setAttribute('y2', py(o.lat));
+    cy.setAttribute('x1', px(o.lon)); cy.setAttribute('x2', px(o.lon));
+    plan.classList.add('aim');
+    ortOut.textContent = o.ort + '  ' + o.nrs.map(function(n){ return 'MR-0' + n }).join('  ');
+  }
+  function springe(nr){
+    var row = document.getElementById('mr-' + nr);
+    if (!row) return;
+    var alle = document.querySelector('#filters button[data-f="alle"]');
+    if (alle && alle.getAttribute('aria-pressed') === 'false') alle.click();
+    row.scrollIntoView({ block:'center' });
+    row.classList.add('ziel');
+    setTimeout(function(){ row.classList.remove('ziel') }, 2200);
+  }
+
+  ORTE.forEach(function(o, i){
+    var x = px(o.lon), y = py(o.lat);
+    var g = el('g', {'class':'pin' + (o.live ? ' live' : ''), tabindex:'0', role:'button',
+      style:'--i:' + i,
+      'aria-label': o.ort + ', ' + o.nrs.length + (o.nrs.length === 1 ? ' Objekt' : ' Objekte')});
+    g.appendChild(el('circle', {'class':'halo', cx:x, cy:y, r:24}));
+    g.appendChild(el('circle', {'class':'ring',  cx:x, cy:y, r:9}));
+    g.appendChild(el('circle', {'class':'dot',   cx:x, cy:y, r:5.5}));
+    var t = el('text', {'class':'nrlabel',
+      x: o.an === 'end' ? x - 12 : (o.an === 'start' ? x + 12 : x),
+      y: o.an === 'up' ? y - 15 : (o.an === 'down' ? y + 26 : y + 5),
+      'text-anchor': o.an === 'end' ? 'end' : (o.an === 'start' ? 'start' : 'middle')});
+    // the Munich cluster is too dense for place names, so it carries numbers only
+    // and the city gets one label of its own; the outlying towns are named in place.
+    // name and number are separate spans so narrow screens can drop the name and
+    // grow the number instead of shrinking both into illegibility
+    if (o.ort.indexOf('München') !== 0){
+      var ts = el('tspan', {'class':'tort'});
+      ts.textContent = o.ort + '  ';
+      t.appendChild(ts);
+    }
+    var tn = el('tspan', {'class':'tnr'});
+    tn.textContent = o.nrs.join('·');
+    t.appendChild(tn);
+    g.appendChild(t);
+    g.addEventListener('mouseenter', function(){ aim(o); markiere(i, true) });
+    g.addEventListener('mouseleave', function(){ aim(null); markiere(i, false) });
+    g.addEventListener('focus', function(){ aim(o); markiere(i, true) });
+    g.addEventListener('blur', function(){ aim(null); markiere(i, false) });
+    g.addEventListener('click', function(){ springe(o.nrs[0]) });
+    g.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); springe(o.nrs[0]) } });
+    pins.appendChild(g);
+
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span>' + o.ort + '</span><span class="lnr">' + o.nrs.join(' ') + '</span>';
+    b.addEventListener('mouseenter', function(){ aim(o); markiere(i, true) });
+    b.addEventListener('mouseleave', function(){ aim(null); markiere(i, false) });
+    b.addEventListener('focus', function(){ aim(o); markiere(i, true) });
+    b.addEventListener('blur', function(){ aim(null); markiere(i, false) });
+    b.addEventListener('click', function(){ springe(o.nrs[0]) });
+    li.appendChild(b); legende.appendChild(li);
+  });
+
+  var pinEls = pins.children, legEls = legende.children;
+  function markiere(i, an){
+    if (legEls[i]) legEls[i].classList.toggle('an', an);
+    if (pinEls[i]) pinEls[i].classList.toggle('hover', an);
+  }
+
+  // pull the satellite basemap in early enough that it is there before the pins land,
+  // late enough that it never weighs on the first paint
+  new IntersectionObserver(function(es, obs){
+    if (!es[0].isIntersecting) return;
+    var b = document.getElementById('basis');
+    if (b && !b.getAttribute('href')) b.setAttribute('href', b.dataset.src);
+    obs.disconnect();
+  }, { rootMargin: '900px 0px' }).observe(plan);
+
+  new IntersectionObserver(function(es, obs){
+    if (es[0].isIntersecting){ plan.classList.add('drawn'); obs.disconnect(); }
+  }, { rootMargin: '0px 0px -18% 0px' }).observe(plan);
+})();
+
+/* ---------------- text splitting (seeded, once at load) ---------------- */
+function rng(seed){ var s = seed >>> 0; return function(){ s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+
+function split(el, mode, spread, emWord){
+  var text = el.textContent;
+  var rand = rng(text.length * 977 + 13);
+  var sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = text;
+  var vis = document.createElement('span'); vis.setAttribute('aria-hidden','true');
+  var words = text.split(' ');
+  var total = text.length, ci = 0;
+  words.forEach(function(word, wi){
+    var w = document.createElement('span'); w.className = 'w';
+    if (emWord && word.indexOf(emWord) !== -1) w.classList.add('em');
+    if (mode === 'word'){
+      w.style.setProperty('--th', (wi / Math.max(1, words.length) * 0.5 + rand() * 0.05).toFixed(3));
+      w.textContent = word;
+    } else {
+      for (var i = 0; i < word.length; i++){
+        var c = document.createElement('span'); c.className = 'c'; c.textContent = word[i];
+        c.style.setProperty('--th', (ci / total * (spread || 0.5) + rand() * 0.06).toFixed(3));
+        c.style.setProperty('--jx', ((rand() * 2 - 1) * 30).toFixed(1) + 'px');
+        w.appendChild(c); ci++;
+      }
+      ci++;
+    }
+    vis.appendChild(w);
+    if (wi < words.length - 1) vis.appendChild(document.createTextNode(' '));
+  });
+  el.textContent = ''; el.appendChild(sr); el.appendChild(vis);
+}
+[].forEach.call(document.querySelectorAll('[data-split]'), function(el){
+  var band = el.closest('.band');
+  split(el, el.dataset.split, parseFloat(band && band.dataset.spread) || 0.5, el.dataset.em);
+});
+
+/* ---------------- hero scrub ---------------- */
+var VIDEO_URL = 'assets/hero-scrub.mp4';
+var POSTER_URL = 'assets/hero-poster.jpg';
+var hero = document.getElementById('hero');
+var stage = document.getElementById('stage');
+var video = document.getElementById('hero-video');
+var posterEl = document.getElementById('poster');
+var ring = document.getElementById('ring');
+var bands = [].map.call(document.querySelectorAll('.band'), function(el){
+  return { el: el, a: parseFloat(el.dataset.a), b: parseFloat(el.dataset.b),
+           ramp: parseFloat(el.dataset.ramp) || 0, op: -1, k: -1 };
+});
+
+var target = 0, shown = 0, rafId = null, lastTick = 0;
+var heroOnScreen = true, scrubOn = false, inited = false, loadStart = 0;
+
+function heroProgress(){
+  var range = hero.offsetHeight - window.innerHeight;
+  if (range <= 0) return 0;
+  var y = -hero.getBoundingClientRect().top;
+  return Math.min(1, Math.max(0, y / range));
+}
+
+var seekBusy = false, pendingTime = null;
+function requestSeek(t){
+  if (!video.duration || isNaN(video.duration)) return;
+  if (seekBusy){ pendingTime = t; return; }
+  seekBusy = true;
+  try { video.currentTime = t; } catch (e) { seekBusy = false; }
+}
+video.addEventListener('seeked', function(){
+  seekBusy = false;
+  if (pendingTime !== null){ var t = pendingTime; pendingTime = null; requestSeek(t); }
+});
+video.addEventListener('error', function(){ seekBusy = false; pendingTime = null; failVideo(); });
+
+var smoothstep = function(p, e0, e1){
+  var t = Math.min(1, Math.max(0, (p - e0) / (e1 - e0)));
+  return t * t * (3 - 2 * t);
+};
+
+function updateCaptions(p){
+  for (var i = 0; i < bands.length; i++){
+    var bd = bands[i], a = bd.a, b = bd.b;
+    var f = Math.min(0.02, (b - a) / 3);
+    var inRamp  = (i === 0) ? 1 : smoothstep(p, a, a + f);
+    var outRamp = (i === bands.length - 1) ? 1 : (1 - smoothstep(p, b - f, b));
+    var op = inRamp * outRamp;
+    var ramp = bd.ramp || Math.min(0.025, (b - a) * 0.35);
+    var k = Math.min(1, Math.max(0, (p - a) / ramp));
+    if (i === 0 && loadStart){
+      var loadK = Math.min(1, (performance.now() - loadStart) / 900);
+      k = Math.max(k, loadK);
+      if (loadK < 1 && rafId === null) rafId = requestAnimationFrame(tick);
+    }
+    if (Math.abs(op - bd.op) > 0.004){ bd.el.style.opacity = op.toFixed(3); bd.op = op; }
+    if (Math.abs(k - bd.k) > 0.008){ bd.el.style.setProperty('--k', k.toFixed(3)); bd.k = k; }
+  }
+}
+
+function tick(now){
+  var dt = Math.min(100, now - (lastTick || now));
+  lastTick = now;
+  var k = 0.16;
+  shown += (target - shown) * (1 - Math.pow(1 - k, dt / 16.667));
+  var settled = Math.abs(target - shown) < 0.0005;
+  if (settled){ shown = target; rafId = null; lastTick = 0; }
+  else { rafId = requestAnimationFrame(tick); }
+  if (video.duration) requestSeek(shown * video.duration);
+  updateCaptions(shown);
+}
+
+function onScroll(){
+  target = heroProgress();
+  if (rafId === null && heroOnScreen) rafId = requestAnimationFrame(tick);
+}
+
+function failVideo(){
+  stage.classList.add('video-failed');
+  if (ring && ring.parentNode){
+    ring.insertAdjacentHTML('afterend',
+      '<svg class="cue" viewBox="0 0 24 34" aria-hidden="true"><path d="M12 4v22M5 20l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>');
+    ring.remove();
+  }
+}
+
+function loadHeroBlob(){
+  return fetch(VIDEO_URL, { priority: 'low' }).then(function(res){
+    if (!res.ok) throw new Error('http ' + res.status);
+    var total = Number(res.headers.get('Content-Length')) || 0;
+    if (!res.body || !total) return res.blob();
+    var reader = res.body.getReader(), chunks = [], got = 0, lastRing = 0;
+    return (function pump(){
+      return reader.read().then(function(r){
+        if (r.done) return new Blob(chunks);
+        chunks.push(r.value); got += r.value.length;
+        var frac = Math.min(1, got / total), now = performance.now();
+        if (now - lastRing > 100 || frac === 1){
+          lastRing = now;
+          ring && ring.style.setProperty('--ld', Math.round(126 * (1 - frac)));
+        }
+        return pump();
+      });
+    })();
+  }).then(function(blob){
+    ring && ring.style.setProperty('--ld', 0);
+    video.src = URL.createObjectURL(blob);
+    video.load();
+    video.addEventListener('canplay', function(){
+      requestSeek(heroProgress() * video.duration);
+      stage.classList.add('video-ready');
+      onScroll();
+    }, { once: true });
+  });
+}
+
+function initHeroOnce(){
+  if (inited) return; inited = true;
+  posterEl.style.backgroundImage = "url('" + POSTER_URL + "')";
+  loadStart = performance.now();
+  var started = false;
+  function start(){ if (started) return; started = true; loadHeroBlob().catch(failVideo); }
+  var img = new Image();
+  img.onload = start; img.onerror = start; img.src = POSTER_URL;
+  setTimeout(start, 4000);
+}
+
+/* the five gates, identical strings in CSS and JS */
+var GATES = [
+  '(max-width: 720px)',
+  '(orientation: portrait) and (max-width: 1024px)',
+  '(orientation: portrait) and (pointer: coarse)',
+  '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
+  '(prefers-reduced-motion: reduce)'
+];
+function enableScrub(){
+  if (scrubOn) return; scrubOn = true;
+  initHeroOnce();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  bands.forEach(function(b){ b.op = -1; b.k = -1; });
+  unpinFinalStates();
+  updateCaptions(heroProgress());
+  onScroll();
+}
+function disableScrub(){
+  if (!scrubOn) return; scrubOn = false;
+  window.removeEventListener('scroll', onScroll);
+  if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+}
+function applyHeroMode(){
+  if (GATES.some(function(q){ return matchMedia(q).matches; })) disableScrub();
+  else enableScrub();
+}
+var MQLS = GATES.map(function(q){ return matchMedia(q); });
+MQLS.forEach(function(m){ m.addEventListener('change', applyHeroMode); });
+
+var navEl = document.querySelector('.nav');
+new IntersectionObserver(function(es){
+  heroOnScreen = es[0].isIntersecting;
+  navEl.classList.toggle('solid', !heroOnScreen);
+  if (heroOnScreen && scrubOn) onScroll();
+}, { rootMargin: '10px' }).observe(hero);
+
+/* ---------------- entrances ---------------- */
+var io = new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if (!e.isIntersecting) return;
+    var el = e.target;
+    el.classList.add('in');
+    io.unobserve(el);
+    // retire the stagger delay once it has done its job, or every later
+    // transition on this element inherits the lag forever
+    setTimeout(function(){ el.style.transitionDelay = '0s'; }, 1400);
+  });
+}, { rootMargin: '0px 0px -12% 0px' });
+[].forEach.call(document.querySelectorAll('.reveal'), function(el, i){
+  el.style.transitionDelay = (Math.min(i, 4) * 0.07) + 's';
+  io.observe(el);
+});
+
+/* ---------------- archive parallax (only what is on screen, only on change) ---------------- */
+var pars = [], parRaf = null, parOn = false;
+var parIO = new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    var el = e.target;
+    if (e.isIntersecting){ if (pars.indexOf(el) === -1) pars.push(el); }
+    else { var i = pars.indexOf(el); if (i !== -1) pars.splice(i, 1); }
+  });
+  schedulePar();
+}, { rootMargin: '15% 0px' });
+[].forEach.call(document.querySelectorAll('.work .par'), function(el){ parIO.observe(el); });
+
+function paintPar(){
+  parRaf = null;
+  var vh = window.innerHeight;
+  for (var i = 0; i < pars.length; i++){
+    var el = pars[i], r = el.getBoundingClientRect();
+    // -1 above the fold, +1 below it; 18 percent of travel inside a 22 percent taller frame
+    var t = ((r.top + r.height / 2) - vh / 2) / vh;
+    var v = Math.max(-1, Math.min(1, t)) * -9 - 9;
+    var q = Math.round(v * 10) / 10;
+    if (el._p !== q){ el.style.setProperty('--par', q + '%'); el._p = q; }
+  }
+}
+function schedulePar(){ if (parRaf === null && parOn) parRaf = requestAnimationFrame(paintPar); }
+function parallaxAn(){
+  if (parOn) return; parOn = true;
+  window.addEventListener('scroll', schedulePar, { passive: true });
+  window.addEventListener('resize', schedulePar);
+  schedulePar();
+}
+function parallaxAus(){
+  if (!parOn) return; parOn = false;
+  window.removeEventListener('scroll', schedulePar);
+  window.removeEventListener('resize', schedulePar);
+  if (parRaf !== null){ cancelAnimationFrame(parRaf); parRaf = null; }
+  pars.forEach(function(el){ el.style.setProperty('--par', '-9%'); el._p = -9; });
+}
+
+/* ---------------- the hold interaction ---------------- */
+var hold = document.getElementById('hold');
+var holdpath = document.getElementById('holdpath');
+var holdline = document.getElementById('holdline');
+var stations = [].slice.call(document.querySelectorAll('.station'));
+var circles = [].slice.call(holdline.querySelectorAll('circle'));
+var hp = 0, holding = false, holdRaf = null, holdLast = 0, latched = false;
+
+try { holdline.style.setProperty('--len', holdpath.getTotalLength().toFixed(1)); } catch (e) {}
+
+function paintHold(){
+  holdline.style.setProperty('--hp', hp.toFixed(3));
+  hold.style.setProperty('--hp', hp.toFixed(3));
+  stations.forEach(function(s, i){ s.classList.toggle('lit', hp >= (i + 1) / 3 - 0.02); });
+  circles.forEach(function(c, i){ c.classList.toggle('on', hp >= i / 2 - 0.001 && hp > 0); });
+  hold.classList.toggle('done', hp >= 1);
+  hold.querySelector('span').textContent = hp >= 1 ? 'Der Abschluss steht' : 'Gedrückt halten';
+}
+function holdTick(now){
+  var dt = Math.min(100, now - (holdLast || now)); holdLast = now;
+  hp += (holding ? 1 : -1) * (dt / 1400);
+  hp = Math.min(1, Math.max(0, hp));
+  // once it is closed it stays closed: the visitor earned it, releasing must not undo it
+  if (hp >= 1) latched = true;
+  paintHold();
+  if (!latched && ((holding && hp < 1) || (!holding && hp > 0))){ holdRaf = requestAnimationFrame(holdTick); }
+  else { holdRaf = null; holdLast = 0; }
+}
+function startHold(e){ e.preventDefault(); if (latched) return; holding = true; if (holdRaf === null) holdRaf = requestAnimationFrame(holdTick); }
+function endHold(){ holding = false; if (!latched && holdRaf === null && hp > 0) holdRaf = requestAnimationFrame(holdTick); }
+hold.addEventListener('pointerdown', startHold);
+window.addEventListener('pointerup', endHold);
+window.addEventListener('pointercancel', endHold);
+hold.addEventListener('keydown', function(e){ if (e.key === ' ' || e.key === 'Enter'){ startHold(e); } });
+hold.addEventListener('keyup', function(e){ if (e.key === ' ' || e.key === 'Enter'){ endHold(); } });
+
+var holdPinned = false;   // true only when reduced motion forced it, not when the visitor earned it
+function pinHoldDone(){
+  holding = false;
+  if (holdRaf !== null){ cancelAnimationFrame(holdRaf); holdRaf = null; }
+  if (!latched) holdPinned = true;
+  latched = true; hp = 1; paintHold();
+}
+
+/* ---------------- reduced motion, live and both ways ---------------- */
+function pinToFinalStates(){
+  disableScrub();
+  parallaxAus();
+  bands.forEach(function(b){ b.el.style.setProperty('--k', '1'); b.k = 1; });
+  [].forEach.call(document.querySelectorAll('.reveal'), function(el){
+    el.classList.add('in'); el.style.transitionDelay = '0s';
+  });
+  pinHoldDone();
+}
+function unpinFinalStates(){
+  // give the hold back to the visitor, but only if reduced motion was what completed it
+  if (holdPinned && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    holdPinned = false; latched = false; holding = false; hp = 0; paintHold();
+  }
+}
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function(e){
+  if (e.matches) pinToFinalStates(); else { applyHeroMode(); parallaxAn(); }
+});
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) pinToFinalStates();
+else parallaxAn();
+
+/* ---------------- form (mailto, and it says so) ---------------- */
+document.getElementById('form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var f = e.target;
+  var body = 'Name: ' + f.name.value + '\n' +
+             'Kontakt: ' + f.kontakt.value + '\n' +
+             'Grundstück: ' + f.ort.value + '\n\n' + f.text.value;
+  window.location.href = 'mailto:info@munich-residential.com' +
+    '?subject=' + encodeURIComponent('Grundstück anbieten') +
+    '&body=' + encodeURIComponent(body);
+  document.getElementById('formdone').classList.add('on');
+});
+
+/* ---------------- pause everything on a hidden tab ---------------- */
+document.addEventListener('visibilitychange', function(){
+  document.body.classList.toggle('paused', document.hidden);
+});
+
+applyHeroMode();
+})();
+</script>
+</body>
+</html>
