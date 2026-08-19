@@ -223,7 +223,6 @@ section{padding:clamp(90px,13vh,170px) var(--gut);position:relative;scroll-margi
 /* die feste Kopfleiste muss weg, solange die Galerie offen ist */
 body.galerie-offen .nav{opacity:0;pointer-events:none}
 /* Legende gehört zur München-Ansicht */
-.plaene[data-blick="de"] ~ .legende{opacity:.32;pointer-events:none}
 .legende{transition:opacity .6s var(--ease)}
 .lb.auf{display:flex}
 .lb figure{margin:0;width:100%;height:100%;display:flex;align-items:center;
@@ -257,23 +256,17 @@ body.galerie-offen .nav{opacity:0;pointer-events:none}
 /* Karte, Fusszeile und Zoomleiste gehoeren in EIN Rasterfeld, sonst verteilt
    das Raster sie auf eigene Spalten */
 .kartenspalte{min-width:0}
-.plaene{position:relative;aspect-ratio:1000/990}
-.plaene .plan{position:absolute;inset:0;
-  transition:opacity .75s var(--ease),transform .75s var(--ease)}
-.plaene .plan svg{width:100%;height:100%}
-.plaene[data-blick="de"] .plan-de{opacity:1;transform:none;pointer-events:auto}
-.plaene[data-blick="de"] .plan-mu{opacity:0;transform:scale(.86);pointer-events:none}
-.plaene[data-blick="mu"] .plan-de{opacity:0;transform:scale(2.4);pointer-events:none}
-.plaene[data-blick="mu"] .plan-mu{opacity:1;transform:none;pointer-events:auto}
-.plaene[data-blick="mu"]{min-height:0}
+.plan{transition:opacity .26s var(--ease-soft),transform .26s var(--ease-soft)}
+.plan.wechsel{opacity:0;transform:scale(1.06)}
 .zoomleiste{display:flex;gap:8px;margin-top:18px}
 .zbtn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   background:none;border:1px solid var(--accent-muted);color:var(--text-secondary);
   padding:10px 16px;cursor:pointer;transition:all .4s var(--ease)}
 .zbtn:hover{border-color:var(--accent);color:var(--accent)}
 .zbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#F2F1ED}
-@media (prefers-reduced-motion:reduce){.plaene .plan{transition:none}}
-.plan{margin:0;position:relative}
+@media (prefers-reduced-motion:reduce){.plan{transition:none}.plan.wechsel{opacity:1;transform:none}}
+.plan{margin:0;position:relative;aspect-ratio:1000/990}
+.plan svg{width:100%;height:100%}
 .plan svg{width:100%;height:auto;display:block;overflow:visible}
 /* the data layer sits on real Sentinel-2 imagery, so everything on top goes light */
 .plan .basis{opacity:.92}
@@ -538,60 +531,41 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
   <section id="karte">
     <p class="kicker">Wo wir bauen</p>
     <div class="kartekopf reveal">
-      <p class="lede">Einundzwanzig Objekte. Siebzehn davon in München und Umland, dazu Nürnberg, Landshut und Chemnitz.</p>
-      <p class="kartehint">München anklicken zoomt hinein. Dort führt ein Klick auf einen Punkt ins Archiv.</p>
+      <p class="lede">Einundzwanzig Objekte, jedes auf seiner echten Adresse. Siebzehn in München und Umland, dazu Nürnberg, Landshut und Chemnitz.</p>
+      <p class="kartehint">Stadt anklicken zoomt hinein. Dort führt ein Klick auf einen Punkt ins Archiv.</p>
     </div>
 
     <div class="kartewrap reveal">
       <div class="kartenspalte">
-      <div class="plaene" id="plaene" data-blick="de">
+        <figure class="plan" id="plan">
+          <svg id="plansvg" viewBox="0 0 1000 990" role="img" aria-labelledby="plantitel">
+            <title id="plantitel">Satellitenkarte mit den Standorten von Munich Residential</title>
+            <image class="basis" id="basis" x="0" y="0" width="1000" height="990"
+                   preserveAspectRatio="none"></image>
+            <g class="grid" id="grid" aria-hidden="true"></g>
+            <g class="cross" aria-hidden="true">
+              <line id="cx" x1="0" y1="-99" x2="1000" y2="-99"></line>
+              <line id="cy" x1="-99" y1="0" x2="-99" y2="990"></line>
+            </g>
+            <g class="pins" id="pins"></g>
+            <g class="deko" id="deko" aria-hidden="true"></g>
+          </svg>
+        </figure>
 
-      <figure class="plan plan-de" id="plan-de">
-        <svg viewBox="0 0 1000 990" role="img" aria-labelledby="detitel">
-          <title id="detitel">Deutschlandkarte mit allen Standorten von Munich Residential</title>
-          <image class="basis" id="basis-de" data-src="assets/karte-deutschland.jpg"
-                 x="0" y="82" width="1000" height="826" preserveAspectRatio="none"></image>
-          <g class="grid" id="grid-de" aria-hidden="true"></g>
-          <g class="pins" id="pins-de"></g>
-        </svg>
-      </figure>
+        <p class="planfuss">
+          <span id="fuss-links">Deutschland</span>
+          <span id="planort">&nbsp;</span>
+          <span class="quelle">Satellitenbild: <a href="https://s2maps.eu" rel="noopener">Sentinel-2 cloudless</a>
+            von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0</span>
+        </p>
 
-      <figure class="plan plan-mu" id="plan">
-        <svg viewBox="0 0 1000 990" role="img" aria-labelledby="plantitle">
-          <title id="plantitle">Satellitenkarte mit den Standorten von Munich Residential in München und Umland</title>
-          <!-- href is set from JS once the section approaches: an SVG image has no lazy attribute
-               and would otherwise be pulled on first paint, far above where it is needed -->
-          <image class="basis" id="basis" data-src="assets/karte-satellit.jpg"
-                 x="0" y="0" width="1000" height="990" preserveAspectRatio="none"></image>
-          <g class="grid" id="grid" aria-hidden="true"></g>
-          <g class="cross" aria-hidden="true">
-            <line id="cx" x1="0" y1="-99" x2="1000" y2="-99"></line>
-            <line id="cy" x1="-99" y1="0" x2="-99" y2="990"></line>
-          </g>
-          <g class="pins" id="pins"></g>
-          <g class="deko" id="deko" aria-hidden="true"></g>
-        </svg>
-      </figure>
-
-      </div>
-
-      <p class="planfuss">
-        <span id="fuss-links">Deutschland &nbsp;·&nbsp; 21 Objekte</span>
-        <span id="planort">&nbsp;</span>
-        <span class="quelle">Satellitenbild: <a href="https://s2maps.eu" rel="noopener">Sentinel-2 cloudless</a>
-          von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0</span>
-      </p>
-
-      <div class="zoomleiste">
-        <button type="button" id="zu-de" class="zbtn">Deutschland</button>
-        <button type="button" id="zu-mu" class="zbtn">München und Umland</button>
-      </div>
+        <div class="zoomleiste" id="zoomleiste"></div>
       </div>
 
       <ol class="legende" id="legende"></ol>
     </div>
 
-    <p class="planhinweis">Die Punkte sitzen auf Stadtteil- und Ortsebene, nicht auf der Hausnummer. Vier Objekte liegen außerhalb des Ausschnitts: Nürnberg (MR-004, MR-009), Landshut (MR-018) und Chemnitz (MR-017). Die Ringbergstraße (MR-008) ist noch nicht zugeordnet. Schicken Sie uns die genauen Adressen, dann setzen wir alle Punkte exakt.</p>
+    <p class="planhinweis">Die Koordinaten stammen aus der Adresssuche von OpenStreetMap. Wo nur der Straßenname bekannt ist, sitzt der Punkt auf der Straße, nicht auf der Hausnummer.</p>
   </section>
 
   <section id="weg">
@@ -728,32 +702,32 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
 
 /* ---------------- project data ---------------- */
 var PROJEKTE = [
-  {n:'01',name:'Hansastraße',ort:'München',status:'im-bau',f:'01_hansastrasse_muenchen'},
-  {n:'02',name:'Nymphenburger Straße',ort:'München',status:'im-bau',f:'02_nymphenburger-strasse_muenchen'},
-  {n:'03',name:'Äußere Münchner Straße',ort:'Wolfratshausen',status:'in-planung',f:'03_aeussere-muenchner-strasse_wolfratshausen'},
-  {n:'04',name:'Schanzäckerstraße',ort:'Nürnberg',status:'in-planung',f:'04_schanzaeckerstrasse_nuernberg'},
-  {n:'05',name:'Wielandstraße',ort:'Eching',status:'in-planung',f:'05_wielandstrasse_eching'},
-  {n:'06',name:'Schwedenstraße',ort:'München',status:'in-planung',f:'06_schwedenstrasse_muenchen'},
-  {n:'07',name:'Arnulfstraße',ort:'München',status:'fertiggestellt',f:'07_arnulfstrasse_muenchen'},
-  {n:'08',name:'Ringbergstraße',ort:'München',status:'fertiggestellt',f:'08_ringbergstrasse_muenchen'},
-  {n:'09',name:'Edisonstraße',ort:'Nürnberg',status:'fertiggestellt',f:'09_edisonstrasse_nuernberg'},
-  {n:'10',name:'Philipp-Helmer-Straße',ort:'Olching',status:'fertiggestellt',f:'10_philipp-helmer-strasse_olching'},
-  {n:'11',name:'Münchner Freiheit',ort:'München-Schwabing',status:'fertiggestellt',f:'11_muenchner-freiheit_schwabing'},
-  {n:'12',name:'Klenzestraße',ort:'München-Glockenbach',status:'fertiggestellt',f:'12_klenzestrasse_glockenbach'},
-  {n:'13',name:'Klenzestraße',ort:'Ismaning',status:'fertiggestellt',f:'13_klenzestrasse_ismaning'},
-  {n:'14',name:'Gustav-Heinemann-Ring',ort:'München',status:'fertiggestellt',f:'14_gustav-heinemann-ring_muenchen'},
-  {n:'15',name:'Haidelweg',ort:'München-Pasing',status:'fertiggestellt',f:'15_haidelweg_pasing'},
-  {n:'16',name:'Leibstraße',ort:'Haar',status:'fertiggestellt',f:'16_leibstrasse_haar',
+  {n:'01',lat:48.1272,lon:11.5354,name:'Hansastraße',ort:'München',status:'im-bau',f:'01_hansastrasse_muenchen'},
+  {n:'02',lat:48.1477,lon:11.5582,name:'Nymphenburger Straße',ort:'München',status:'im-bau',f:'02_nymphenburger-strasse_muenchen'},
+  {n:'03',lat:47.9222,lon:11.4215,name:'Äußere Münchner Straße',ort:'Wolfratshausen',status:'in-planung',f:'03_aeussere-muenchner-strasse_wolfratshausen'},
+  {n:'04',lat:49.4448,lon:11.0641,name:'Schanzäckerstraße',ort:'Nürnberg',status:'in-planung',f:'04_schanzaeckerstrasse_nuernberg'},
+  {n:'05',lat:48.2990,lon:11.6247,name:'Wielandstraße',ort:'Eching',status:'in-planung',f:'05_wielandstrasse_eching'},
+  {n:'06',lat:48.1675,lon:11.6024,name:'Schwedenstraße',ort:'München',status:'in-planung',f:'06_schwedenstrasse_muenchen'},
+  {n:'07',lat:48.1417,lon:11.5585,name:'Arnulfstraße',ort:'München',status:'fertiggestellt',f:'07_arnulfstrasse_muenchen'},
+  {n:'08',lat:48.1276,lon:11.6436,name:'Ringbergstraße',ort:'München',status:'fertiggestellt',f:'08_ringbergstrasse_muenchen'},
+  {n:'09',lat:49.4314,lon:11.0269,name:'Edisonstraße',ort:'Nürnberg',status:'fertiggestellt',f:'09_edisonstrasse_nuernberg'},
+  {n:'10',lat:48.2209,lon:11.3313,name:'Philipp-Helmer-Straße',ort:'Olching',status:'fertiggestellt',f:'10_philipp-helmer-strasse_olching'},
+  {n:'11',lat:48.1620,lon:11.5865,name:'Münchner Freiheit',ort:'München-Schwabing',status:'fertiggestellt',f:'11_muenchner-freiheit_schwabing'},
+  {n:'12',lat:48.1302,lon:11.5737,name:'Klenzestraße',ort:'München-Glockenbach',status:'fertiggestellt',f:'12_klenzestrasse_glockenbach'},
+  {n:'13',lat:48.2179,lon:11.6628,name:'Klenzestraße',ort:'Ismaning',status:'fertiggestellt',f:'13_klenzestrasse_ismaning'},
+  {n:'14',lat:48.0889,lon:11.6429,name:'Gustav-Heinemann-Ring',ort:'München',status:'fertiggestellt',f:'14_gustav-heinemann-ring_muenchen'},
+  {n:'15',lat:48.1389,lon:11.4579,name:'Haidelweg',ort:'München-Pasing',status:'fertiggestellt',f:'15_haidelweg_pasing'},
+  {n:'16',lat:48.1137,lon:11.7356,name:'Leibstraße',ort:'Haar',status:'fertiggestellt',f:'16_leibstrasse_haar',
    gal:['leibstrasse-01.jpg'],
    text:'Wohnanlage am Bahnhofsplatz mit begrüntem Innenhof, Spielplatz und Photovoltaik auf allen Dächern. Das Bild im Kopf dieser Seite zeigt dieses Objekt.'},
-  {n:'17',name:'Konradstraße / Richterstraße',ort:'Chemnitz',status:'fertiggestellt',f:'17_konradstrasse-richterstrasse_chemnitz'},
-  {n:'18',name:'Objekt Landshut',ort:'Landshut',status:'fertiggestellt',f:'18_objekt-landshut'},
-  {n:'19',name:'Adalbert-Stifter-Straße',ort:'Geretsried',status:'fertiggestellt',f:'19_adalbert-stifter-strasse_geretsried'},
-  {n:'20',name:'Zeisigweg',ort:'Freising',status:'fertiggestellt',f:'20_zeisigweg_freising',
+  {n:'17',lat:50.8419,lon:12.9052,name:'Konradstraße / Richterstraße',ort:'Chemnitz',status:'fertiggestellt',f:'17_konradstrasse-richterstrasse_chemnitz'},
+  {n:'18',lat:48.5362,lon:12.1517,name:'Objekt Landshut',ort:'Landshut',status:'fertiggestellt',f:'18_objekt-landshut'},
+  {n:'19',lat:47.8645,lon:11.4782,name:'Adalbert-Stifter-Straße',ort:'Geretsried',status:'fertiggestellt',f:'19_adalbert-stifter-strasse_geretsried'},
+  {n:'20',lat:48.3948,lon:11.7687,name:'Zeisigweg',ort:'Freising',status:'fertiggestellt',f:'20_zeisigweg_freising',
    gal:['zeisigweg-01.jpg','zeisigweg-02.jpg','zeisigweg-03.jpg','zeisigweg-04.jpg',
         'zeisigweg-05.jpg','zeisigweg-06.jpg','zeisigweg-07.jpg','zeisigweg-08.jpg'],
    text:'Wohnanlage in Freising. Die Wohnungen wurden im Bestand saniert und neu übergeben.'},
-  {n:'21',name:'Pettenkoferstraße',ort:'München-Ludwigsvorstadt',status:'fertiggestellt',
+  {n:'21',lat:48.1353,lon:11.5549,name:'Pettenkoferstraße',ort:'München-Ludwigsvorstadt',status:'fertiggestellt',
    f:'21_pettenkoferstrasse_muenchen',
    gal:['pettenkofer-01.jpg','pettenkofer-02.jpg'],
    text:'Nachverdichtung im Innenhof der Ludwigsvorstadt: Townhouses in hellem Klinker, hinter dem Altbaubestand an der Straße.'}
@@ -868,235 +842,189 @@ document.addEventListener('keydown', function(e){
   }, {passive:true});
 })();
 
-/* ---------------- Lageplan (hand drawn, no map service, nothing leaves the page) ---------------- */
-var BOX = { latT:48.45, latB:47.82, lonL:11.05, lonR:12.00, w:1000, h:990 };
-function px(lon){ return (lon - BOX.lonL) / (BOX.lonR - BOX.lonL) * BOX.w; }
-function py(lat){ return (BOX.latT - lat) / (BOX.latT - BOX.latB) * BOX.h; }
-
-// Positions are district and town centres, not house numbers. Said plainly under the map.
-var ORTE = [
-  {ort:'Freising',        lat:48.4028, lon:11.7489, nrs:['20'], an:'start'},
-  {ort:'Eching',          lat:48.2980, lon:11.6270, nrs:['05'], an:'start', live:true},
-  {ort:'Ismaning',        lat:48.2270, lon:11.6720, nrs:['13'], an:'start'},
-  {ort:'Olching',         lat:48.2060, lon:11.3270, nrs:['10'], an:'start'},
-  {ort:'München-Schwabing',lat:48.1620,lon:11.5860, nrs:['11'], an:'start'},
-  {ort:'München-Pasing',  lat:48.1490, lon:11.4600, nrs:['15'], an:'up'},
-  {ort:'München-Maxvorstadt',lat:48.1495,lon:11.5445,nrs:['02','07'], an:'end', live:true},
-  {ort:'München-Glockenbach',lat:48.1290,lon:11.5750,nrs:['12'], an:'start'},
-  {ort:'München-Ludwigsvorstadt',lat:48.1320,lon:11.5590,nrs:['21'], an:'up'},
-  {ort:'München-Sendling',lat:48.1270, lon:11.5150, nrs:['01'], an:'end', live:true},
-  {ort:'München-Obersendling',lat:48.1040,lon:11.5470,nrs:['06'], an:'down', live:true},
-  {ort:'München-Neuperlach',lat:48.1010,lon:11.6390, nrs:['14'], an:'start'},
-  {ort:'Haar',            lat:48.1050, lon:11.7270, nrs:['16'], an:'start'},
-  {ort:'Wolfratshausen',  lat:47.9110, lon:11.4260, nrs:['03'], an:'start', live:true},
-  {ort:'Geretsried',      lat:47.8580, lon:11.4790, nrs:['19'], an:'start'}
+/* ---------------- Lageplan, mehrere Zoomstufen ----------------
+   Eine Flaeche, die je nach Ansicht neu gezeichnet wird. Alle Koordinaten
+   stammen aus der Adresssuche von OpenStreetMap, nicht aus Schaetzungen. */
+var ANSICHTEN = [
+  {id:'de', titel:'Deutschland',        bild:'karte-deutschland.jpg',
+   latT:55.2000, latB:47.1000, lonL:5.6000,  lonR:15.4000, oy:82, ih:826, land:true},
+  {id:'mu', titel:'München und Umland', bild:'karte-satellit.jpg',
+   latT:48.4500, latB:47.8200, lonL:11.0500, lonR:12.0000, oy:0,  ih:990},
+  {id:'nu', titel:'Nürnberg',           bild:'karte-nuernberg.jpg',
+   latT:49.4896, latB:49.3864, lonL:10.9650, lonR:11.1250, oy:0,  ih:990},
+  {id:'la', titel:'Landshut',           bild:'karte-landshut.jpg',
+   latT:48.5887, latB:48.4837, lonL:12.0717, lonR:12.2317, oy:0,  ih:990},
+  {id:'ch', titel:'Chemnitz',           bild:'karte-chemnitz.jpg',
+   latT:50.8920, latB:50.7918, lonL:12.8252, lonR:12.9852, oy:0,  ih:990}
+];
+var GRUPPEN = [
+  {id:'mu', ort:'München und Umland', lat:48.1374, lon:11.5755, an:'end'},
+  {id:'nu', ort:'Nürnberg',           lat:49.4380, lon:11.0455, an:'start'},
+  {id:'la', ort:'Landshut',           lat:48.5362, lon:12.1517, an:'start'},
+  {id:'ch', ort:'Chemnitz',           lat:50.8419, lon:12.9052, an:'start'}
 ];
 
-(function buildPlan(){
-  var svgNS = 'http://www.w3.org/2000/svg';
-  var el = function(t, a){ var n = document.createElementNS(svgNS, t);
-    for (var k in a) n.setAttribute(k, a[k]); return n; };
+(function karte(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var el = function(t,a){ var n=document.createElementNS(NS,t); for(var k in a) n.setAttribute(k,a[k]); return n; };
+  var W = 1000, H = 990;
   var plan = document.getElementById('plan');
-  var grid = document.getElementById('grid');
-  var pins = document.getElementById('pins');
-  var deko = document.getElementById('deko');
-  var legende = document.getElementById('legende');
-  var ortOut = document.getElementById('planort');
+  var basis = document.getElementById('basis');
+  var grid = document.getElementById('grid'), pins = document.getElementById('pins'), deko = document.getElementById('deko');
   var cx = document.getElementById('cx'), cy = document.getElementById('cy');
+  var ortOut = document.getElementById('planort'), fussLinks = document.getElementById('fuss-links');
+  var leiste = document.getElementById('zoomleiste'), legende = document.getElementById('legende');
+  var jetzt = null;
 
-  // graticule every tenth of a degree, the whole degrees drawn heavier
-  for (var lo = 11.1; lo < BOX.lonR; lo += 0.1){
-    grid.appendChild(el('line', {x1:px(lo), y1:0, x2:px(lo), y2:BOX.h,
-      'class': Math.abs(lo - Math.round(lo)) < 0.02 ? 'major' : ''}));
-  }
-  for (var la = 47.9; la < BOX.latT; la += 0.1){
-    grid.appendChild(el('line', {x1:0, y1:py(la), x2:BOX.w, y2:py(la),
-      'class': Math.abs(la - Math.round(la)) < 0.02 ? 'major' : ''}));
-  }
+  function px(v,lon){ return (lon - v.lonL)/(v.lonR - v.lonL)*W; }
+  function py(v,lat){ return v.oy + (v.latT - lat)/(v.latT - v.latB)*v.ih; }
+  function drin(v,p){ return p.lat<=v.latT && p.lat>=v.latB && p.lon>=v.lonL && p.lon<=v.lonR; }
+  function leer(g){ while(g.firstChild) g.removeChild(g.firstChild); }
 
-  // scale bar, measured rather than guessed: 10 km of longitude at this latitude
-  var kmLon = 10 / (111.32 * Math.cos(48.1 * Math.PI / 180));
-  var barW = kmLon / (BOX.lonR - BOX.lonL) * BOX.w;
-  var bx = BOX.w - 40 - barW, by = BOX.h - 42;
-  deko.appendChild(el('line', {'class':'scale', x1:bx, y1:by, x2:bx + barW, y2:by}));
-  deko.appendChild(el('line', {'class':'scale', x1:bx, y1:by-7, x2:bx, y2:by+7}));
-  deko.appendChild(el('line', {'class':'scale', x1:bx+barW, y1:by-7, x2:bx+barW, y2:by+7}));
-  var sl = el('text', {'class':'mlabel', x:bx + barW/2, y:by-16, 'text-anchor':'middle'});
-  sl.textContent = '10 km'; deko.appendChild(sl);
-  deko.appendChild(el('path', {'class':'nord', d:'M56 '+(BOX.h-42)+' L56 '+(BOX.h-88)+
-    ' M56 '+(BOX.h-88)+' L50 '+(BOX.h-75)+' M56 '+(BOX.h-88)+' L62 '+(BOX.h-75)}));
-  var nl = el('text', {'class':'mlabel', x:56, y:BOX.h-22, 'text-anchor':'middle'});
-  nl.textContent = 'N'; deko.appendChild(nl);
-
-  // degree readings along the edges, so the grid is a real graticule and not decoration
-  for (var g1 = 47.9; g1 < BOX.latT; g1 += 0.2){
-    var la1 = Math.round(g1 * 10) / 10;
-    var tl = el('text', {'class':'mlabel deg', x:8, y:py(la1) - 7});
-    tl.textContent = la1.toFixed(1) + '° N'; deko.appendChild(tl);
-  }
-  for (var g2 = 11.2; g2 < BOX.lonR; g2 += 0.2){
-    var lo1 = Math.round(g2 * 10) / 10;
-    var tb = el('text', {'class':'mlabel deg', x:px(lo1) + 7, y:BOX.h - 8});
-    tb.textContent = lo1.toFixed(1) + '° E'; deko.appendChild(tb);
-  }
-  // one anchor label so the cluster reads as a city and not as scattered dots
-  var stadt = el('text', {'class':'stadt', x:px(11.5755), y:py(48.055), 'text-anchor':'middle'});
-  stadt.textContent = 'M Ü N C H E N'; deko.appendChild(stadt);
-
-  function aim(o){
-    if (!o){ plan.classList.remove('aim'); ortOut.innerHTML = '&nbsp;'; return; }
-    cx.setAttribute('y1', py(o.lat)); cx.setAttribute('y2', py(o.lat));
-    cy.setAttribute('x1', px(o.lon)); cy.setAttribute('x2', px(o.lon));
-    plan.classList.add('aim');
-    ortOut.textContent = o.ort + '  ' + o.nrs.map(function(n){ return 'MR-0' + n }).join('  ');
+  function zielen(x,y,text){
+    if (x === null){ plan.classList.remove('aim'); ortOut.innerHTML='&nbsp;'; return; }
+    cx.setAttribute('y1',y); cx.setAttribute('y2',y);
+    cy.setAttribute('x1',x); cy.setAttribute('x2',x);
+    plan.classList.add('aim'); ortOut.textContent = text;
   }
   function springe(nr){
-    var row = document.getElementById('mr-' + nr);
-    if (!row) return;
+    var row = document.getElementById('mr-'+nr); if(!row) return;
     var alle = document.querySelector('#filters button[data-f="alle"]');
-    if (alle && alle.getAttribute('aria-pressed') === 'false') alle.click();
-    row.scrollIntoView({ block:'center' });
-    row.classList.add('ziel');
-    setTimeout(function(){ row.classList.remove('ziel') }, 2200);
+    if (alle && alle.getAttribute('aria-pressed')==='false') alle.click();
+    row.scrollIntoView({block:'center'});
+    row.classList.add('ziel'); setTimeout(function(){ row.classList.remove('ziel') }, 2200);
   }
 
-  ORTE.forEach(function(o, i){
-    var x = px(o.lon), y = py(o.lat);
-    var g = el('g', {'class':'pin' + (o.live ? ' live' : ''), tabindex:'0', role:'button',
-      style:'--i:' + i,
-      'aria-label': o.ort + ', ' + o.nrs.length + (o.nrs.length === 1 ? ' Objekt' : ' Objekte')});
-    g.appendChild(el('circle', {'class':'halo', cx:x, cy:y, r:24}));
-    g.appendChild(el('circle', {'class':'ring',  cx:x, cy:y, r:9}));
-    g.appendChild(el('circle', {'class':'dot',   cx:x, cy:y, r:5.5}));
-    var t = el('text', {'class':'nrlabel',
-      x: o.an === 'end' ? x - 12 : (o.an === 'start' ? x + 12 : x),
-      y: o.an === 'up' ? y - 15 : (o.an === 'down' ? y + 26 : y + 5),
-      'text-anchor': o.an === 'end' ? 'end' : (o.an === 'start' ? 'start' : 'middle')});
-    // the Munich cluster is too dense for place names, so it carries numbers only
-    // and the city gets one label of its own; the outlying towns are named in place.
-    // name and number are separate spans so narrow screens can drop the name and
-    // grow the number instead of shrinking both into illegibility
-    if (o.ort.indexOf('München') !== 0){
-      var ts = el('tspan', {'class':'tort'});
-      ts.textContent = o.ort + '  ';
-      t.appendChild(ts);
+  function zeichne(v){
+    jetzt = v;
+    basis.setAttribute('href','assets/'+v.bild);
+    leer(grid); leer(pins); leer(deko); zielen(null);
+    fussLinks.textContent = v.titel;
+
+    var schritt = v.land ? 2 : ((v.lonR-v.lonL) > 0.5 ? 0.1 : 0.02);
+    for (var lo=Math.ceil(v.lonL/schritt)*schritt; lo<v.lonR; lo+=schritt)
+      grid.appendChild(el('line',{x1:px(v,lo),y1:v.oy,x2:px(v,lo),y2:v.oy+v.ih}));
+    for (var la=Math.ceil(v.latB/schritt)*schritt; la<v.latT; la+=schritt)
+      grid.appendChild(el('line',{x1:0,y1:py(v,la),x2:W,y2:py(v,la)}));
+
+    // Massstab, gerechnet statt gemalt
+    var km = v.land ? 200 : 2;
+    var breite = (km/(111.32*Math.cos((v.latT+v.latB)/2*Math.PI/180)))/(v.lonR-v.lonL)*W;
+    var bx = W-40-breite, by = v.oy+v.ih-42;
+    deko.appendChild(el('line',{'class':'scale',x1:bx,y1:by,x2:bx+breite,y2:by}));
+    deko.appendChild(el('line',{'class':'scale',x1:bx,y1:by-7,x2:bx,y2:by+7}));
+    deko.appendChild(el('line',{'class':'scale',x1:bx+breite,y1:by-7,x2:bx+breite,y2:by+7}));
+    var sl = el('text',{'class':'mlabel',x:bx+breite/2,y:by-16,'text-anchor':'middle'});
+    sl.textContent = km+' km'; deko.appendChild(sl);
+
+    var eintraege = [];
+    if (v.land){
+      GRUPPEN.forEach(function(g,i){
+        var anz = PROJEKTE.filter(function(p){
+          var z = ANSICHTEN.filter(function(x){return x.id===g.id})[0];
+          return drin(z,p); }).length;
+        eintraege.push({x:px(v,g.lon), y:py(v,g.lat), name:g.ort, txt:g.ort+'  '+anz,
+          an:g.an, gross:true, tip:g.ort+'  '+anz+(anz===1?' Objekt':' Objekte'),
+          tun:function(){ setze(g.id) }, i:i});
+      });
+    } else {
+      PROJEKTE.forEach(function(p,i){
+        if (!drin(v,p)) return;
+        eintraege.push({x:px(v,p.lon), y:py(v,p.lat), name:p.name, txt:p.n,
+          an:'start', live:p.status!=='fertiggestellt',
+          tip:p.name+', '+p.ort+'  MR-0'+p.n,
+          tun:function(){ springe(p.n) }, i:i});
+      });
     }
-    var tn = el('tspan', {'class':'tnr'});
-    tn.textContent = o.nrs.join('·');
-    t.appendChild(tn);
-    g.appendChild(t);
-    g.addEventListener('mouseenter', function(){ aim(o); markiere(i, true) });
-    g.addEventListener('mouseleave', function(){ aim(null); markiere(i, false) });
-    g.addEventListener('focus', function(){ aim(o); markiere(i, true) });
-    g.addEventListener('blur', function(){ aim(null); markiere(i, false) });
-    g.addEventListener('click', function(){ springe(o.nrs[0]) });
-    g.addEventListener('keydown', function(e){
-      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); springe(o.nrs[0]) } });
-    pins.appendChild(g);
 
-    var li = document.createElement('li');
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.innerHTML = '<span>' + o.ort + '</span><span class="lnr">' + o.nrs.join(' ') + '</span>';
-    b.addEventListener('mouseenter', function(){ aim(o); markiere(i, true) });
-    b.addEventListener('mouseleave', function(){ aim(null); markiere(i, false) });
-    b.addEventListener('focus', function(){ aim(o); markiere(i, true) });
-    b.addEventListener('blur', function(){ aim(null); markiere(i, false) });
-    b.addEventListener('click', function(){ springe(o.nrs[0]) });
-    li.appendChild(b); legende.appendChild(li);
-  });
+    // Beschriftungen setzen: vier Seiten durchprobieren, die erste nehmen, die
+    // keine schon gesetzte Beschriftung schneidet. Ohne das kleben sie in der
+    // dichten Muenchner Gruppe aufeinander.
+    if (!v.land){
+      var belegt = [];
+      var kasten = function(e,an){
+        var br = e.txt.length * 8.6 + 6, ho = 17;
+        var x = an==='end' ? e.x-13-br : (an==='start' ? e.x+13 : e.x-br/2);
+        var y = an==='up' ? e.y-14-ho : (an==='down' ? e.y+22-ho : e.y+5-ho);
+        return {l:x, r:x+br, t:y, b:y+ho+4};
+      };
+      var frei = function(k){
+        for (var q=0;q<belegt.length;q++){ var o=belegt[q];
+          if (k.l<o.r && o.l<k.r && k.t<o.b && o.t<k.b) return false; }
+        return k.l>-4 && k.r<W+4 && k.t>v.oy-4 && k.b<v.oy+v.ih+4;
+      };
+      eintraege.forEach(function(e){
+        var seiten = ['start','end','up','down'], gewaehlt = null;
+        for (var q=0;q<seiten.length;q++){
+          var k = kasten(e, seiten[q]);
+          if (frei(k)){ gewaehlt = seiten[q]; belegt.push(k); break; }
+        }
+        if (!gewaehlt){ gewaehlt = 'start'; belegt.push(kasten(e,'start')); }
+        e.an = gewaehlt;
+      });
+    }
 
-  var pinEls = pins.children, legEls = legende.children;
-  function markiere(i, an){
-    if (legEls[i]) legEls[i].classList.toggle('an', an);
-    if (pinEls[i]) pinEls[i].classList.toggle('hover', an);
-  }
-
-  // pull the satellite basemap in early enough that it is there before the pins land,
-  // late enough that it never weighs on the first paint
-  new IntersectionObserver(function(es, obs){
-    if (!es[0].isIntersecting) return;
-    var b = document.getElementById('basis');
-    if (b && !b.getAttribute('href')) b.setAttribute('href', b.dataset.src);
-    obs.disconnect();
-  }, { rootMargin: '900px 0px' }).observe(plan);
-
-  new IntersectionObserver(function(es, obs){
-    if (es[0].isIntersecting){ plan.classList.add('drawn'); obs.disconnect(); }
-  }, { rootMargin: '0px 0px -18% 0px' }).observe(plan);
-})();
-
-/* ---------------- Deutschlandkarte und der Zoom ---------------- */
-(function buildDe(){
-  var svgNS = 'http://www.w3.org/2000/svg';
-  var el = function(t,a){ var n=document.createElementNS(svgNS,t); for(var k in a) n.setAttribute(k,a[k]); return n; };
-  // gleicher Rahmen wie die München-Karte, das Bild sitzt mittig darin
-  var DE = { latT:55.2, latB:47.1, lonL:5.6, lonR:15.4, w:1000, h:826, oy:82 };
-  var dx = function(lon){ return (lon - DE.lonL)/(DE.lonR - DE.lonL)*DE.w; };
-  var dy = function(lat){ return DE.oy + (DE.latT - lat)/(DE.latT - DE.latB)*DE.h; };
-
-  var STAEDTE = [
-    {ort:'München und Umland', lat:48.1374, lon:11.5755, anzahl:17, an:'end'},
-    {ort:'Nürnberg',           lat:49.4521, lon:11.0767, anzahl:2,  an:'start'},
-    {ort:'Landshut',           lat:48.5372, lon:12.1522, anzahl:1,  an:'start'},
-    {ort:'Chemnitz',           lat:50.8278, lon:12.9214, anzahl:1,  an:'start'}
-  ];
-
-  var planDe = document.getElementById('plan-de');
-  var grid = document.getElementById('grid-de');
-  var pins = document.getElementById('pins-de');
-  var ortOut = document.getElementById('planort');
-  for (var lo = 6; lo < DE.lonR; lo += 2)
-    grid.appendChild(el('line',{x1:dx(lo),y1:DE.oy,x2:dx(lo),y2:DE.oy+DE.h,'class':'major'}));
-  for (var la = 48; la < DE.latT; la += 2)
-    grid.appendChild(el('line',{x1:0,y1:dy(la),x2:DE.w,y2:dy(la),'class':'major'}));
-
-  STAEDTE.forEach(function(s,i){
-    var x = dx(s.lon), y = dy(s.lat);
-    var g = el('g',{'class':'pin' + (s.klein?'':' gross'), style:'--i:'+i,
-      'aria-label': s.ort + ', ' + s.anzahl + (s.anzahl===1?' Objekt':' Objekte')});
-    g.appendChild(el('circle',{'class':'halo',cx:x,cy:y,r:26}));
-    g.appendChild(el('circle',{'class':'dot',cx:x,cy:y,r:s.klein?5:9}));
-    var t = el('text',{x: s.an==='end'? x-14 : x+14, y:y+5,
-      'text-anchor': s.an==='end'?'end':'start'});
-    t.textContent = s.ort + '  ' + s.anzahl;
-    g.appendChild(t);
-    g.addEventListener('mouseenter', function(){ ortOut.textContent = s.ort + '  ' + s.anzahl +
-      (s.anzahl===1?' Objekt':' Objekte'); });
-    g.addEventListener('mouseleave', function(){ ortOut.innerHTML = '&nbsp;'; });
-    pins.appendChild(g);
-  });
-
-  var plaene = document.getElementById('plaene');
-  var bDe = document.getElementById('zu-de'), bMu = document.getElementById('zu-mu');
-  var fussLinks = document.getElementById('fuss-links');
-  function blick(v){
-    plaene.dataset.blick = v;
-    fussLinks.textContent = v === 'de'
-      ? 'Deutschland  ·  21 Objekte'
-      : 'München und Umland  ·  48.45 N bis 47.82 N  ·  11.05 E bis 12.00 E';
-    bDe.setAttribute('aria-pressed', String(v === 'de'));
-    bMu.setAttribute('aria-pressed', String(v === 'mu'));
-  }
-  bDe.addEventListener('click', function(){ blick('de') });
-  bMu.addEventListener('click', function(){ blick('mu') });
-  // ein Klick auf München zoomt hinein, das ist der eigentliche Weg
-  pins.firstChild.style.cursor = 'pointer';
-  pins.firstChild.setAttribute('tabindex','0');
-  pins.firstChild.setAttribute('role','button');
-  pins.firstChild.addEventListener('click', function(){ blick('mu') });
-  pins.firstChild.addEventListener('keydown', function(e){
-    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); blick('mu') } });
-  blick('de');
-
-  new IntersectionObserver(function(es, obs){
-    if (!es[0].isIntersecting) return;
-    [document.getElementById('basis-de'), document.getElementById('basis')].forEach(function(b){
-      if (b && !b.getAttribute('href')) b.setAttribute('href', b.dataset.src);
+    eintraege.forEach(function(e,i){
+      var g = el('g',{'class':'pin'+(e.live?' live':''), tabindex:'0', role:'button',
+        style:'--i:'+i, 'aria-label':e.tip});
+      g.appendChild(el('circle',{'class':'halo',cx:e.x,cy:e.y,r:26}));
+      if (e.live) g.appendChild(el('circle',{'class':'ring',cx:e.x,cy:e.y,r:9}));
+      g.appendChild(el('circle',{'class':'dot',cx:e.x,cy:e.y,r:e.gross?9:5.5}));
+      var t = el('text',{
+        x: e.an==='end' ? e.x-13 : (e.an==='start' ? e.x+13 : e.x),
+        y: e.an==='up' ? e.y-14 : (e.an==='down' ? e.y+22 : e.y+5),
+        'text-anchor': e.an==='end' ? 'end' : (e.an==='start' ? 'start' : 'middle')});
+      t.textContent = e.txt; g.appendChild(t);
+      var an = function(){ zielen(e.x,e.y,e.tip); markiere(i,true) };
+      var aus = function(){ zielen(null); markiere(i,false) };
+      g.addEventListener('mouseenter',an); g.addEventListener('mouseleave',aus);
+      g.addEventListener('focus',an); g.addEventListener('blur',aus);
+      g.addEventListener('click',e.tun);
+      g.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); e.tun() } });
+      pins.appendChild(g);
     });
-    planDe.classList.add('drawn');
-    obs.disconnect();
-  }, { rootMargin: '900px 0px' }).observe(planDe);
+
+    legende.innerHTML = eintraege.map(function(e,i){
+      return '<li><button type="button" data-i="'+i+'"><span>'+e.name+
+             '</span><span class="lnr">'+e.txt+'</span></button></li>';
+    }).join('');
+    [].forEach.call(legende.querySelectorAll('button'), function(b,i){
+      var e = eintraege[i];
+      b.addEventListener('mouseenter',function(){ zielen(e.x,e.y,e.tip); markiere(i,true) });
+      b.addEventListener('mouseleave',function(){ zielen(null); markiere(i,false) });
+      b.addEventListener('focus',function(){ zielen(e.x,e.y,e.tip); markiere(i,true) });
+      b.addEventListener('blur',function(){ zielen(null); markiere(i,false) });
+      b.addEventListener('click', e.tun);
+    });
+    requestAnimationFrame(function(){ plan.classList.add('drawn') });
+  }
+  function markiere(i,an){
+    var l = legende.children[i], p = pins.children[i];
+    if (l) l.classList.toggle('an',an);
+    if (p) p.classList.toggle('hover',an);
+  }
+  function setze(id){
+    var v = ANSICHTEN.filter(function(x){return x.id===id})[0];
+    if (!v || (jetzt && jetzt.id===id)) return;
+    plan.classList.remove('drawn');
+    plan.classList.add('wechsel');
+    setTimeout(function(){ zeichne(v); plan.classList.remove('wechsel') }, 260);
+    [].forEach.call(leiste.children, function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.v === id)) });
+  }
+
+  leiste.innerHTML = ANSICHTEN.map(function(v){
+    return '<button type="button" class="zbtn" data-v="'+v.id+'" aria-pressed="'+
+           (v.id==='de')+'">'+v.titel+'</button>';
+  }).join('');
+  leiste.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(b) setze(b.dataset.v); });
+
+  new IntersectionObserver(function(es,obs){
+    if(!es[0].isIntersecting) return;
+    zeichne(ANSICHTEN[0]); obs.disconnect();
+  },{rootMargin:'900px 0px'}).observe(plan);
 })();
 
 /* ---------------- text splitting (seeded, once at load) ---------------- */
