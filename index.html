@@ -199,10 +199,77 @@ section{padding:clamp(90px,13vh,170px) var(--gut);position:relative;scroll-margi
   .work figure{order:1}
 }
 
+.work .wtext{font-family:var(--body);font-size:15px;color:var(--text-secondary);
+  margin:1.1em 0 0;max-width:46ch;margin-left:auto}
+.work .mehr{margin-top:1.2em;background:none;border:0;padding:0;cursor:pointer;
+  font-family:var(--mono);font-size:12px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--accent);border-bottom:1px solid var(--accent-muted);
+  transition:border-color .4s var(--ease),letter-spacing .4s var(--ease)}
+.work .mehr:hover{border-bottom-color:var(--accent);letter-spacing:.16em}
+.work figure.hat-galerie{position:relative;cursor:pointer}
+.work .figbtn{position:absolute;inset:0;background:none;border:0;cursor:pointer;padding:0}
+.work .figbtn:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}
+.work figure.hat-galerie::after{content:"";position:absolute;right:14px;bottom:14px;
+  width:34px;height:34px;pointer-events:none;
+  background:rgba(8,11,13,.55) center/16px 16px no-repeat;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F2F1ED' stroke-width='1.6'%3E%3Cpath d='M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5'/%3E%3C/svg%3E");
+  opacity:0;transition:opacity .45s var(--ease)}
+.work figure.hat-galerie:hover::after{opacity:1}
+@media (max-width:860px){.work .wtext{margin-left:0}}
+
+/* Galerie-Überlagerung */
+.lb{position:fixed;inset:0;z-index:80;display:none;background:rgba(8,11,13,.965);
+  align-items:center;justify-content:center}
+/* die feste Kopfleiste muss weg, solange die Galerie offen ist */
+body.galerie-offen .nav{opacity:0;pointer-events:none}
+/* Legende gehört zur München-Ansicht */
+.plaene[data-blick="de"] ~ .legende{opacity:.32;pointer-events:none}
+.legende{transition:opacity .6s var(--ease)}
+.lb.auf{display:flex}
+.lb figure{margin:0;width:100%;height:100%;display:flex;align-items:center;
+  justify-content:center;padding:clamp(46px,7vh,84px) clamp(16px,7vw,110px)}
+.lb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+  opacity:0;transition:opacity .35s var(--ease-soft)}
+.lb img.da{opacity:1}
+.lb .lbkopf{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;
+  align-items:baseline;gap:16px;padding:20px var(--gut);
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:#F2F1ED}
+.lb .lbfuss{position:absolute;bottom:0;left:0;right:0;padding:18px var(--gut);
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:rgba(242,241,237,.72);
+  text-align:center}
+.lb button{background:none;border:0;color:#F2F1ED;cursor:pointer;font:inherit;
+  letter-spacing:inherit;text-transform:uppercase;padding:8px;transition:opacity .3s var(--ease)}
+.lb button:hover{opacity:.6}
+.lb .nav-l,.lb .nav-r{position:absolute;top:50%;transform:translateY(-50%);
+  width:clamp(44px,6vw,64px);height:clamp(44px,6vw,64px);display:flex;
+  align-items:center;justify-content:center;font-size:26px;line-height:1}
+.lb .nav-l{left:clamp(4px,1.5vw,24px)}
+.lb .nav-r{right:clamp(4px,1.5vw,24px)}
+.lb .nav-l[disabled],.lb .nav-r[disabled]{opacity:.22;cursor:default}
+.lb .zu{font-size:13px}
+@media (prefers-reduced-motion:reduce){.lb img{opacity:1;transition:none}}
+
 /* b2) Lageplan */
 .kartekopf{display:flex;justify-content:space-between;align-items:baseline;gap:30px;flex-wrap:wrap;
   margin:0 0 clamp(34px,5vh,64px)}
 .kartehint{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--text-secondary);margin:0}
+/* zwei Kartenebenen, die ineinander zoomen */
+.plaene{position:relative}
+.plaene .plan{transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.plaene .plan-mu{position:absolute;inset:0}
+.plaene[data-blick="de"] .plan-de{opacity:1;transform:none;pointer-events:auto}
+.plaene[data-blick="de"] .plan-mu{opacity:0;transform:scale(.86);pointer-events:none}
+.plaene[data-blick="mu"] .plan-de{opacity:0;transform:scale(2.4);pointer-events:none}
+.plaene[data-blick="mu"] .plan-mu{opacity:1;transform:none;pointer-events:auto}
+.plaene[data-blick="mu"]{min-height:0}
+.plaene[data-blick="de"] .plan-mu figcaption,.plaene[data-blick="mu"] .plan-de figcaption{visibility:hidden}
+.zoomleiste{display:flex;gap:8px;margin-top:18px}
+.zbtn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--accent-muted);color:var(--text-secondary);
+  padding:10px 16px;cursor:pointer;transition:all .4s var(--ease)}
+.zbtn:hover{border-color:var(--accent);color:var(--accent)}
+.zbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#F2F1ED}
+@media (prefers-reduced-motion:reduce){.plaene .plan{transition:none}}
 .plan{margin:0;position:relative}
 .plan svg{width:100%;height:auto;display:block;overflow:visible}
 /* the data layer sits on real Sentinel-2 imagery, so everything on top goes light */
@@ -468,22 +535,38 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
   <section id="karte">
     <p class="kicker">Wo wir bauen</p>
     <div class="kartekopf reveal">
-      <p class="lede">München und Umland. Vierzehn Objekte innerhalb dieser Karte, vier darüber hinaus.</p>
-      <p class="kartehint">Punkt anfahren zeigt den Ort, anklicken springt ins Archiv.</p>
+      <p class="lede">Einundzwanzig Objekte. Siebzehn davon in München und Umland, dazu Nürnberg, Landshut und Chemnitz.</p>
+      <p class="kartehint">München anklicken zoomt hinein. Dort führt ein Klick auf einen Punkt ins Archiv.</p>
     </div>
 
     <div class="kartewrap reveal">
-      <figure class="plan" id="plan">
-        <svg viewBox="0 0 1000 785" role="img" aria-labelledby="plantitle">
+      <div class="plaene" id="plaene" data-blick="de">
+
+      <figure class="plan plan-de" id="plan-de">
+        <svg viewBox="0 0 1000 990" role="img" aria-labelledby="detitel">
+          <title id="detitel">Deutschlandkarte mit allen Standorten von Munich Residential</title>
+          <image class="basis" id="basis-de" data-src="assets/karte-deutschland.jpg"
+                 x="0" y="82" width="1000" height="826" preserveAspectRatio="none"></image>
+          <g class="grid" id="grid-de" aria-hidden="true"></g>
+          <g class="pins" id="pins-de"></g>
+        </svg>
+        <figcaption class="planfuss">
+          <span>Deutschland &nbsp;·&nbsp; 21 Objekte</span>
+          <span id="planort-de">&nbsp;</span>
+        </figcaption>
+      </figure>
+
+      <figure class="plan plan-mu" id="plan">
+        <svg viewBox="0 0 1000 990" role="img" aria-labelledby="plantitle">
           <title id="plantitle">Satellitenkarte mit den Standorten von Munich Residential in München und Umland</title>
           <!-- href is set from JS once the section approaches: an SVG image has no lazy attribute
                and would otherwise be pulled on first paint, far above where it is needed -->
           <image class="basis" id="basis" data-src="assets/karte-satellit.jpg"
-                 x="0" y="0" width="1000" height="785" preserveAspectRatio="none"></image>
+                 x="0" y="0" width="1000" height="990" preserveAspectRatio="none"></image>
           <g class="grid" id="grid" aria-hidden="true"></g>
           <g class="cross" aria-hidden="true">
             <line id="cx" x1="0" y1="-99" x2="1000" y2="-99"></line>
-            <line id="cy" x1="-99" y1="0" x2="-99" y2="785"></line>
+            <line id="cy" x1="-99" y1="0" x2="-99" y2="990"></line>
           </g>
           <g class="pins" id="pins"></g>
           <g class="deko" id="deko" aria-hidden="true"></g>
@@ -495,6 +578,12 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
             von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0</span>
         </figcaption>
       </figure>
+
+      <div class="zoomleiste">
+        <button type="button" id="zu-de" class="zbtn">Deutschland</button>
+        <button type="button" id="zu-mu" class="zbtn">München und Umland</button>
+      </div>
+      </div>
 
       <ol class="legende" id="legende"></ol>
     </div>
@@ -610,13 +699,24 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
   </section>
 </main>
 
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Bildergalerie" hidden>
+  <div class="lbkopf">
+    <span id="lb-titel"></span>
+    <button class="zu" id="lb-zu" type="button">Schließen</button>
+  </div>
+  <button class="nav-l" id="lb-vor" type="button" aria-label="Vorheriges Bild">&#8592;</button>
+  <figure><img id="lb-bild" src="" alt=""></figure>
+  <button class="nav-r" id="lb-zur" type="button" aria-label="Nächstes Bild">&#8594;</button>
+  <p class="lbfuss" id="lb-fuss"></p>
+</div>
+
 <footer>
   <div class="footrow"><img class="footlogo" src="assets/logo-mr.png" alt="Munich Residential" width="336" height="252" loading="lazy"></div>
   <span>© <span id="jahr"></span> Munich Residential GmbH</span>
   <span>
     <a href="#">Impressum</a> &nbsp;·&nbsp; <a href="#">Datenschutz</a>
   </span>
-  <p class="disclose">Das Bild im Kopf der Seite ist eine Visualisierung. Die Projektbilder zeigen echte Objekte.</p>
+  <p class="disclose">Das Bild im Kopf der Seite zeigt unser Objekt Leibstraße in Haar. Die Kamerabewegung wurde aus einer Luftaufnahme berechnet, das Gebäude ist echt. Alle Projektbilder zeigen echte Objekte. Das Satellitenbild im Lageplan stammt von Sentinel-2 cloudless (EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0).</p>
 </footer>
 
 <script>
@@ -640,21 +740,38 @@ var PROJEKTE = [
   {n:'13',name:'Klenzestraße',ort:'Ismaning',status:'fertiggestellt',f:'13_klenzestrasse_ismaning'},
   {n:'14',name:'Gustav-Heinemann-Ring',ort:'München',status:'fertiggestellt',f:'14_gustav-heinemann-ring_muenchen'},
   {n:'15',name:'Haidelweg',ort:'München-Pasing',status:'fertiggestellt',f:'15_haidelweg_pasing'},
-  {n:'16',name:'Leibstraße',ort:'Haar',status:'fertiggestellt',f:'16_leibstrasse_haar'},
+  {n:'16',name:'Leibstraße',ort:'Haar',status:'fertiggestellt',f:'16_leibstrasse_haar',
+   gal:['leibstrasse-01.jpg'],
+   text:'Wohnanlage am Bahnhofsplatz mit begrüntem Innenhof, Spielplatz und Photovoltaik auf allen Dächern. Das Bild im Kopf dieser Seite zeigt dieses Objekt.'},
   {n:'17',name:'Konradstraße / Richterstraße',ort:'Chemnitz',status:'fertiggestellt',f:'17_konradstrasse-richterstrasse_chemnitz'},
   {n:'18',name:'Objekt Landshut',ort:'Landshut',status:'fertiggestellt',f:'18_objekt-landshut'},
-  {n:'19',name:'Adalbert-Stifter-Straße',ort:'Geretsried',status:'fertiggestellt',f:'19_adalbert-stifter-strasse_geretsried'}
+  {n:'19',name:'Adalbert-Stifter-Straße',ort:'Geretsried',status:'fertiggestellt',f:'19_adalbert-stifter-strasse_geretsried'},
+  {n:'20',name:'Zeisigweg',ort:'Freising',status:'fertiggestellt',f:'20_zeisigweg_freising',
+   gal:['zeisigweg-01.jpg','zeisigweg-02.jpg','zeisigweg-03.jpg','zeisigweg-04.jpg',
+        'zeisigweg-05.jpg','zeisigweg-06.jpg','zeisigweg-07.jpg','zeisigweg-08.jpg'],
+   text:'Wohnanlage in Freising. Die Wohnungen wurden im Bestand saniert und neu übergeben.'},
+  {n:'21',name:'Pettenkoferstraße',ort:'München-Ludwigsvorstadt',status:'fertiggestellt',
+   f:'21_pettenkoferstrasse_muenchen',
+   gal:['pettenkofer-01.jpg','pettenkofer-02.jpg'],
+   text:'Nachverdichtung im Innenhof der Ludwigsvorstadt: Townhouses in hellem Klinker, hinter dem Altbaubestand an der Straße.'}
 ];
 var LABEL = {'im-bau':'Im Bau','in-planung':'In Planung','fertiggestellt':'Fertiggestellt'};
 
 var worksEl = document.getElementById('works');
-worksEl.innerHTML = PROJEKTE.map(function(p){
+worksEl.innerHTML = PROJEKTE.map(function(p, idx){
+  var n = p.gal ? p.gal.length : 0;
+  var mehr = n ? '<button class="mehr" type="button" data-i="' + idx + '">' +
+      (n === 1 ? '1 Bild ansehen' : n + ' Bilder ansehen') + '</button>' : '';
   return '<li class="work reveal" id="mr-' + p.n + '" data-status="' + p.status + '">' +
-    '<figure><span class="par"><img src="assets/projekte/' + p.f + '.jpg" alt="' + p.name + ' in ' + p.ort +
-      ', Objekt von Munich Residential" loading="lazy" width="1280" height="880"></span></figure>' +
+    '<figure' + (n ? ' class="hat-galerie"' : '') + '><span class="par">' +
+      '<img src="assets/projekte/' + p.f + '.jpg" alt="' + p.name + ' in ' + p.ort +
+      ', Objekt von Munich Residential" loading="lazy" width="1280" height="880"></span>' +
+      (n ? '<button class="figbtn" type="button" data-i="' + idx + '" aria-label="Bilder zu ' +
+           p.name + ' ansehen"></button>' : '') + '</figure>' +
     '<div class="label"><span class="no">MR-0' + p.n + '</span>' +
       '<h3>' + p.name + '</h3>' +
-      '<span class="meta">' + p.ort + ' · <span class="status">' + LABEL[p.status] + '</span></span></div></li>';
+      '<span class="meta">' + p.ort + ' · <span class="status">' + LABEL[p.status] + '</span></span>' +
+      (p.text ? '<p class="wtext">' + p.text + '</p>' : '') + mehr + '</div></li>';
 }).join('');
 
 document.getElementById('filters').addEventListener('click', function(e){
@@ -670,13 +787,92 @@ document.getElementById('filters').addEventListener('click', function(e){
 
 document.getElementById('jahr').textContent = new Date().getFullYear();
 
+/* ---------------- Galerie ---------------- */
+var lb = document.getElementById('lb');
+var lbBild = document.getElementById('lb-bild');
+var lbTitel = document.getElementById('lb-titel');
+var lbFuss = document.getElementById('lb-fuss');
+var lbVor = document.getElementById('lb-vor');
+var lbZur = document.getElementById('lb-zur');
+var galP = null, galI = 0, zurueckZu = null;
+
+function zeige(i){
+  var bilder = galP.gal;
+  galI = Math.max(0, Math.min(bilder.length - 1, i));
+  lbBild.classList.remove('da');
+  var neu = new Image();
+  neu.onload = function(){
+    lbBild.src = neu.src;
+    lbBild.alt = galP.name + ' in ' + galP.ort + ', Bild ' + (galI + 1) + ' von ' + bilder.length;
+    lbBild.classList.add('da');
+  };
+  neu.src = 'assets/galerie/' + bilder[galI];
+  lbFuss.textContent = (galI + 1) + ' / ' + bilder.length;
+  lbVor.disabled = galI === 0;
+  lbZur.disabled = galI === bilder.length - 1;
+  // das nächste Bild schon einmal holen, damit das Blättern nicht stockt
+  if (bilder[galI + 1]) new Image().src = 'assets/galerie/' + bilder[galI + 1];
+}
+function galAuf(idx, ausloeser){
+  galP = PROJEKTE[idx];
+  if (!galP || !galP.gal) return;
+  zurueckZu = ausloeser || null;
+  lb.hidden = false;
+  lb.classList.add('auf');
+  document.body.style.overflow = 'hidden';
+  document.body.classList.add('galerie-offen');
+  lbTitel.textContent = 'MR-0' + galP.n + '  ' + galP.name + ', ' + galP.ort;
+  zeige(0);
+  document.getElementById('lb-zu').focus();
+}
+function galZu(){
+  lb.classList.remove('auf');
+  lb.hidden = true;
+  document.body.style.overflow = '';
+  document.body.classList.remove('galerie-offen');
+  if (zurueckZu && zurueckZu.focus) zurueckZu.focus();
+  zurueckZu = null;
+}
+worksEl.addEventListener('click', function(e){
+  var b = e.target.closest('.mehr, .figbtn');
+  if (!b) return;
+  galAuf(+b.dataset.i, b);
+});
+document.getElementById('lb-zu').addEventListener('click', galZu);
+lbVor.addEventListener('click', function(){ zeige(galI - 1) });
+lbZur.addEventListener('click', function(){ zeige(galI + 1) });
+lb.addEventListener('click', function(e){ if (e.target === lb || e.target.tagName === 'FIGURE') galZu(); });
+document.addEventListener('keydown', function(e){
+  if (lb.hidden) return;
+  if (e.key === 'Escape') galZu();
+  else if (e.key === 'ArrowLeft') zeige(galI - 1);
+  else if (e.key === 'ArrowRight') zeige(galI + 1);
+  else if (e.key === 'Tab'){
+    // Fokus bleibt in der Galerie, solange sie offen ist
+    var f = [].filter.call(lb.querySelectorAll('button'), function(x){ return !x.disabled });
+    var i = f.indexOf(document.activeElement);
+    e.preventDefault();
+    f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+  }
+});
+(function(){   // Wischen auf dem Handy
+  var x0 = null;
+  lb.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX }, {passive:true});
+  lb.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 45) zeige(galI + (dx < 0 ? 1 : -1));
+  }, {passive:true});
+})();
+
 /* ---------------- Lageplan (hand drawn, no map service, nothing leaves the page) ---------------- */
-var BOX = { latT:48.32, latB:47.82, lonL:11.05, lonR:12.00, w:1000, h:785 };
+var BOX = { latT:48.45, latB:47.82, lonL:11.05, lonR:12.00, w:1000, h:990 };
 function px(lon){ return (lon - BOX.lonL) / (BOX.lonR - BOX.lonL) * BOX.w; }
 function py(lat){ return (BOX.latT - lat) / (BOX.latT - BOX.latB) * BOX.h; }
 
 // Positions are district and town centres, not house numbers. Said plainly under the map.
 var ORTE = [
+  {ort:'Freising',        lat:48.4028, lon:11.7489, nrs:['20'], an:'start'},
   {ort:'Eching',          lat:48.2980, lon:11.6270, nrs:['05'], an:'start', live:true},
   {ort:'Ismaning',        lat:48.2270, lon:11.6720, nrs:['13'], an:'start'},
   {ort:'Olching',         lat:48.2060, lon:11.3270, nrs:['10'], an:'start'},
@@ -684,6 +880,7 @@ var ORTE = [
   {ort:'München-Pasing',  lat:48.1490, lon:11.4600, nrs:['15'], an:'up'},
   {ort:'München-Maxvorstadt',lat:48.1495,lon:11.5445,nrs:['02','07'], an:'end', live:true},
   {ort:'München-Glockenbach',lat:48.1290,lon:11.5750,nrs:['12'], an:'start'},
+  {ort:'München-Ludwigsvorstadt',lat:48.1320,lon:11.5590,nrs:['21'], an:'up'},
   {ort:'München-Sendling',lat:48.1270, lon:11.5150, nrs:['01'], an:'end', live:true},
   {ort:'München-Obersendling',lat:48.1040,lon:11.5470,nrs:['06'], an:'down', live:true},
   {ort:'München-Neuperlach',lat:48.1010,lon:11.6390, nrs:['14'], an:'start'},
@@ -824,6 +1021,76 @@ var ORTE = [
   new IntersectionObserver(function(es, obs){
     if (es[0].isIntersecting){ plan.classList.add('drawn'); obs.disconnect(); }
   }, { rootMargin: '0px 0px -18% 0px' }).observe(plan);
+})();
+
+/* ---------------- Deutschlandkarte und der Zoom ---------------- */
+(function buildDe(){
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var el = function(t,a){ var n=document.createElementNS(svgNS,t); for(var k in a) n.setAttribute(k,a[k]); return n; };
+  // gleicher Rahmen wie die München-Karte, das Bild sitzt mittig darin
+  var DE = { latT:55.2, latB:47.1, lonL:5.6, lonR:15.4, w:1000, h:826, oy:82 };
+  var dx = function(lon){ return (lon - DE.lonL)/(DE.lonR - DE.lonL)*DE.w; };
+  var dy = function(lat){ return DE.oy + (DE.latT - lat)/(DE.latT - DE.latB)*DE.h; };
+
+  var STAEDTE = [
+    {ort:'München und Umland', lat:48.1374, lon:11.5755, anzahl:17, an:'end'},
+    {ort:'Freising',           lat:48.4028, lon:11.7489, anzahl:1,  an:'start', klein:true},
+    {ort:'Nürnberg',           lat:49.4521, lon:11.0767, anzahl:2,  an:'start'},
+    {ort:'Landshut',           lat:48.5372, lon:12.1522, anzahl:1,  an:'start'},
+    {ort:'Chemnitz',           lat:50.8278, lon:12.9214, anzahl:1,  an:'start'}
+  ];
+
+  var planDe = document.getElementById('plan-de');
+  var grid = document.getElementById('grid-de');
+  var pins = document.getElementById('pins-de');
+  var ortOut = document.getElementById('planort-de');
+  for (var lo = 6; lo < DE.lonR; lo += 2)
+    grid.appendChild(el('line',{x1:dx(lo),y1:DE.oy,x2:dx(lo),y2:DE.oy+DE.h,'class':'major'}));
+  for (var la = 48; la < DE.latT; la += 2)
+    grid.appendChild(el('line',{x1:0,y1:dy(la),x2:DE.w,y2:dy(la),'class':'major'}));
+
+  STAEDTE.forEach(function(s,i){
+    var x = dx(s.lon), y = dy(s.lat);
+    var g = el('g',{'class':'pin' + (s.klein?'':' gross'), style:'--i:'+i,
+      'aria-label': s.ort + ', ' + s.anzahl + (s.anzahl===1?' Objekt':' Objekte')});
+    g.appendChild(el('circle',{'class':'halo',cx:x,cy:y,r:26}));
+    g.appendChild(el('circle',{'class':'dot',cx:x,cy:y,r:s.klein?5:9}));
+    var t = el('text',{x: s.an==='end'? x-14 : x+14, y:y+5,
+      'text-anchor': s.an==='end'?'end':'start'});
+    t.textContent = s.ort + '  ' + s.anzahl;
+    g.appendChild(t);
+    g.addEventListener('mouseenter', function(){ ortOut.textContent = s.ort + '  ' + s.anzahl +
+      (s.anzahl===1?' Objekt':' Objekte'); });
+    g.addEventListener('mouseleave', function(){ ortOut.innerHTML = '&nbsp;'; });
+    pins.appendChild(g);
+  });
+
+  var plaene = document.getElementById('plaene');
+  var bDe = document.getElementById('zu-de'), bMu = document.getElementById('zu-mu');
+  function blick(v){
+    plaene.dataset.blick = v;
+    bDe.setAttribute('aria-pressed', String(v === 'de'));
+    bMu.setAttribute('aria-pressed', String(v === 'mu'));
+  }
+  bDe.addEventListener('click', function(){ blick('de') });
+  bMu.addEventListener('click', function(){ blick('mu') });
+  // ein Klick auf München zoomt hinein, das ist der eigentliche Weg
+  pins.firstChild.style.cursor = 'pointer';
+  pins.firstChild.setAttribute('tabindex','0');
+  pins.firstChild.setAttribute('role','button');
+  pins.firstChild.addEventListener('click', function(){ blick('mu') });
+  pins.firstChild.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); blick('mu') } });
+  blick('de');
+
+  new IntersectionObserver(function(es, obs){
+    if (!es[0].isIntersecting) return;
+    [document.getElementById('basis-de'), document.getElementById('basis')].forEach(function(b){
+      if (b && !b.getAttribute('href')) b.setAttribute('href', b.dataset.src);
+    });
+    planDe.classList.add('drawn');
+    obs.disconnect();
+  }, { rootMargin: '900px 0px' }).observe(planDe);
 })();
 
 /* ---------------- text splitting (seeded, once at load) ---------------- */
