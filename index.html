@@ -232,7 +232,11 @@ section{padding:clamp(90px,13vh,170px) var(--gut);position:relative;scroll-margi
 .pin text{font-family:var(--mono);font-size:14px;fill:#F2F1ED;letter-spacing:.06em;
   paint-order:stroke;stroke:rgba(6,12,10,.8);stroke-width:3.5;stroke-linejoin:round;
   transition:fill .3s var(--ease)}
+/* no browser focus ring on the pins: it draws a dark 5px box over the map.
+   Keyboard focus stays obvious through the halo and the grown dot below. */
+.pin:focus,.pin:focus-visible,.pin *:focus{outline:none}
 .pin:hover .halo,.pin:focus-visible .halo,.pin.hover .halo{opacity:.22;r:30}
+.pin:focus-visible .halo{opacity:.34;r:34}
 .pin:hover text,.pin:focus-visible text,.pin.hover text{fill:#fff}
 .pin:focus-visible{outline:none}
 .plan.drawn .pin:hover .dot,.plan.drawn .pin:focus-visible .dot,
