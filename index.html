@@ -254,15 +254,18 @@ body.galerie-offen .nav{opacity:0;pointer-events:none}
   margin:0 0 clamp(34px,5vh,64px)}
 .kartehint{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--text-secondary);margin:0}
 /* zwei Kartenebenen, die ineinander zoomen */
-.plaene{position:relative}
-.plaene .plan{transition:opacity .75s var(--ease),transform .75s var(--ease)}
-.plaene .plan-mu{position:absolute;inset:0}
+/* Karte, Fusszeile und Zoomleiste gehoeren in EIN Rasterfeld, sonst verteilt
+   das Raster sie auf eigene Spalten */
+.kartenspalte{min-width:0}
+.plaene{position:relative;aspect-ratio:1000/990}
+.plaene .plan{position:absolute;inset:0;
+  transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.plaene .plan svg{width:100%;height:100%}
 .plaene[data-blick="de"] .plan-de{opacity:1;transform:none;pointer-events:auto}
 .plaene[data-blick="de"] .plan-mu{opacity:0;transform:scale(.86);pointer-events:none}
 .plaene[data-blick="mu"] .plan-de{opacity:0;transform:scale(2.4);pointer-events:none}
 .plaene[data-blick="mu"] .plan-mu{opacity:1;transform:none;pointer-events:auto}
 .plaene[data-blick="mu"]{min-height:0}
-.plaene[data-blick="de"] .plan-mu figcaption,.plaene[data-blick="mu"] .plan-de figcaption{visibility:hidden}
 .zoomleiste{display:flex;gap:8px;margin-top:18px}
 .zbtn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   background:none;border:1px solid var(--accent-muted);color:var(--text-secondary);
@@ -313,7 +316,7 @@ body.galerie-offen .nav{opacity:0;pointer-events:none}
 
 .kartewrap{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(0,.48fr);
   gap:clamp(26px,4vw,64px);align-items:start}
-.planfuss{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+.planfuss{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:20px 0 0;
   font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--text-secondary);
   border-top:1px solid var(--accent-muted);margin-top:20px;padding-top:14px}
 .planfuss .quelle{flex:0 0 100%;opacity:.8;line-height:1.6}
@@ -540,6 +543,7 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
     </div>
 
     <div class="kartewrap reveal">
+      <div class="kartenspalte">
       <div class="plaene" id="plaene" data-blick="de">
 
       <figure class="plan plan-de" id="plan-de">
@@ -550,10 +554,6 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
           <g class="grid" id="grid-de" aria-hidden="true"></g>
           <g class="pins" id="pins-de"></g>
         </svg>
-        <figcaption class="planfuss">
-          <span>Deutschland &nbsp;·&nbsp; 21 Objekte</span>
-          <span id="planort-de">&nbsp;</span>
-        </figcaption>
       </figure>
 
       <figure class="plan plan-mu" id="plan">
@@ -571,13 +571,16 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
           <g class="pins" id="pins"></g>
           <g class="deko" id="deko" aria-hidden="true"></g>
         </svg>
-        <figcaption class="planfuss">
-          <span>48.32 N bis 47.82 N &nbsp;·&nbsp; 11.05 E bis 12.00 E</span>
-          <span id="planort">&nbsp;</span>
-          <span class="quelle">Satellitenbild: <a href="https://s2maps.eu" rel="noopener">Sentinel-2 cloudless</a>
-            von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0</span>
-        </figcaption>
       </figure>
+
+      </div>
+
+      <p class="planfuss">
+        <span id="fuss-links">Deutschland &nbsp;·&nbsp; 21 Objekte</span>
+        <span id="planort">&nbsp;</span>
+        <span class="quelle">Satellitenbild: <a href="https://s2maps.eu" rel="noopener">Sentinel-2 cloudless</a>
+          von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0</span>
+      </p>
 
       <div class="zoomleiste">
         <button type="button" id="zu-de" class="zbtn">Deutschland</button>
@@ -1034,7 +1037,6 @@ var ORTE = [
 
   var STAEDTE = [
     {ort:'München und Umland', lat:48.1374, lon:11.5755, anzahl:17, an:'end'},
-    {ort:'Freising',           lat:48.4028, lon:11.7489, anzahl:1,  an:'start', klein:true},
     {ort:'Nürnberg',           lat:49.4521, lon:11.0767, anzahl:2,  an:'start'},
     {ort:'Landshut',           lat:48.5372, lon:12.1522, anzahl:1,  an:'start'},
     {ort:'Chemnitz',           lat:50.8278, lon:12.9214, anzahl:1,  an:'start'}
@@ -1043,7 +1045,7 @@ var ORTE = [
   var planDe = document.getElementById('plan-de');
   var grid = document.getElementById('grid-de');
   var pins = document.getElementById('pins-de');
-  var ortOut = document.getElementById('planort-de');
+  var ortOut = document.getElementById('planort');
   for (var lo = 6; lo < DE.lonR; lo += 2)
     grid.appendChild(el('line',{x1:dx(lo),y1:DE.oy,x2:dx(lo),y2:DE.oy+DE.h,'class':'major'}));
   for (var la = 48; la < DE.latT; la += 2)
@@ -1067,8 +1069,12 @@ var ORTE = [
 
   var plaene = document.getElementById('plaene');
   var bDe = document.getElementById('zu-de'), bMu = document.getElementById('zu-mu');
+  var fussLinks = document.getElementById('fuss-links');
   function blick(v){
     plaene.dataset.blick = v;
+    fussLinks.textContent = v === 'de'
+      ? 'Deutschland  ·  21 Objekte'
+      : 'München und Umland  ·  48.45 N bis 47.82 N  ·  11.05 E bis 12.00 E';
     bDe.setAttribute('aria-pressed', String(v === 'de'));
     bMu.setAttribute('aria-pressed', String(v === 'mu'));
   }
