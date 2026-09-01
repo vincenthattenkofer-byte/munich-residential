@@ -173,14 +173,23 @@ section{padding:clamp(90px,13vh,170px) var(--gut);position:relative;scroll-margi
 .filters button:hover{color:var(--ink)}
 
 .works{list-style:none;margin:0;padding:0}
-.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) minmax(0,.8fr);
-  gap:clamp(18px,3vw,44px);align-items:start;padding:clamp(26px,4vh,52px) 0;
+/* Anordnung wie bei den Referenzen: rechtsbündige Beschriftung, daneben das
+   Bild, und die Leere liegt rechts davon statt zwischen den beiden */
+.work{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.35fr) minmax(0,.5fr);
+  gap:clamp(18px,3vw,44px);align-items:start;padding:clamp(30px,5vh,64px) 0;
   border-top:1px solid var(--accent-muted)}
 .work:last-child{border-bottom:1px solid var(--accent-muted)}
 .work.hide{display:none}
-.work .label{text-align:right}
-.work .no{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--text-secondary);display:block;margin-bottom:.9em}
-.work h3{font-size:clamp(21px,2.3vw,34px)}
+.work .label{text-align:right;order:1}
+.work figure{order:2}
+.work .no{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--text-secondary);
+  display:block;margin-bottom:.9em;transition:color .5s var(--ease)}
+/* Beschriftung und Bild reagieren gemeinsam, sonst zerfaellt die Zeile in zwei Haelften */
+.work .label{transition:transform .7s var(--ease)}
+.work:hover .label{transform:translateX(10px)}
+.work:hover .no{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.work:hover .label{transform:none}}
+.work h3{font-size:clamp(22px,2.5vw,38px)}
 .work .meta{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--text-secondary);margin-top:1em;display:block}
 .work .status{color:var(--accent)}
