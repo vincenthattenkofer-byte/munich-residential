@@ -369,7 +369,7 @@ html:not(.js) .karte,html:not(.js) .werkzeug,html:not(.js) .rand,html:not(.js) .
 /* Zeigervorschau, folgt der Maus */
 .vorschau{position:fixed;left:0;top:0;z-index:30;pointer-events:none;opacity:0;
   transition:opacity var(--d1) var(--ease);will-change:transform}
-.vorschau img{width:auto;height:auto;max-width:min(38vw,var(--bw,590px));max-height:44vh;display:block}
+.vorschau img{display:block;object-fit:cover}
 .vorschau.an{opacity:1}
 @media (hover:none),(max-width:860px){.vorschau{display:none}}
 
@@ -387,7 +387,7 @@ html:not(.js) .karte,html:not(.js) .werkzeug,html:not(.js) .rand,html:not(.js) .
 .karte .land{fill:none;stroke:var(--on-dark-secondary);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.7}
 .karte .fluss{fill:none;stroke:var(--on-dark-secondary);stroke-width:1;vector-effect:non-scaling-stroke;opacity:0;
   transition:opacity var(--d3) var(--ease)}
-.karte.mu .fluss{opacity:.8}
+.karte.mu .fluss,.karte.st .fluss{opacity:.8}
 .karte .rahmen{fill:none;stroke:var(--on-dark-secondary);stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:3 4;opacity:.5;
   transition:opacity var(--d2) var(--ease)}
 .karte.mu .rahmen{opacity:0}
@@ -395,7 +395,7 @@ html:not(.js) .karte,html:not(.js) .werkzeug,html:not(.js) .rand,html:not(.js) .
 .karte .orte.weg{opacity:0}
 .karte .ort{cursor:pointer}
 .karte .ort rect{fill:var(--on-dark);transition:fill var(--d1) var(--ease),transform var(--d1) var(--ease);transform-box:fill-box;transform-origin:center}
-.karte .ort text{font-family:var(--mono);font-size:11px;fill:var(--on-dark-secondary);letter-spacing:.06em;
+.karte .ort text{font-family:var(--mono);font-size:15px;fill:var(--on-dark-secondary);letter-spacing:.06em;
   transition:fill var(--d1) var(--ease)}
 .karte .ort.warm rect,.karte .ort:hover rect,.karte .ort:focus-visible rect{fill:#8FC0CA;transform:scale(1.6)}
 .karte .ort.warm text,.karte .ort:hover text,.karte .ort:focus-visible text{fill:var(--on-dark)}
@@ -404,7 +404,7 @@ html:not(.js) .karte,html:not(.js) .werkzeug,html:not(.js) .rand,html:not(.js) .
 .karte .kf{margin-top:var(--s3);font-family:var(--mono);font-size:var(--t-2);letter-spacing:.06em;color:var(--on-dark-secondary);
   line-height:1.7;min-height:2.6em}
 .karte .massstab{stroke:var(--on-dark-secondary);stroke-width:1}
-.karte text.ms{font-family:var(--mono);font-size:11px;fill:var(--on-dark-secondary);letter-spacing:.06em}
+.karte text.ms{font-family:var(--mono);font-size:14px;fill:var(--on-dark-secondary);letter-spacing:.06em}
 @media (max-width:1000px){
   .archiv{grid-template-columns:1fr}
   .karte{position:static;order:-1;max-width:520px}
@@ -562,8 +562,8 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
 @media (max-width:520px){.fuss .raster{grid-template-columns:1fr}}
 
 /* Randanzeige: Abschnitt und Fortschritt in Mono */
-.rand{position:fixed;left:var(--gut);bottom:var(--s4);z-index:20;font-family:var(--mono);font-size:var(--t-2);letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-secondary);display:flex;gap:var(--s3);pointer-events:none;
+.rand{position:fixed;right:calc(var(--gut)/2);top:50%;transform:translate(50%,-50%);z-index:20;font-family:var(--mono);font-size:var(--t-2);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-secondary);display:flex;gap:var(--s3);pointer-events:none;writing-mode:vertical-rl;
   opacity:0;transition:opacity var(--d2) var(--ease)}
 .rand.an{opacity:1}
 .arbeiten-sicht .rand{color:var(--on-dark-secondary)}
@@ -1282,17 +1282,23 @@ function vTick(){
   vorschau.style.transform = 'translate3d(' + vx.toFixed(1) + 'px,' + vy.toFixed(1) + 'px,0)';
   if (vAn || Math.abs(tx - vx) > 0.5) vRaf = requestAnimationFrame(vTick); else vRaf = null;
 }
+var vW = 0, vH = 0;
+function vMass(p){
+  // Größe aus den Daten, nicht aus dem Bild: das Bild hat vor dem Laden keine Fläche
+  vW = Math.min(innerWidth * 0.38, p.w); vH = vW * p.h / p.w;
+  if (vH > innerHeight * 0.44){ vH = innerHeight * 0.44; vW = vH * p.w / p.h; }
+  vImg.style.width = vW.toFixed(1) + 'px'; vImg.style.height = vH.toFixed(1) + 'px';
+}
 function vZiel(e){
-  var r = vorschau.getBoundingClientRect();
-  tx = Math.min(innerWidth - r.width - 24, e.clientX + 28);
-  ty = Math.max(12, Math.min(innerHeight - r.height - 12, e.clientY - r.height / 2));
+  tx = Math.min(innerWidth - vW - 24, e.clientX + 28);
+  ty = Math.max(12, Math.min(innerHeight - vH - 12, e.clientY - vH / 2));
 }
 liste.addEventListener('pointermove', function(e){
   if (!fein.matches || rm.matches || liste.classList.contains('raster')) return;
   var z = e.target.closest('.zeile');
   if (!z){ vAn = false; vorschau.classList.remove('an'); return; }
   var p = vonSlug[z.dataset.slug];
-  if (vImg.dataset.slug !== p.slug){ vImg.src = 'assets/projekte/' + p.bild + '.jpg'; vImg.width = p.w; vImg.height = p.h; vImg.dataset.slug = p.slug; vorschau.style.setProperty('--bw', p.w + 'px'); }
+  if (vImg.dataset.slug !== p.slug){ vImg.src = 'assets/projekte/' + p.bild + '.jpg'; vImg.width = p.w; vImg.height = p.h; vImg.dataset.slug = p.slug; vMass(p); }
   vZiel(e);
   if (!vAn){ vAn = true; vx = tx; vy = ty; vorschau.classList.add('an'); }
   if (vRaf === null) vRaf = requestAnimationFrame(vTick);
@@ -1356,9 +1362,9 @@ function zeichneOrte(){
   // Beschriftungen: vier Seiten durchprobieren, die erste freie nehmen
   var belegt = [];
   eintraege.forEach(function(e){ belegt.push({ l: e.x - 6, r: e.x + 6, t: e.y - 6, b: e.y + 6 }); });
-  var kasten = function(e, an){ var br = e.txt.length * 7 + 4, ho = 13;
-    var x = an === 'end' ? e.x - 10 - br : (an === 'start' ? e.x + 10 : e.x - br / 2);
-    var y = an === 'up' ? e.y - 12 - ho : (an === 'down' ? e.y + 18 - ho : e.y + 4 - ho);
+  var kasten = function(e, an){ var br = e.txt.length * 9.5 + 4, ho = 17;
+    var x = an === 'end' ? e.x - 12 - br : (an === 'start' ? e.x + 12 : e.x - br / 2);
+    var y = an === 'up' ? e.y - 14 - ho : (an === 'down' ? e.y + 22 - ho : e.y + 5 - ho);
     return { l: x, r: x + br, t: y, b: y + ho + 2 }; };
   var frei = function(k){ for (var q = 0; q < belegt.length; q++){ var o = belegt[q]; if (k.l < o.r && o.l < k.r && k.t < o.b && o.t < k.b) return false; } return k.l > 0 && k.r < W && k.t > 0 && k.b < H; };
   eintraege.forEach(function(e){
@@ -1369,10 +1375,10 @@ function zeichneOrte(){
   eintraege.forEach(function(e){
     var g = el('g', { 'class': 'ort', tabindex: '0', role: 'button', 'aria-label': e.tip });
     if (e.slug) g.dataset.slug = e.slug;
-    var r = e.gross ? 5 : 3.5;
+    var r = e.gross ? 6.5 : 4.5;
     g.appendChild(el('rect', { x: e.x - r, y: e.y - r, width: r * 2, height: r * 2 }));
-    var t = el('text', { x: e.an === 'end' ? e.x - 10 : (e.an === 'start' ? e.x + 10 : e.x),
-      y: e.an === 'up' ? e.y - 12 : (e.an === 'down' ? e.y + 18 : e.y + 4),
+    var t = el('text', { x: e.an === 'end' ? e.x - 12 : (e.an === 'start' ? e.x + 12 : e.x),
+      y: e.an === 'up' ? e.y - 14 : (e.an === 'down' ? e.y + 22 : e.y + 5),
       'text-anchor': e.an === 'end' ? 'end' : (e.an === 'start' ? 'start' : 'middle') });
     t.textContent = e.txt; g.appendChild(t);
     g.addEventListener('mouseenter', function(){ kf.textContent = e.tip; if (e.slug) zeileWarm(e.slug, true); });
