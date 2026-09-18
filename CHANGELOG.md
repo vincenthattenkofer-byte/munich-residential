@@ -55,7 +55,8 @@
   (Loslassen gleitet zurück, vollendet bleibt), Routen, Escape, `inert`, 404, Auftritte 14/14,
   kein seitliches Scrollen, Konsole leer, keine Fremdanfrage.
 - Lesbarkeit im Kopf, schlechtester Bereich je Band: 4,93 / 5,28 / 5,90 / 5,72 : 1.
-- Lighthouse (gzip-Server): mobil 99 / 100 / 100 / 100, LCP 2,1 s simuliert, CLS 0; Desktop 100 / 100 / 100 / 100.
+- Lighthouse gegen die Live-Seite (GitHub Pages): mobil 99 / 100 / 100 / 100, LCP 1,8 s, CLS 0; Desktop 100 / 100 / 100 / 100.
+  Das Formular trägt keine mailto-Action mehr im Markup, Chrome wertete sie als Mixed Content; der Versand läuft über das Skript.
 - html-validate ohne Befund. grep: 0 Gedankenstriche außer `MR—0xx`, 0 Wörter der Verbotsliste,
   0 Ausrufezeichen, 0 `!important`, 0 Schatten, 0 Rundungen, eine `h1`.
 
