@@ -77,3 +77,21 @@ Abschnitt. Fundstellen beziehen sich auf `index.html` dieses Commits.
 - Die Halten-Interaktion. Signatur der Seite, bleibt, wird auf die handgezeichnete Linie verlegt.
 - Die Farbwerte, die Schriften, das mailto-Formular mit ehrlicher Erfolgsmeldung.
 - Die echten Koordinaten aus der Adresssuche (21 Objekte), sie treiben jetzt die gezeichnete Karte.
+
+## G. Kontraste der neuen Fassung, nachgerechnet (WCAG 2.2, relative Leuchtdichte)
+
+| Paar | Verwendung | Wert | AA |
+|---|---|---|---|
+| `--ink` #15181B auf `--canvas` #F2F1ED | Fließtext, Überschriften | 15,8 : 1 | ja |
+| `--text-secondary` #6A6E72 auf `--canvas` | Mono-Labels, Kicker, Hinweise | 4,55 : 1 | ja (Grenze, deshalb nie unter 11 px und nie mit Deckkraft) |
+| `--accent` #2A5B65 auf `--canvas` | Textlinks, aktiver Zustand, Fokus | 6,7 : 1 | ja |
+| `--accent-hover` #1E454D auf `--canvas` | Hover der Textlinks | 9,2 : 1 | ja |
+| `--on-dark` #F2F1ED auf `--ink` | Archiv, Namen | 15,8 : 1 | ja |
+| `--on-dark-secondary` #A9ADB1 auf `--ink` | Archiv, Nummern, Ort · Status, Filter | 7,9 : 1 | ja |
+| #8FC0CA auf `--ink` | aktiver Filter im Archiv, Kartenquadrat warm | 9,0 : 1 | ja |
+| `--accent-muted` #C6D2D5 auf `--ink` | Haarlinien im Archiv (nicht Text) | 11,5 : 1 | – |
+| Weiß #F2F1ED über dem Film, schlechtester 2-Prozent-Bereich je Band | Kopf, Band 1 bis 4 | 4,93 / 5,28 / 5,89 / 5,72 : 1 | ja (Ziel 4,5) |
+| `.fehlt` #6A6E72 mit Deckkraft .55 auf `--canvas` | Platzhalter `[[FEHLT]]` | etwa 2,3 : 1 | nein, bewusst: ist kein Inhalt, sondern die Markierung einer Lücke; verschwindet, sobald der Wert eingetragen ist |
+
+Lighthouse (mobil, lokal, Chrome 152 headless): Barrierefreiheit 100, Best Practices 100, SEO 100.
+Leistung siehe CHANGELOG (LCP je Lauf 1,2 bis 4,0 s, abhängig von der Last der Prüfmaschine).

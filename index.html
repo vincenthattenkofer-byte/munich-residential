@@ -21,6 +21,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232A5B65'/%3E%3Cpath d='M7 24V9h3.4l5.6 9.2L21.6 9H25v15h-3V14.6l-5 8.1h-2l-5-8.1V24z' fill='%23F2F1ED'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/archivo-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibmplexmono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/hero-ending-960.jpg" as="image" media="(max-width: 720px)" fetchpriority="high">
+<link rel="preload" href="assets/hero-ending.jpg" as="image" media="(min-width: 721px) and (orientation: portrait) and (max-width: 1024px)" fetchpriority="high">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -275,6 +277,7 @@ html:not(.js) .auf{opacity:1;transform:none}
 html:not(.js) .klip{clip-path:inset(0)}
 html:not(.js) .zeile .bild{display:block;grid-column:2;margin:var(--s3) 0 var(--s2);max-width:min(100%,var(--bw,590px))}
 html:not(.js) .zeile .bild img{width:100%;height:auto}
+html:not(.js) .karte,html:not(.js) .werkzeug,html:not(.js) .rand,html:not(.js) .vorschau{display:none}
 
 /* ============================================================
    Das Haus
@@ -477,15 +480,14 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
 .station h3{font-size:var(--t2);margin-bottom:.5em;transition:color var(--d2) var(--ease)}
 .station p{color:var(--text-secondary);max-width:34ch}
 .station.an .nr,.station.an h3{color:var(--accent)}
-.halten{margin-top:var(--s6);display:flex;align-items:baseline;gap:var(--s3) var(--s4);flex-wrap:wrap;
-  font-size:var(--t1);line-height:1.4}
+.halten{margin-top:var(--s6);font-size:var(--t1);line-height:1.6;max-width:var(--measure)}
 .halten .hold{font:inherit;font-family:var(--display);font-weight:600;letter-spacing:-.02em;color:var(--accent);
-  position:relative;padding:0 2px;touch-action:none;user-select:none;-webkit-user-select:none;min-height:var(--touch);display:inline-flex;align-items:center}
+  position:relative;padding:0 2px;margin:0 2px;touch-action:none;user-select:none;-webkit-user-select:none;min-height:var(--touch);display:inline-flex;align-items:center;vertical-align:baseline}
 .halten .hold::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:2px;background:var(--accent);
   transform:scaleX(var(--hp,0));transform-origin:left}
 .halten .hold::before{content:"";position:absolute;left:0;right:0;bottom:8px;height:var(--line);background:var(--accent-muted)}
 .halten .hold.fertig{color:var(--accent-hover)}
-.halten .hinweis{font-family:var(--mono);font-size:var(--t-1);letter-spacing:.06em;color:var(--text-secondary)}
+.halten .hinweis{display:block;margin-top:var(--s3);font-family:var(--mono);font-size:var(--t-1);letter-spacing:.06em;color:var(--text-secondary)}
 @media (max-width:760px){.stationen{grid-template-columns:1fr;gap:var(--s4)}.linie{display:none}}
 
 /* ============================================================
@@ -578,13 +580,15 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
   .hero{height:auto}
   .stage{position:relative;height:min(94vh,760px)}
   .stage video,.filmhinweis{display:none}
-  .poster{opacity:1;background-image:url('assets/hero-ending.jpg')}
+  html.js .stage .poster,html:not(.js) .stage .poster{opacity:1;background-image:url('assets/hero-ending.jpg');clip-path:none;transition:none}
   .bands{position:absolute;inset:auto 0 0 0;top:0}
   .band{display:none}
   .band.static-hero{display:block;opacity:1;top:auto;bottom:clamp(28px,6vh,64px);transform:none;width:min(46ch,86vw)}
   .band.static-hero .w,.band.static-hero .c,
   .band.static-hero .sub,.band.static-hero .cta-row{opacity:1;transform:none}
 }
+
+@media (max-width:720px){html.js .stage .poster,html:not(.js) .stage .poster{background-image:url('assets/hero-ending-960.jpg')}}
 
 /* ---- reduzierte Bewegung, vollständig ---- */
 @media (prefers-reduced-motion:reduce){

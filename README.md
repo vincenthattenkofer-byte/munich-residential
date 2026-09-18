@@ -1,13 +1,15 @@
 # Munich Residential
 
-Website der Munich Residential GmbH, München.
+Website der Munich Residential GmbH, Pöcking bei München. Ein Werkverzeichnis mit 21 Objekten.
 
-Statische Seite: eine `index.html` mit eingebettetem CSS und JavaScript, dazu der Ordner
-`assets/`. Kein Framework, kein Build-Schritt, keine Abhängigkeiten außer Google Fonts.
+Statische Seite: eine `index.html` mit eingebettetem CSS und JavaScript, dazu `assets/` (Bilder,
+Film) und `fonts/` (drei WOFF2). Kein Framework, kein Build-Schritt, keine Anfrage an fremde
+Server. Läuft per Doppelklick auf `index.html` und auf jedem einfachen Webspace.
 
 ## Ändern und veröffentlichen
 
-Datei ändern, dann:
+Objekte stehen in `index.html` im Feld `PROJEKTE` (Name, Ort, Status, Koordinaten, Bild, Galerie,
+Fakten). Fehlende Fakten stehen als `null` und erscheinen auf der Seite als `[[FEHLT: …]]`.
 
     git add -A
     git commit -m "Was geändert wurde"
@@ -15,15 +17,16 @@ Datei ändern, dann:
 
 GitHub Pages stellt die Änderung nach etwa einer Minute live.
 
+## Dokumente
+
+- `AUDIT.md`: Bestandsaufnahme der alten Fassung, 44 Punkte mit Fundstelle
+- `PLAN.md`: wie jeder Abschnitt gebaut ist und warum
+- `ASSETS.md`: Bildinventar mit Quelle, Maßen und Anzeigegrenze
+- `CHANGELOG.md`: was sich geändert hat
+- `OFFENE-PUNKTE.md`: was der Auftraggeber liefern oder entscheiden muss
+
 ## Bildnachweis
 
-Das Satellitenbild im Lageplan stammt von [Sentinel-2 cloudless](https://s2maps.eu)
-von EOX IT Services GmbH und enthält bearbeitete Copernicus-Sentinel-Daten 2020 (CC BY 4.0).
-Das Bild im Kopf der Seite ist eine Visualisierung. Die Projektbilder zeigen echte Objekte.
-
-## Offen
-
-- Impressum und Datenschutzerklärung fehlen noch (Pflicht vor dem Betrieb unter eigener Domain)
-- Projektstatus sind abgeleitet, nicht recherchiert
-- Kartenpunkte sitzen auf Stadtteilebene, nicht auf der Hausnummer
-- Ringbergstraße (MR-008) ist noch keinem Ort zugeordnet
+Das Bild im Kopf der Seite zeigt das Objekt Leibstraße in Haar; die Kamerafahrt wurde aus dem
+Luftbild berechnet. Alle Projektbilder zeigen echte Objekte oder deren Visualisierung, so
+gekennzeichnet. Schriften: Archivo, Instrument Sans, IBM Plex Mono (SIL Open Font License).
