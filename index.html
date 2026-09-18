@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Munich Residential GmbH · Projektentwicklung, Bau und Bestand in München</title>
+<title>Munich Residential GmbH · Projektentwicklung in München</title>
 <meta name="description" content="Munich Residential entwickelt, baut und hält Wohn- und Gewerbeimmobilien in München und Umland, dazu Nürnberg, Landshut und Chemnitz. Seit 2007. Werkverzeichnis mit 21 Objekten.">
 <meta name="theme-color" content="#F2F1ED">
 <!-- DEPLOY STEP: Beim Umzug auf munich-residential.com die vier Adressen hier und im JSON-LD anpassen. -->
@@ -163,7 +163,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .menue-knopf{display:inline-flex;align-items:center}
   .marke img{height:24px}
 }
+/* dialog ohne showModal: nur ein Kasten, den wir selbst steuern */
+dialog{position:fixed;inset:0;width:auto;height:auto;max-width:none;max-height:none;margin:0;padding:0;border:0;background:none;color:inherit}
+dialog:not([open]){display:none}
 /* Vollflächenmenü */
+.menue[open]{display:flex}
 .menue{position:fixed;inset:0;z-index:60;background:var(--canvas);color:var(--ink);
   display:flex;flex-direction:column;padding:var(--s4) var(--gut) var(--s6);
   clip-path:inset(0 0 100% 0);transition:clip-path var(--d3) var(--ease);visibility:hidden}
@@ -216,26 +220,26 @@ html.js.bereit .poster,html:not(.js) .poster{clip-path:inset(0)}
 .w{display:inline-block;white-space:pre}
 .c{display:inline-block}
 /* Eintritte je Band, gesteuert über --k aus dem Skript */
-#b1 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);
+.b1 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);
   transform:translateY(calc((1 - var(--kc))*-26px))}
-#b2 .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);
+.b2 .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);
   transform:translateX(calc((1 - var(--kc))*var(--jx,0px)))}
-#b3 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*3,1);
+.b3 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*3,1);
   --ks:clamp(0,(var(--k,0) - var(--th,0) - var(--sd,.1))*var(--ss,3.2),1);
   opacity:var(--kc);
   transform:scale(calc(0.62 + (0.38 + var(--ov,.12))*var(--kc) - var(--ov,.12)*var(--ks)))}
-#b3 .w.em{--ov:.24;--sd:.16;--ss:2.6}
-#b4 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);
+.b3 .w.em{--ov:.24;--sd:.16;--ss:2.6}
+.b4 .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);
   transform:translateY(calc((1 - var(--kc))*22px))}
-#b4 .sub{--ks:clamp(0,(var(--k,0) - .66)*4,1);opacity:calc(.9*var(--ks));
+.b4 .sub{--ks:clamp(0,(var(--k,0) - .66)*4,1);opacity:calc(.9*var(--ks));
   transform:translateY(calc((1 - var(--ks))*14px))}
-#b4 .cta-row{--kb:clamp(0,(var(--k,0) - .78)*5,1);opacity:var(--kb);
+.b4 .cta-row{--kb:clamp(0,(var(--k,0) - .78)*5,1);opacity:var(--kb);
   transform:translateY(calc((1 - var(--kb))*14px))}
 /* Filmhinweis unten rechts, in Mono */
 .filmhinweis{position:absolute;right:var(--gut);bottom:var(--s5);font-family:var(--mono);
   font-size:var(--t-2);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark);opacity:.6;
   text-align:right;line-height:1.7}
-.filmhinweis .zeile{display:block}
+.filmhinweis .fz{display:block}
 
 /* Ohne Skript zeigt der Kopf das Endbild und den statischen Text */
 html:not(.js) .hero{height:auto}
@@ -408,7 +412,7 @@ html:not(.js) .zeile .bild img{width:100%;height:auto}
    ============================================================ */
 .ansicht{position:fixed;inset:0;z-index:50;background:var(--canvas);color:var(--ink);overflow-y:auto;
   display:none;view-transition-name:ansicht}
-.ansicht.offen{display:block}
+.ansicht[open].offen{display:block}
 body.ansicht-offen{overflow:hidden}
 body.ansicht-offen .top{opacity:0;pointer-events:none}
 .ansicht .innen{min-height:100%;padding:var(--s4) var(--gut) var(--s7);display:flex;flex-direction:column}
@@ -519,7 +523,7 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
 .kontakt .raster{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(30px,6vw,120px);align-items:start}
 .anschrift{font-family:var(--mono);font-size:var(--t-1);letter-spacing:.03em;line-height:2;color:var(--text-secondary)}
 .anschrift strong{font-weight:400;color:var(--ink)}
-.anschrift a{color:var(--ink);text-decoration:none;border-bottom:var(--line) solid var(--accent-muted);transition:border-color var(--d1) var(--ease)}
+.anschrift a{color:var(--ink);text-decoration:none;border-bottom:var(--line) solid var(--accent-muted);transition:border-color var(--d1) var(--ease);display:inline-block;padding:var(--s1) 0;line-height:1.4}
 .anschrift a:hover{border-color:var(--accent)}
 .form{display:grid;gap:var(--s4)}
 .feld{display:grid;gap:var(--s2)}
@@ -546,8 +550,8 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
   font-family:var(--mono);font-size:var(--t-1);letter-spacing:.03em;color:var(--text-secondary);line-height:1.8}
 .fuss .raster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s5) var(--s4)}
 .fuss h2{font-family:var(--mono);font-weight:400;font-size:var(--t-2);letter-spacing:.14em;text-transform:uppercase;
-  color:var(--text-secondary);margin:0 0 var(--s3);opacity:.8}
-.fuss a{text-decoration:none;color:var(--ink);border-bottom:var(--line) solid var(--accent-muted);transition:border-color var(--d1) var(--ease)}
+  color:var(--text-secondary);margin:0 0 var(--s3)}
+.fuss a{text-decoration:none;color:var(--ink);border-bottom:var(--line) solid var(--accent-muted);transition:border-color var(--d1) var(--ease);display:inline-block;padding:var(--s1) 0;line-height:1.4}
 .fuss a:hover{border-color:var(--accent)}
 .fuss .logo img{height:44px;width:auto;margin-bottom:var(--s4)}
 .fuss .unten{margin-top:var(--s6);padding-top:var(--s3);border-top:var(--line) solid var(--accent-muted);
@@ -573,7 +577,7 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
        (prefers-reduced-motion:reduce){
   .hero{height:auto}
   .stage{position:relative;height:min(94vh,760px)}
-  .stage video,.filmhinweis .film{display:none}
+  .stage video,.filmhinweis{display:none}
   .poster{opacity:1;background-image:url('assets/hero-ending.jpg')}
   .bands{position:absolute;inset:auto 0 0 0;top:0}
   .band{display:none}
@@ -640,7 +644,7 @@ body.pause .env{animation-play-state:paused}
   <button class="menue-knopf" id="menue-knopf" type="button" aria-expanded="false" aria-controls="menue">Menü</button>
 </header>
 
-<div class="menue" id="menue" role="dialog" aria-modal="true" aria-label="Menü" hidden>
+<dialog class="menue" id="menue" aria-label="Menü">
   <div class="kopf">
     <span>Munich Residential</span>
     <button type="button" id="menue-zu">Schließen</button>
@@ -651,8 +655,8 @@ body.pause .env{animation-play-state:paused}
     <li><a href="#ankauf">Ankauf <span>Grundstücke</span></a></li>
     <li><a href="#kontakt">Kontakt <span>Pöcking</span></a></li>
   </ul>
-  <p class="fuss">Munich Residential GmbH<br>Gewerbeallee 3, 82343 Pöcking<br><a href="tel:+4981514463120">08151 446 3120</a></p>
-</div>
+  <p class="fuss">Munich Residential GmbH<br>Gewerbeallee 3, 82343 Pöcking<br><a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a></p>
+</dialog>
 
 <section class="hero" id="hero" aria-label="Kopf der Seite">
   <div class="stage" id="stage">
@@ -662,22 +666,22 @@ body.pause .env{animation-play-state:paused}
     <p class="sr">Kamerafahrt über die Wohnanlage Leibstraße in Haar: begrünter Innenhof, Spielplatz, Photovoltaik auf den Dächern. Die Fahrt wurde aus einem Luftbild berechnet.</p>
 
     <div class="bands" id="bands">
-      <div class="band" id="b1" data-a="0" data-b="0.18">
+      <div class="band b1" id="b1" data-a="0" data-b="0.18">
         <h1 data-split="word">Wir entwickeln in München.</h1>
       </div>
-      <div class="band" id="b2" data-a="0.2" data-b="0.4" data-spread="0.5">
+      <div class="band b2" id="b2" data-a="0.2" data-b="0.4" data-spread="0.5">
         <p class="b" data-split="char"><span class="sr">Grundstück. Baurecht. Übergabe.</span></p>
       </div>
-      <div class="band" id="b3" data-a="0.42" data-b="0.62">
+      <div class="band b3" id="b3" data-a="0.42" data-b="0.62">
         <p class="b" data-split="word" data-em="1.000"><span class="sr">Über 1.000 Einheiten übergeben.</span></p>
       </div>
-      <div class="band static-hero" id="b4" data-a="0.64" data-b="1" data-ramp="0.05">
+      <div class="band b4 static-hero" id="b4" data-a="0.64" data-b="1" data-ramp="0.05">
         <h2 data-split="word">Der Abschluss hält.</h2>
         <p class="sub">Munich Residential entwickelt, baut und hält Wohn- und Gewerbeimmobilien in München und Umland. Seit 2007.</p>
         <p class="cta-row"><a class="cta linktext" href="#kontakt">Grundstück anbieten</a></p>
       </div>
     </div>
-    <p class="filmhinweis" aria-hidden="true"><span class="zeile">Leibstraße, Haar · MR—016</span><span class="zeile film">Scrollen bewegt die Kamera</span></p>
+    <p class="filmhinweis" aria-hidden="true"><span class="fz">Leibstraße, Haar · MR—016</span><span class="fz film">Scrollen bewegt die Kamera</span></p>
   </div>
 </section>
 
@@ -710,9 +714,9 @@ body.pause .env{animation-play-state:paused}
         <span>2007 bis heute</span>
         <span id="zeit-hinweis">Pfeiltasten oder ziehen</span>
       </div>
-      <div class="bahn" id="zeit-bahn" tabindex="0" role="region" aria-label="Zeitleiste der Projekte, horizontal scrollbar">
+      <section class="bahn" id="zeit-bahn" tabindex="0" aria-label="Zeitleiste der Projekte, horizontal scrollbar">
         <svg viewBox="0 0 3020 240" width="3020" height="240" role="img" aria-labelledby="zeit-t"><title id="zeit-t">Zeitleiste 2007 bis 2026</title><line class="linie" x1="60" y1="120" x2="2150" y2="120"/><line class="marke" x1="60" y1="110" x2="60" y2="120"/><text class="jahr" x="60" y="146" text-anchor="middle">2007</text><line class="marke" x1="170" y1="115" x2="170" y2="120"/><line class="marke" x1="280" y1="115" x2="280" y2="120"/><line class="marke" x1="390" y1="110" x2="390" y2="120"/><text class="jahr" x="390" y="146" text-anchor="middle">2010</text><line class="marke" x1="500" y1="115" x2="500" y2="120"/><line class="marke" x1="610" y1="115" x2="610" y2="120"/><line class="marke" x1="720" y1="115" x2="720" y2="120"/><line class="marke" x1="830" y1="115" x2="830" y2="120"/><line class="marke" x1="940" y1="110" x2="940" y2="120"/><text class="jahr" x="940" y="146" text-anchor="middle">2015</text><line class="marke" x1="1050" y1="115" x2="1050" y2="120"/><line class="marke" x1="1160" y1="115" x2="1160" y2="120"/><line class="marke" x1="1270" y1="115" x2="1270" y2="120"/><line class="marke" x1="1380" y1="115" x2="1380" y2="120"/><line class="marke" x1="1490" y1="110" x2="1490" y2="120"/><text class="jahr" x="1490" y="146" text-anchor="middle">2020</text><line class="marke" x1="1600" y1="115" x2="1600" y2="120"/><line class="marke" x1="1710" y1="115" x2="1710" y2="120"/><line class="marke" x1="1820" y1="115" x2="1820" y2="120"/><line class="marke" x1="1930" y1="115" x2="1930" y2="120"/><line class="marke" x1="2040" y1="110" x2="2040" y2="120"/><text class="jahr" x="2040" y="146" text-anchor="middle">2025</text><line class="marke" x1="2150" y1="115" x2="2150" y2="120"/><text class="jahr" x="2150" y="146" text-anchor="middle">2026</text><text class="jahr" x="60" y="80">gegründet</text><text class="jahr" x="2150" y="80" text-anchor="end">heute</text><line class="marke" x1="2250" y1="18" x2="2250" y2="232"/><text class="offen" x="2264" y="30">Fertigstellungsjahr offen · 21 Objekte</text><a href="#/arbeiten/hansastrasse" data-slug="hansastrasse"><rect x="2264" y="54" width="5" height="5"/><text class="name" x="2278" y="62">Hansastraße</text></a><a href="#/arbeiten/nymphenburger-strasse" data-slug="nymphenburger-strasse"><rect x="2264" y="80" width="5" height="5"/><text class="name" x="2278" y="88">Nymphenburger Straße</text></a><a href="#/arbeiten/aeussere-muenchner-strasse" data-slug="aeussere-muenchner-strasse"><rect x="2264" y="106" width="5" height="5"/><text class="name" x="2278" y="114">Äußere Münchner Straße</text></a><a href="#/arbeiten/schanzaeckerstrasse" data-slug="schanzaeckerstrasse"><rect x="2264" y="132" width="5" height="5"/><text class="name" x="2278" y="140">Schanzäckerstraße</text></a><a href="#/arbeiten/wielandstrasse" data-slug="wielandstrasse"><rect x="2264" y="158" width="5" height="5"/><text class="name" x="2278" y="166">Wielandstraße</text></a><a href="#/arbeiten/schwedenstrasse" data-slug="schwedenstrasse"><rect x="2264" y="184" width="5" height="5"/><text class="name" x="2278" y="192">Schwedenstraße</text></a><a href="#/arbeiten/arnulfstrasse" data-slug="arnulfstrasse"><rect x="2264" y="210" width="5" height="5"/><text class="name" x="2278" y="218">Arnulfstraße</text></a><a href="#/arbeiten/ringbergstrasse" data-slug="ringbergstrasse"><rect x="2514" y="54" width="5" height="5"/><text class="name" x="2528" y="62">Ringbergstraße</text></a><a href="#/arbeiten/edisonstrasse" data-slug="edisonstrasse"><rect x="2514" y="80" width="5" height="5"/><text class="name" x="2528" y="88">Edisonstraße</text></a><a href="#/arbeiten/philipp-helmer-strasse" data-slug="philipp-helmer-strasse"><rect x="2514" y="106" width="5" height="5"/><text class="name" x="2528" y="114">Philipp-Helmer-Straße</text></a><a href="#/arbeiten/muenchner-freiheit" data-slug="muenchner-freiheit"><rect x="2514" y="132" width="5" height="5"/><text class="name" x="2528" y="140">Münchner Freiheit</text></a><a href="#/arbeiten/klenzestrasse-muenchen" data-slug="klenzestrasse-muenchen"><rect x="2514" y="158" width="5" height="5"/><text class="name" x="2528" y="166">Klenzestraße</text></a><a href="#/arbeiten/klenzestrasse-ismaning" data-slug="klenzestrasse-ismaning"><rect x="2514" y="184" width="5" height="5"/><text class="name" x="2528" y="192">Klenzestraße</text></a><a href="#/arbeiten/gustav-heinemann-ring" data-slug="gustav-heinemann-ring"><rect x="2514" y="210" width="5" height="5"/><text class="name" x="2528" y="218">Gustav-Heinemann-Ring</text></a><a href="#/arbeiten/haidelweg" data-slug="haidelweg"><rect x="2764" y="54" width="5" height="5"/><text class="name" x="2778" y="62">Haidelweg</text></a><a href="#/arbeiten/leibstrasse" data-slug="leibstrasse"><rect x="2764" y="80" width="5" height="5"/><text class="name" x="2778" y="88">Leibstraße</text></a><a href="#/arbeiten/konradstrasse-richterstrasse" data-slug="konradstrasse-richterstrasse"><rect x="2764" y="106" width="5" height="5"/><text class="name" x="2778" y="114">Konradstraße / Richterstraße</text></a><a href="#/arbeiten/landshut" data-slug="landshut"><rect x="2764" y="132" width="5" height="5"/><text class="name" x="2778" y="140">Objekt Landshut</text></a><a href="#/arbeiten/adalbert-stifter-strasse" data-slug="adalbert-stifter-strasse"><rect x="2764" y="158" width="5" height="5"/><text class="name" x="2778" y="166">Adalbert-Stifter-Straße</text></a><a href="#/arbeiten/zeisigweg" data-slug="zeisigweg"><rect x="2764" y="184" width="5" height="5"/><text class="name" x="2778" y="192">Zeisigweg</text></a><a href="#/arbeiten/pettenkoferstrasse" data-slug="pettenkoferstrasse"><rect x="2764" y="210" width="5" height="5"/><text class="name" x="2778" y="218">Pettenkoferstraße</text></a></svg>
-      </div>
+      </section>
     </div>
   </section>
 
@@ -883,7 +887,7 @@ body.pause .env{animation-play-state:paused}
           <strong>Munich Residential GmbH</strong><br>
           Gewerbeallee 3<br>
           82343 Pöcking<br><br>
-          <a href="tel:+4981514463120">08151 446 3120</a><br>
+          <a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a><br>
           <a href="mailto:info@munich-residential.com">info@munich-residential.com</a>
         </p>
       </div>
@@ -924,7 +928,7 @@ body.pause .env{animation-play-state:paused}
     </div>
     <div>
       <h2>Kontakt</h2>
-      <p><a href="tel:+4981514463120">08151 446 3120</a><br><a href="mailto:info@munich-residential.com">info@munich-residential.com</a></p>
+      <p><a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a><br><a href="mailto:info@munich-residential.com">info@munich-residential.com</a></p>
     </div>
     <div>
       <h2>Rechtliches</h2>
@@ -938,13 +942,13 @@ body.pause .env{animation-play-state:paused}
 </footer>
 
 <!-- Zeigervorschau -->
-<div class="vorschau" id="vorschau" aria-hidden="true"><img src="" alt="" width="590" height="396"></div>
+<div class="vorschau" id="vorschau" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="590" height="396"></div>
 
 <!-- Randanzeige -->
 <div class="rand" id="rand" aria-hidden="true"><span id="rand-ort">Kopf</span><span id="rand-zahl">00</span></div>
 
 <!-- Ansichten: Projekt, Impressum, Datenschutz, Nicht gefunden -->
-<div class="ansicht" id="ansicht" role="dialog" aria-modal="true" aria-labelledby="ansicht-t" hidden>
+<dialog class="ansicht" id="ansicht" aria-labelledby="ansicht-t">
   <div class="innen">
     <div class="ak">
       <a href="#arbeiten" id="ansicht-zurueck" class="zurueck">← Verzeichnis</a>
@@ -956,14 +960,14 @@ body.pause .env{animation-play-state:paused}
     </div>
     <div id="ansicht-inhalt"></div>
   </div>
-</div>
+</dialog>
 
 <!-- Rechtstexte, im Dokument, damit sie ohne Skript lesbar bleiben -->
 <template id="t-impressum">
   <article class="recht">
     <h2 id="ansicht-t">Impressum</h2>
     <p><strong>Munich Residential GmbH</strong><br>Gewerbeallee 3<br>82343 Pöcking</p>
-    <p>Telefon <a href="tel:+4981514463120">08151 446 3120</a><br>E-Mail <a href="mailto:info@munich-residential.com">info@munich-residential.com</a></p>
+    <p>Telefon <a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a><br>E-Mail <a href="mailto:info@munich-residential.com">info@munich-residential.com</a></p>
     <h3>Vertreten durch</h3>
     <p class="fehlt">[[FEHLT: Geschäftsführerin oder Geschäftsführer, Vor- und Nachname]]</p>
     <h3>Registereintrag</h3>
@@ -1161,7 +1165,7 @@ var vonSlug = {}; PROJEKTE.forEach(function(p, i){ p.i = i; vonSlug[p.slug] = p;
 var menue = $('#menue'), menueKnopf = $('#menue-knopf'), menueLetzter = null;
 function menueAuf(){
   menueLetzter = document.activeElement;
-  menue.hidden = false; requestAnimationFrame(function(){ menue.classList.add('offen'); $('#menue-zu').focus(); });
+  menue.setAttribute('open', ''); requestAnimationFrame(function(){ menue.classList.add('offen'); $('#menue-zu').focus(); });
   document.body.classList.add('menue-offen');
   menueKnopf.setAttribute('aria-expanded', 'true');
 }
@@ -1169,7 +1173,7 @@ function menueZu(){
   menue.classList.remove('offen');
   document.body.classList.remove('menue-offen');
   menueKnopf.setAttribute('aria-expanded', 'false');
-  setTimeout(function(){ menue.hidden = true; }, rm.matches ? 0 : 900);
+  setTimeout(function(){ if (!menue.classList.contains('offen')) menue.removeAttribute('open'); }, rm.matches ? 0 : 900);
   if (menueLetzter && menueLetzter.focus) menueLetzter.focus();
 }
 menueKnopf.addEventListener('click', menueAuf);
@@ -1336,10 +1340,14 @@ function zeichneOrte(){
         tun: function(){ if (k === 'mu') setze('mu'); else { fOrt = k; $$('button[data-o]', filterEl).forEach(function(x){ x.setAttribute('aria-pressed', String(x.dataset.o === k)); }); filtere(); springeZu('arbeiten'); } } });
     });
   } else {
+    var kern = { n: 0, lat: 0, lon: 0 }, st = ANSICHTEN[2];
     PROJEKTE.forEach(function(p){ if (!drin(v, p)) return;
+      if (v.id === 'mu' && drin(st, p)){ kern.n++; kern.lat += p.lat; kern.lon += p.lon; return; }
       eintraege.push({ x: sx(p.lon), y: sy(p.lat), txt: p.n, slug: p.slug, tip: p.name + ', ' + p.ort + ' · ' + nr(p),
         tun: function(){ location.hash = '#/arbeiten/' + p.slug; } });
     });
+    if (kern.n) eintraege.push({ x: sx(kern.lon / kern.n), y: sy(kern.lat / kern.n), txt: 'München ' + kern.n, gross: true,
+      tip: 'München Stadt, ' + kern.n + ' Objekte, Klick zoomt hinein', tun: function(){ setze('st'); } });
   }
   // Beschriftungen: vier Seiten durchprobieren, die erste freie nehmen
   var belegt = [];
@@ -1445,6 +1453,11 @@ function projektHTML(p, bi){
       '<p class="art">' + (p.art === 'Foto' ? 'Fotografie des gebauten Objekts.' : 'Visualisierung, das Objekt ist noch nicht gebaut.') + ' Status ist eine Einschätzung aus dem Bildmaterial.</p>' +
     '</div></div>';
 }
+function uebergang(fn){
+  if (!document.startViewTransition || rm.matches){ fn(); return; }
+  var t = document.startViewTransition(fn);
+  t.ready.catch(function(){}); t.finished.catch(function(){});
+}
 function oeffneAnsicht(html, route, blaettern){
   var war = ans.classList.contains('offen');
   if (!war) ansLetzter = document.activeElement;
@@ -1453,7 +1466,7 @@ function oeffneAnsicht(html, route, blaettern){
     ansBlaettern.classList.toggle('nur-zu', !blaettern);
     ansVor.hidden = ansWeiter.hidden = !blaettern;
     if (blaettern){ ansVor.disabled = blaettern.i === 0; ansWeiter.disabled = blaettern.i === PROJEKTE.length - 1; }
-    ans.hidden = false; ans.classList.add('offen');
+    ans.setAttribute('open', ''); ans.classList.add('offen');
     document.body.classList.add('ansicht-offen');
     hauptteile.forEach(function(s){ var e = $(s); if (e) e.inert = true; });
     ans.scrollTop = 0;
@@ -1461,19 +1474,19 @@ function oeffneAnsicht(html, route, blaettern){
     document.title = ($('#ansicht-t') ? $('#ansicht-t').textContent + ' · ' : '') + 'Munich Residential GmbH';
     if (!war) $('#ansicht-zu').focus();
   };
-  if (document.startViewTransition && !rm.matches) document.startViewTransition(tausch); else tausch();
+  uebergang(tausch);
 }
 function schliesseAnsicht(){
   if (!ans.classList.contains('offen')) return;
   var tausch = function(){
-    ans.classList.remove('offen'); ans.hidden = true;
+    ans.classList.remove('offen'); ans.removeAttribute('open');
     document.body.classList.remove('ansicht-offen');
     hauptteile.forEach(function(s){ var e = $(s); if (e) e.inert = false; });
-    document.title = 'Munich Residential GmbH · Projektentwicklung, Bau und Bestand in München';
+    document.title = 'Munich Residential GmbH · Projektentwicklung in München';
     if (ansLetzter && ansLetzter.focus) ansLetzter.focus({ preventScroll: true });
     ansLetzter = null; ansRoute = null;
   };
-  if (document.startViewTransition && !rm.matches) document.startViewTransition(tausch); else tausch();
+  uebergang(tausch);
 }
 function route(){
   var h = location.hash;
@@ -1626,7 +1639,10 @@ function disableScrub(){
   bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.op = -1; b.k = -1; });
   document.documentElement.classList.add('bereit');
 }
-function applyHeroMode(){ if (GATES.some(function(q){ return matchMedia(q).matches; })) disableScrub(); else enableScrub(); }
+function applyHeroMode(){
+  if (GATES.some(function(q){ return matchMedia(q).matches; })){ disableScrub(); document.documentElement.classList.add('bereit'); }
+  else enableScrub();
+}
 GATES.forEach(function(q){ matchMedia(q).addEventListener('change', applyHeroMode); });
 
 /* ---------------- Halten ---------------- */
