@@ -273,7 +273,7 @@ html:not(.js) .auf{opacity:1;transform:none}
 html:not(.js) .klip{clip-path:inset(0)}
 html:not(.js) .zeile .bild{display:block;grid-column:2;margin:var(--s3) 0 var(--s2);max-width:min(100%,var(--bw,590px))}
 html:not(.js) .zeile .bild img{width:100%;height:auto}
-html:not(.js) .lage,html:not(.js) .panel,html:not(.js) .werkzeug,html:not(.js) .rand{display:none}
+html:not(.js) .lage,html:not(.js) .panel,html:not(.js) .werkzeug,html:not(.js) .rand,html:not(.js) .streifen-nav,html:not(.js) .sprache{display:none}
 
 /* ============================================================
    Das Haus
@@ -640,13 +640,70 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
 body.pause .env{animation-play-state:paused}
 
 /* ============================================================
+   Register nach Orten und Stand (ersetzt die Zeitleiste, solange Jahre fehlen)
+   ============================================================ */
+.register{margin-top:var(--s7)}
+.register .rk{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);font-family:var(--mono);font-size:var(--t-1);
+  letter-spacing:.06em;color:var(--text-secondary);margin:0 0 var(--s3)}
+.register .reg + .rk{margin-top:var(--s6)}
+.reg{list-style:none;margin:0;padding:0;display:flex;border-top:var(--line) solid var(--ink)}
+.reg li{flex:calc(var(--n,1) + 3) 1 0;min-width:0;border-left:var(--line) solid var(--ink);padding:var(--s3) 0 0}
+.reg li:first-child{border-left:0}
+.reg button{display:block;width:100%;text-align:left;padding:0 var(--s2) var(--s2) var(--s2);min-height:var(--touch);transition:color var(--d1) var(--ease)}
+.reg li:first-child button{padding-left:0}
+.reg .rname{display:block;font-family:var(--display);font-weight:600;letter-spacing:-.02em;font-size:var(--t1);line-height:1.1;white-space:nowrap}
+.reg .rz{display:block;margin-top:var(--s1);font-family:var(--mono);font-size:var(--t-1);letter-spacing:.06em;color:var(--text-secondary)}
+.reg button:hover .rname,.reg button:focus-visible .rname{color:var(--accent)}
+@media (max-width:900px){.reg{flex-direction:column;border-top:0}.reg li{border-left:0;border-top:var(--line) solid var(--ink);padding:0}.reg button{display:flex;justify-content:space-between;align-items:baseline;padding:var(--s2) 0}.reg .rname{font-size:var(--t0);white-space:normal}.reg .rz{margin:0}}
+
+/* ============================================================
+   Bildband: seitlich scrollende Bildstrecke
+   ============================================================ */
+.strecke .streifen{margin:0 calc(-1 * var(--gut));padding:0 var(--gut) var(--s3);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;
+  scrollbar-width:none;cursor:grab;outline-offset:6px}
+.strecke .streifen::-webkit-scrollbar{display:none}
+.strecke .streifen:focus-visible{outline:2px solid var(--accent)}
+.strecke .bilder{display:flex;gap:clamp(14px,2vw,32px);list-style:none;margin:0;padding:0;width:max-content}
+.strecke .bilder li{flex:none;scroll-snap-align:start}
+.strecke .bilder a{display:block;text-decoration:none;color:inherit}
+.strecke .bilder picture,.strecke .bilder img{display:block}
+.strecke .bilder img{height:min(62vh,var(--bh,620px));width:auto;max-width:none}
+.strecke .u{display:flex;gap:var(--s3);margin-top:var(--s2);font-family:var(--mono);font-size:var(--t-1);letter-spacing:.06em;color:var(--text-secondary)}
+.strecke .u .nr{color:var(--ink)}
+.strecke .bilder a:hover .u,.strecke .bilder a:focus-visible .u{color:var(--accent)}
+.strecke .streifen-nav{display:flex;gap:var(--s4);margin-top:var(--s3);font-family:var(--mono);font-size:var(--t-2);letter-spacing:.14em;text-transform:uppercase}
+.strecke .streifen-nav button{color:var(--text-secondary);min-height:var(--touch);transition:color var(--d1) var(--ease)}
+.strecke .streifen-nav button:hover{color:var(--ink)}
+@media (max-width:760px){.strecke .bilder img{height:min(52vh,420px)}.strecke .streifen{cursor:auto}}
+
+/* Rasteransicht als Startansicht: das Bildpanel entfällt, das Raster nimmt die Breite */
+.archiv.raster-an{grid-template-columns:1fr}
+.archiv.raster-an .panel{display:none}
+.liste.raster{grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),1fr));gap:var(--s6) var(--s5)}
+.liste.raster .zeile .bild{max-width:none;aspect-ratio:4/3;overflow:hidden;background:rgba(242,241,237,.04)}
+.liste.raster .zeile .bild img{width:100%;height:100%;object-fit:cover}
+@media (max-width:760px){.liste.raster{grid-template-columns:1fr 1fr;gap:var(--s5) var(--s3)}.liste.raster .zeile .name{font-size:var(--t0)}.liste.raster .zeile .nr{white-space:nowrap}}
+.liste.raster .zeile a{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}
+.liste.raster .zeile .nr{grid-column:1}
+.liste.raster .zeile .name,.liste.raster .zeile .meta,.liste.raster .zeile .bild{grid-column:1}
+@media (max-width:460px){.liste.raster{grid-template-columns:1fr}}
+
+/* Sprache */
+.sprache{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;min-height:var(--touch);padding:0 var(--s1);position:relative;opacity:.75;transition:opacity var(--d1) var(--ease)}
+.sprache:hover{opacity:1}
+.menue .sprache{font-family:var(--mono);font-size:var(--t-1);letter-spacing:.14em;text-transform:uppercase;padding:var(--s3) 0;opacity:1}
+.recht-en:empty{display:none}
+.recht-en{margin-bottom:var(--s4)}
+.ansicht .ak .kopiert{color:var(--accent)}
+
+/* ============================================================
    Druck: das Archiv als Werkverzeichnis auf A4
    ============================================================ */
 @media print{
   @page{size:A4;margin:18mm}
   :root{--gut:0}
   html,body{background:#fff;color:#000}
-  .env,.top,.hero,.rand,.panel,.lage,.werkzeug,.menue,.linie,.halten,.fuss .logo,.skip{display:none}
+  .env,.top,.hero,.rand,.panel,.lage,.werkzeug,.menue,.linie,.halten,.fuss .logo,.skip,.strecke,.streifen-nav,.sprache{display:none}
   .abschnitt{padding:0 0 14mm;break-inside:avoid-page}
   .arbeiten{background:#fff;color:#000}
   .arbeiten .kopfzeile .zahl,.zeile .nr,.zeile .meta{color:#444}
@@ -667,7 +724,7 @@ body.pause .env{animation-play-state:paused}
 <body>
 <script>document.documentElement.className='js';</script>
 <div class="env" aria-hidden="true"></div>
-<a class="skip" href="#main">Zum Inhalt springen</a>
+<a class="skip" href="#main" data-t="skip">Zum Inhalt springen</a>
 
 <header class="top" id="top">
   <a class="marke" href="#main" aria-label="Munich Residential, zum Seitenanfang">
@@ -675,27 +732,29 @@ body.pause .env{animation-play-state:paused}
   </a>
   <nav aria-label="Hauptnavigation">
     <ul>
-      <li><a href="#arbeiten">Arbeiten</a></li>
-      <li><a href="#haus">Haus</a></li>
-      <li><a href="#ankauf">Ankauf</a></li>
-      <li><a href="#kontakt">Kontakt</a></li>
+      <li><a href="#arbeiten" data-t="nav.arbeiten">Arbeiten</a></li>
+      <li><a href="#haus" data-t="nav.haus">Haus</a></li>
+      <li><a href="#ankauf" data-t="nav.ankauf">Ankauf</a></li>
+      <li><a href="#kontakt" data-t="nav.kontakt">Kontakt</a></li>
+      <li><button class="sprache" type="button" aria-label="Switch to English">EN</button></li>
     </ul>
   </nav>
-  <button class="menue-knopf" id="menue-knopf" type="button" aria-expanded="false" aria-controls="menue">Menü</button>
+  <button class="menue-knopf" id="menue-knopf" type="button" aria-expanded="false" aria-controls="menue" data-t="menu.knopf">Menü</button>
 </header>
 
 <dialog class="menue" id="menue" aria-label="Menü">
   <div class="kopf">
     <span>Munich Residential</span>
-    <button type="button" id="menue-zu">Schließen</button>
+    <button type="button" id="menue-zu" data-t="menu.zu">Schließen</button>
   </div>
   <ul>
-    <li><a href="#arbeiten">Arbeiten <span>21 Objekte</span></a></li>
-    <li><a href="#karte">Lageplan <span>Satellit</span></a></li>
-    <li><a href="#haus">Haus <span>seit 2007</span></a></li>
-    <li><a href="#ankauf">Ankauf <span>Grundstücke</span></a></li>
-    <li><a href="#kontakt">Kontakt <span>Pöcking</span></a></li>
+    <li><a href="#arbeiten" data-t="menu.arbeiten">Arbeiten <span>21 Objekte</span></a></li>
+    <li><a href="#karte" data-t="menu.lage">Lageplan <span>Satellit</span></a></li>
+    <li><a href="#haus" data-t="menu.haus">Haus <span>seit 2007</span></a></li>
+    <li><a href="#ankauf" data-t="menu.ankauf">Ankauf <span>Grundstücke</span></a></li>
+    <li><a href="#kontakt" data-t="menu.kontakt">Kontakt <span>Pöcking</span></a></li>
   </ul>
+  <p><button class="sprache" type="button" aria-label="Switch to English">EN</button></p>
   <p class="fuss">Munich Residential GmbH<br>Gewerbeallee 3, 82343 Pöcking<br><a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a></p>
 </dialog>
 
@@ -704,25 +763,25 @@ body.pause .env{animation-play-state:paused}
     <div class="poster" id="poster" aria-hidden="true"></div>
     <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
     <div class="scrim" aria-hidden="true"></div>
-    <p class="sr">Kamerafahrt über die Wohnanlage Leibstraße in Haar: begrünter Innenhof, Spielplatz, Photovoltaik auf den Dächern. Die Fahrt wurde aus einem Luftbild berechnet.</p>
+    <p class="sr" data-t="hero.sr">Kamerafahrt über die Wohnanlage Leibstraße in Haar: begrünter Innenhof, Spielplatz, Photovoltaik auf den Dächern. Die Fahrt wurde aus einem Luftbild berechnet.</p>
 
     <div class="bands" id="bands">
       <div class="band b1" id="b1" data-a="0" data-b="0.18">
-        <h1 data-split="word">Wir entwickeln in München.</h1>
+        <h1 data-split="word" data-t="hero.b1">Wir entwickeln in München.</h1>
       </div>
       <div class="band b2" id="b2" data-a="0.2" data-b="0.4" data-spread="0.5">
-        <p class="b" data-split="char"><span class="sr">Grundstück. Baurecht. Übergabe.</span></p>
+        <p class="b" data-split="char" data-t="hero.b2">Grundstück. Baurecht. Übergabe.</p>
       </div>
       <div class="band b3" id="b3" data-a="0.42" data-b="0.62">
-        <p class="b" data-split="word" data-em="1.000"><span class="sr">Über 1.000 Einheiten übergeben.</span></p>
+        <p class="b" data-split="word" data-em="1.000" data-t="hero.b3">Über 1.000 Einheiten übergeben.</p>
       </div>
       <div class="band b4 static-hero" id="b4" data-a="0.64" data-b="1" data-ramp="0.05">
-        <h2 data-split="word">Der Abschluss hält.</h2>
-        <p class="sub">Munich Residential entwickelt, baut und hält Wohn- und Gewerbeimmobilien in München und Umland. Seit 2007.</p>
-        <p class="cta-row"><a class="cta linktext" href="#kontakt">Grundstück anbieten</a></p>
+        <h2 data-split="word" data-t="hero.b4">Der Abschluss hält.</h2>
+        <p class="sub" data-t="hero.sub">Munich Residential entwickelt, baut und hält Wohn- und Gewerbeimmobilien in München und Umland. Seit 2007.</p>
+        <p class="cta-row"><a class="cta linktext" href="#kontakt" data-t="hero.cta">Grundstück anbieten</a></p>
       </div>
     </div>
-    <p class="filmhinweis" aria-hidden="true"><span class="fz">Leibstraße, Haar · MR—016</span><span class="fz film">Scrollen bewegt die Kamera</span></p>
+    <p class="filmhinweis" aria-hidden="true"><span class="fz">Leibstraße, Haar · MR—016</span><span class="fz film" data-t="hero.film">Scrollen bewegt die Kamera</span></p>
   </div>
 </section>
 
@@ -731,64 +790,72 @@ body.pause .env{animation-play-state:paused}
   <!-- ============ Das Haus ============ -->
   <section class="abschnitt" id="haus" tabindex="-1" aria-labelledby="haus-t">
     <div class="kopfzeile">
-      <h2 id="haus-t">Das Haus</h2>
-      <span class="zahl">Pöcking bei München · seit 2007</span>
+      <h2 id="haus-t" data-t="haus.t">Das Haus</h2>
+      <span class="zahl" data-t="haus.z">Pöcking bei München · seit 2007</span>
     </div>
     <div class="haus">
       <div class="text auf">
-        <p class="lede">2007 haben zwei Familienunternehmen in zweiter Generation ihre Arbeit zusammengelegt: die Krulich Immobiliengruppe und die Firmengruppe Opfergeld. Seitdem entwickeln, bauen und halten wir Wohn- und Gewerbeimmobilien in München und Umland.</p>
-        <p>Wir kaufen Grundstücke mit und ohne Baurecht. Die Baurechtsprüfung führen wir selbst. Wir bauen als Bauträger und behalten einen Teil der Häuser im eigenen Bestand.</p>
-        <p>Die Arbeit steht im Verzeichnis unten. Jedes Objekt hat eine Nummer, einen Ort und einen Stand.</p>
+        <p class="lede" data-t="haus.p1">2007 haben zwei Familienunternehmen in zweiter Generation ihre Arbeit zusammengelegt: die Krulich Immobiliengruppe und die Firmengruppe Opfergeld. Seitdem entwickeln, bauen und halten wir Wohn- und Gewerbeimmobilien in München und Umland.</p>
+        <p data-t="haus.p2">Wir kaufen Grundstücke mit und ohne Baurecht. Die Baurechtsprüfung führen wir selbst. Wir bauen als Bauträger und behalten einen Teil der Häuser im eigenen Bestand.</p>
+        <p data-t="haus.p3">Die Arbeit steht im Verzeichnis unten. Jedes Objekt hat eine Nummer, einen Ort und einen Stand.</p>
       </div>
       <ul class="fakten auf" aria-label="Kennzahlen">
-        <li><span class="l">Gegründet</span><span class="v">2007</span></li>
-        <li><span class="l">Erfahrung</span><span class="v">90 Jahre</span></li>
-        <li><span class="l">Einheiten übergeben</span><span class="v">1.000+</span></li>
-        <li><span class="l">Fläche entwickelt</span><span class="v">200.000+ m²</span></li>
-        <li><span class="l">Projektvolumen</span><span class="v">250 Mio. €</span></li>
-        <li><span class="l">Bestand</span><span class="v">150.000+ m²</span></li>
+        <li><span class="l" data-t="fakten.1">Gegründet</span><span class="v">2007</span></li>
+        <li><span class="l" data-t="fakten.2">Erfahrung</span><span class="v" data-t="fakten.v2">90 Jahre</span></li>
+        <li><span class="l" data-t="fakten.3">Einheiten übergeben</span><span class="v">1.000+</span></li>
+        <li><span class="l" data-t="fakten.4">Fläche entwickelt</span><span class="v">200.000+ m²</span></li>
+        <li><span class="l" data-t="fakten.5">Projektvolumen</span><span class="v" data-t="fakten.v5">250 Mio. €</span></li>
+        <li><span class="l" data-t="fakten.6">Bestand</span><span class="v">150.000+ m²</span></li>
       </ul>
     </div>
 
-    <div class="zeit auf" id="zeit">
-      <div class="zk">
-        <span>2007 bis heute</span>
-        <span id="zeit-hinweis">Pfeiltasten oder ziehen</span>
-      </div>
-      <section class="bahn" id="zeit-bahn" tabindex="0" aria-label="Zeitleiste der Projekte, horizontal scrollbar">
-        <svg viewBox="0 0 3020 240" width="3020" height="240" role="img" aria-labelledby="zeit-t"><title id="zeit-t">Zeitleiste 2007 bis 2026</title><line class="linie" x1="60" y1="120" x2="2150" y2="120"/><line class="marke" x1="60" y1="110" x2="60" y2="120"/><text class="jahr" x="60" y="146" text-anchor="middle">2007</text><line class="marke" x1="170" y1="115" x2="170" y2="120"/><line class="marke" x1="280" y1="115" x2="280" y2="120"/><line class="marke" x1="390" y1="110" x2="390" y2="120"/><text class="jahr" x="390" y="146" text-anchor="middle">2010</text><line class="marke" x1="500" y1="115" x2="500" y2="120"/><line class="marke" x1="610" y1="115" x2="610" y2="120"/><line class="marke" x1="720" y1="115" x2="720" y2="120"/><line class="marke" x1="830" y1="115" x2="830" y2="120"/><line class="marke" x1="940" y1="110" x2="940" y2="120"/><text class="jahr" x="940" y="146" text-anchor="middle">2015</text><line class="marke" x1="1050" y1="115" x2="1050" y2="120"/><line class="marke" x1="1160" y1="115" x2="1160" y2="120"/><line class="marke" x1="1270" y1="115" x2="1270" y2="120"/><line class="marke" x1="1380" y1="115" x2="1380" y2="120"/><line class="marke" x1="1490" y1="110" x2="1490" y2="120"/><text class="jahr" x="1490" y="146" text-anchor="middle">2020</text><line class="marke" x1="1600" y1="115" x2="1600" y2="120"/><line class="marke" x1="1710" y1="115" x2="1710" y2="120"/><line class="marke" x1="1820" y1="115" x2="1820" y2="120"/><line class="marke" x1="1930" y1="115" x2="1930" y2="120"/><line class="marke" x1="2040" y1="110" x2="2040" y2="120"/><text class="jahr" x="2040" y="146" text-anchor="middle">2025</text><line class="marke" x1="2150" y1="115" x2="2150" y2="120"/><text class="jahr" x="2150" y="146" text-anchor="middle">2026</text><text class="jahr" x="60" y="80">gegründet</text><text class="jahr" x="2150" y="80" text-anchor="end">heute</text><line class="marke" x1="2250" y1="18" x2="2250" y2="232"/><text class="offen" x="2264" y="30">Fertigstellungsjahr offen · 21 Objekte</text><a href="#/arbeiten/hansastrasse" data-slug="hansastrasse"><rect x="2264" y="54" width="5" height="5"/><text class="name" x="2278" y="62">Hansastraße</text></a><a href="#/arbeiten/nymphenburger-strasse" data-slug="nymphenburger-strasse"><rect x="2264" y="80" width="5" height="5"/><text class="name" x="2278" y="88">Nymphenburger Straße</text></a><a href="#/arbeiten/aeussere-muenchner-strasse" data-slug="aeussere-muenchner-strasse"><rect x="2264" y="106" width="5" height="5"/><text class="name" x="2278" y="114">Äußere Münchner Straße</text></a><a href="#/arbeiten/schanzaeckerstrasse" data-slug="schanzaeckerstrasse"><rect x="2264" y="132" width="5" height="5"/><text class="name" x="2278" y="140">Schanzäckerstraße</text></a><a href="#/arbeiten/wielandstrasse" data-slug="wielandstrasse"><rect x="2264" y="158" width="5" height="5"/><text class="name" x="2278" y="166">Wielandstraße</text></a><a href="#/arbeiten/schwedenstrasse" data-slug="schwedenstrasse"><rect x="2264" y="184" width="5" height="5"/><text class="name" x="2278" y="192">Schwedenstraße</text></a><a href="#/arbeiten/arnulfstrasse" data-slug="arnulfstrasse"><rect x="2264" y="210" width="5" height="5"/><text class="name" x="2278" y="218">Arnulfstraße</text></a><a href="#/arbeiten/ringbergstrasse" data-slug="ringbergstrasse"><rect x="2514" y="54" width="5" height="5"/><text class="name" x="2528" y="62">Ringbergstraße</text></a><a href="#/arbeiten/edisonstrasse" data-slug="edisonstrasse"><rect x="2514" y="80" width="5" height="5"/><text class="name" x="2528" y="88">Edisonstraße</text></a><a href="#/arbeiten/philipp-helmer-strasse" data-slug="philipp-helmer-strasse"><rect x="2514" y="106" width="5" height="5"/><text class="name" x="2528" y="114">Philipp-Helmer-Straße</text></a><a href="#/arbeiten/muenchner-freiheit" data-slug="muenchner-freiheit"><rect x="2514" y="132" width="5" height="5"/><text class="name" x="2528" y="140">Münchner Freiheit</text></a><a href="#/arbeiten/klenzestrasse-muenchen" data-slug="klenzestrasse-muenchen"><rect x="2514" y="158" width="5" height="5"/><text class="name" x="2528" y="166">Klenzestraße</text></a><a href="#/arbeiten/klenzestrasse-ismaning" data-slug="klenzestrasse-ismaning"><rect x="2514" y="184" width="5" height="5"/><text class="name" x="2528" y="192">Klenzestraße</text></a><a href="#/arbeiten/gustav-heinemann-ring" data-slug="gustav-heinemann-ring"><rect x="2514" y="210" width="5" height="5"/><text class="name" x="2528" y="218">Gustav-Heinemann-Ring</text></a><a href="#/arbeiten/haidelweg" data-slug="haidelweg"><rect x="2764" y="54" width="5" height="5"/><text class="name" x="2778" y="62">Haidelweg</text></a><a href="#/arbeiten/leibstrasse" data-slug="leibstrasse"><rect x="2764" y="80" width="5" height="5"/><text class="name" x="2778" y="88">Leibstraße</text></a><a href="#/arbeiten/konradstrasse-richterstrasse" data-slug="konradstrasse-richterstrasse"><rect x="2764" y="106" width="5" height="5"/><text class="name" x="2778" y="114">Konradstraße / Richterstraße</text></a><a href="#/arbeiten/landshut" data-slug="landshut"><rect x="2764" y="132" width="5" height="5"/><text class="name" x="2778" y="140">Objekt Landshut</text></a><a href="#/arbeiten/adalbert-stifter-strasse" data-slug="adalbert-stifter-strasse"><rect x="2764" y="158" width="5" height="5"/><text class="name" x="2778" y="166">Adalbert-Stifter-Straße</text></a><a href="#/arbeiten/zeisigweg" data-slug="zeisigweg"><rect x="2764" y="184" width="5" height="5"/><text class="name" x="2778" y="192">Zeisigweg</text></a><a href="#/arbeiten/pettenkoferstrasse" data-slug="pettenkoferstrasse"><rect x="2764" y="210" width="5" height="5"/><text class="name" x="2778" y="218">Pettenkoferstraße</text></a></svg>
-      </section>
+    <div class="register auf" id="register">
+      <div class="rk"><span data-t="reg.orte">Nach Orten</span><span data-t="reg.hinweis">Klick filtert das Verzeichnis.</span></div><ol class="reg"><li style="--n:10"><button type="button" data-o="muenchen"><span class="rname" data-t="f.muenchen">München</span><span class="rz">10</span></button></li><li style="--n:7"><button type="button" data-o="umland"><span class="rname" data-t="f.umland">Umland</span><span class="rz">7</span></button></li><li style="--n:2"><button type="button" data-o="nuernberg"><span class="rname" data-t="f.nuernberg">Nürnberg</span><span class="rz">2</span></button></li><li style="--n:1"><button type="button" data-o="landshut"><span class="rname" data-t="f.landshut">Landshut</span><span class="rz">1</span></button></li><li style="--n:1"><button type="button" data-o="chemnitz"><span class="rname" data-t="f.chemnitz">Chemnitz</span><span class="rz">1</span></button></li></ol><div class="rk"><span data-t="reg.stand">Nach Stand</span></div><ol class="reg"><li style="--n:3"><button type="button" data-f="im-bau"><span class="rname" data-t="f.imbau">Im Bau</span><span class="rz">3</span></button></li><li style="--n:4"><button type="button" data-f="in-planung"><span class="rname" data-t="f.planung">In Planung</span><span class="rz">4</span></button></li><li style="--n:14"><button type="button" data-f="fertiggestellt"><span class="rname" data-t="f.fertig">Fertiggestellt</span><span class="rz">14</span></button></li></ol>
     </div>
+  </section>
+
+  <!-- ============ Bildband ============ -->
+  <section class="abschnitt strecke" id="bildband" tabindex="-1" aria-labelledby="bildband-t">
+    <div class="kopfzeile">
+      <h2 id="bildband-t" data-t="band.t">Bildband</h2>
+      <span class="zahl" data-t="band.z">elf Aufnahmen, seitlich scrollen</span>
+    </div>
+    <section class="streifen klip" id="streifen" tabindex="0" aria-label="Bildstrecke, horizontal scrollbar">
+      <ol class="bilder">
+        <li><a href="#/arbeiten/leibstrasse"><picture><source type="image/webp" srcset="assets/galerie/leibstrasse-01.webp"><img src="assets/galerie/leibstrasse-01.jpg" alt="Luftbild der Wohnanlage: begrünter Innenhof mit Spielplatz, Photovoltaik auf den Dächern" width="1456" height="818" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—016</span><span>Leibstraße, Haar</span></span></a></li><li><a href="#/arbeiten/pettenkoferstrasse"><picture><source type="image/webp" srcset="assets/projekte/21_pettenkoferstrasse_muenchen.webp"><img src="assets/projekte/21_pettenkoferstrasse_muenchen.jpg" alt="Zwei Stadthäuser in hellem Klinker im Innenhof, Hausnummer 36a, im Hintergrund der Turm der Paulskirche" width="1148" height="1064" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—021</span><span>Pettenkoferstraße, München-Ludwigsvorstadt</span></span></a></li><li><a href="#/arbeiten/zeisigweg"><picture><source type="image/webp" srcset="assets/projekte/20_zeisigweg_freising.webp"><img src="assets/projekte/20_zeisigweg_freising.jpg" alt="Wohnanlage am Zeisigweg in Freising, Außenaufnahme im Winter" width="1280" height="852" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—020</span><span>Zeisigweg, Freising</span></span></a></li><li><a href="#/arbeiten/ringbergstrasse"><picture><source type="image/webp" srcset="assets/projekte/08_ringbergstrasse_muenchen.webp"><img src="assets/projekte/08_ringbergstrasse_muenchen.jpg" alt="Weißes Gebäude mit Dachterrasse und Balkonen, davor parkende Autos" width="1024" height="682" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—008</span><span>Ringbergstraße, München</span></span></a></li><li><a href="#/arbeiten/zeisigweg"><picture><source type="image/webp" srcset="assets/galerie/zeisigweg-04.webp"><img src="assets/galerie/zeisigweg-04.jpg" alt="Zeisigweg, Ansicht mit Eingang" width="1280" height="852" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—020</span><span>Zeisigweg, Freising</span></span></a></li><li><a href="#/arbeiten/edisonstrasse"><picture><source type="image/webp" srcset="assets/projekte/09_edisonstrasse_nuernberg.webp"><img src="assets/projekte/09_edisonstrasse_nuernberg.jpg" alt="Bürogebäude mit verglastem Treppenhaus im Gegenlicht" width="1024" height="682" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—009</span><span>Edisonstraße, Nürnberg</span></span></a></li><li><a href="#/arbeiten/pettenkoferstrasse"><picture><source type="image/webp" srcset="assets/galerie/pettenkofer-02.webp"><img src="assets/galerie/pettenkofer-02.jpg" alt="Blick in die Pettenkoferstraße mit Altbauten und einem Baukran" width="952" height="1268" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—021</span><span>Pettenkoferstraße, München-Ludwigsvorstadt</span></span></a></li><li><a href="#/arbeiten/philipp-helmer-strasse"><picture><source type="image/webp" srcset="assets/projekte/10_philipp-helmer-strasse_olching.webp"><img src="assets/projekte/10_philipp-helmer-strasse_olching.jpg" alt="Flacher Gewerbebau hinter einer Wiese unter bewölktem Himmel" width="1024" height="682" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—010</span><span>Philipp-Helmer-Straße, Olching</span></span></a></li><li><a href="#/arbeiten/zeisigweg"><picture><source type="image/webp" srcset="assets/galerie/zeisigweg-08.webp"><img src="assets/galerie/zeisigweg-08.jpg" alt="Zeisigweg, Außenansicht mit Balkonen" width="1280" height="852" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—020</span><span>Zeisigweg, Freising</span></span></a></li><li><a href="#/arbeiten/muenchner-freiheit"><picture><source type="image/webp" srcset="assets/projekte/11_muenchner-freiheit_schwabing.webp"><img src="assets/projekte/11_muenchner-freiheit_schwabing.jpg" alt="Rosa verputztes Eckhaus mit Erkerturm und Gastronomie im Erdgeschoss" width="590" height="506" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—011</span><span>Münchner Freiheit, München-Schwabing</span></span></a></li><li><a href="#/arbeiten/hansastrasse"><picture><source type="image/webp" srcset="assets/projekte/01_hansastrasse_muenchen.webp"><img src="assets/projekte/01_hansastrasse_muenchen.jpg" alt="Fünfgeschossiger Klinkerbau mit umlaufenden Fensterbändern an einer Straßenecke, Visualisierung" width="590" height="506" loading="lazy" decoding="async"></picture><span class="u"><span class="nr">MR—001</span><span>Hansastraße, München</span></span></a></li>
+      </ol>
+    </section>
+    <div class="streifen-nav"><button type="button" data-d="-1" data-t="band.zurueck">← Zurück</button><button type="button" data-d="1" data-t="band.weiter">Weiter →</button></div>
   </section>
 
   <!-- ============ Arbeiten ============ -->
   <section class="abschnitt arbeiten" id="arbeiten" tabindex="-1" aria-labelledby="arbeiten-t">
     <div class="kopfzeile">
-      <h2 id="arbeiten-t">Arbeiten</h2>
+      <h2 id="arbeiten-t" data-t="arb.t">Arbeiten</h2>
       <span class="zahl" id="zaehler">21 Objekte</span>
     </div>
 
     <div class="werkzeug">
       <ul class="filter" id="filter" aria-label="Verzeichnis filtern">
-        <li><button type="button" data-f="alle" aria-pressed="true">Alle</button></li>
-        <li><button type="button" data-f="im-bau" aria-pressed="false">Im Bau</button></li>
-        <li><button type="button" data-f="in-planung" aria-pressed="false">In Planung</button></li>
-        <li><button type="button" data-f="fertiggestellt" aria-pressed="false">Fertiggestellt</button></li>
+        <li><button type="button" data-f="alle" aria-pressed="true" data-t="f.alle">Alle</button></li>
+        <li><button type="button" data-f="im-bau" aria-pressed="false" data-t="f.imbau">Im Bau</button></li>
+        <li><button type="button" data-f="in-planung" aria-pressed="false" data-t="f.planung">In Planung</button></li>
+        <li><button type="button" data-f="fertiggestellt" aria-pressed="false" data-t="f.fertig">Fertiggestellt</button></li>
         <li class="trenner" aria-hidden="true">·</li>
-        <li><button type="button" data-o="muenchen" aria-pressed="false">München</button></li>
-        <li><button type="button" data-o="umland" aria-pressed="false">Umland</button></li>
-        <li><button type="button" data-o="nuernberg" aria-pressed="false">Nürnberg</button></li>
+        <li><button type="button" data-o="muenchen" aria-pressed="false" data-t="f.muenchen">München</button></li>
+        <li><button type="button" data-o="umland" aria-pressed="false" data-t="f.umland">Umland</button></li>
+        <li><button type="button" data-o="nuernberg" aria-pressed="false" data-t="f.nuernberg">Nürnberg</button></li>
         <li><button type="button" data-o="landshut" aria-pressed="false">Landshut</button></li>
         <li><button type="button" data-o="chemnitz" aria-pressed="false">Chemnitz</button></li>
       </ul>
       <div class="ansichten" role="group" aria-label="Ansicht">
-        <button type="button" data-a="liste" aria-pressed="true">Liste</button>
-        <button type="button" data-a="raster" aria-pressed="false">Raster</button>
+        <button type="button" data-a="liste" aria-pressed="false" data-t="a.liste">Liste</button>
+        <button type="button" data-a="raster" aria-pressed="true" data-t="a.raster">Raster</button>
       </div>
     </div>
 
-    <div class="archiv">
-      <ol class="liste" id="liste" aria-label="Werkverzeichnis, 21 Objekte">
+    <div class="archiv raster-an">
+      <ol class="liste raster" id="liste" aria-label="Werkverzeichnis, 21 Objekte">
         <li class="zeile" data-slug="hansastrasse" data-status="im-bau" data-gruppe="muenchen" style="--bw:590px"><a href="#/arbeiten/hansastrasse"><span class="nr">MR—001</span><span class="name">Hansastraße</span><span class="meta">München · Im Bau</span><span class="bild"><picture><source type="image/webp" srcset="assets/projekte/01_hansastrasse_muenchen.webp"><img src="assets/projekte/01_hansastrasse_muenchen.jpg" alt="Fünfgeschossiger Klinkerbau mit umlaufenden Fensterbändern an einer Straßenecke, Visualisierung" width="590" height="506" loading="lazy" decoding="async"></picture></span></a></li>
         <li class="zeile" data-slug="nymphenburger-strasse" data-status="im-bau" data-gruppe="muenchen" style="--bw:590px"><a href="#/arbeiten/nymphenburger-strasse"><span class="nr">MR—002</span><span class="name">Nymphenburger Straße</span><span class="meta">München · Im Bau</span><span class="bild"><picture><source type="image/webp" srcset="assets/projekte/02_nymphenburger-strasse_muenchen.webp"><img src="assets/projekte/02_nymphenburger-strasse_muenchen.jpg" alt="Wohnhaus mit vorgesetzten Balkonen zwischen zwei Altbauten, Visualisierung" width="590" height="506" loading="lazy" decoding="async"></picture></span></a></li>
         <li class="zeile" data-slug="aeussere-muenchner-strasse" data-status="in-planung" data-gruppe="umland" style="--bw:590px"><a href="#/arbeiten/aeussere-muenchner-strasse"><span class="nr">MR—003</span><span class="name">Äußere Münchner Straße</span><span class="meta">Wolfratshausen · In Planung</span><span class="bild"><picture><source type="image/webp" srcset="assets/projekte/03_aeussere-muenchner-strasse_wolfratshausen.webp"><img src="assets/projekte/03_aeussere-muenchner-strasse_wolfratshausen.jpg" alt="Zwei Häuser mit Holzfassade und Satteldach vor einem Waldhang, Visualisierung" width="590" height="506" loading="lazy" decoding="async"></picture></span></a></li>
@@ -822,8 +889,8 @@ body.pause .env{animation-play-state:paused}
   <!-- ============ Lageplan ============ -->
   <section class="abschnitt lage de" id="karte" tabindex="-1" aria-labelledby="karte-t">
     <div class="kopfzeile">
-      <h2 id="karte-t">Lageplan</h2>
-      <span class="zahl">21 Objekte, jedes auf seiner Adresse</span>
+      <h2 id="karte-t" data-t="lage.t">Lageplan</h2>
+      <span class="zahl" data-t="lage.z">21 Objekte, jedes auf seiner Adresse</span>
     </div>
     <div class="lagewrap">
       <figure class="plan" id="plan">
@@ -840,13 +907,13 @@ body.pause .env{animation-play-state:paused}
       </figure>
       <div class="lageseite">
         <div class="kk" role="group" aria-label="Kartenausschnitt">
-          <button type="button" data-v="de" aria-pressed="true">Deutschland <span class="aktiv">Ansicht</span></button>
-          <button type="button" data-v="mu" aria-pressed="false">München und Umland <span class="aktiv">Ansicht</span></button>
-          <button type="button" data-v="st" aria-pressed="false">München Stadt <span class="aktiv">Ansicht</span></button>
+          <button type="button" data-v="de" aria-pressed="true" data-t="kk.de">Deutschland <span class="aktiv">Ansicht</span></button>
+          <button type="button" data-v="mu" aria-pressed="false" data-t="kk.mu">München und Umland <span class="aktiv">Ansicht</span></button>
+          <button type="button" data-v="st" aria-pressed="false" data-t="kk.st">München Stadt <span class="aktiv">Ansicht</span></button>
         </div>
         <ol class="legende" id="legende" aria-label="Orte in diesem Ausschnitt"></ol>
         <p class="kf" id="kf"></p>
-        <p class="quelle">Satellitenbild: Sentinel-2 cloudless von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0. Grenzen, Flüsse, Seen: Natural Earth. Stadtgrenze, Isar, Mittlerer Ring: OpenStreetMap, ODbL.</p>
+        <p class="quelle" data-t="lage.quelle">Satellitenbild: Sentinel-2 cloudless von EOX IT Services GmbH, enthält bearbeitete Copernicus-Sentinel-Daten 2020, CC BY 4.0. Grenzen, Flüsse, Seen: Natural Earth. Stadtgrenze, Isar, Mittlerer Ring: OpenStreetMap, ODbL.</p>
       </div>
     </div>
   </section>
@@ -854,10 +921,10 @@ body.pause .env{animation-play-state:paused}
   <!-- ============ Vom Grundstück zur Übergabe ============ -->
   <section class="abschnitt weg" id="weg" tabindex="-1" aria-labelledby="weg-t">
     <div class="kopfzeile">
-      <h2 id="weg-t">Vom Grundstück zur Übergabe</h2>
-      <span class="zahl">drei Schritte, ein Risiko: unseres</span>
+      <h2 id="weg-t" data-t="weg.t">Vom Grundstück zur Übergabe</h2>
+      <span class="zahl" data-t="weg.z">drei Schritte, ein Risiko: unseres</span>
     </div>
-    <p class="lede auf">Zwischen Kaufvertrag und Übergabe liegen Monate bis Jahre. Diese Zeit tragen wir.</p>
+    <p class="lede auf" data-t="weg.lede">Zwischen Kaufvertrag und Übergabe liegen Monate bis Jahre. Diese Zeit tragen wir.</p>
 
     <div class="linie auf" aria-hidden="true">
       <svg viewBox="0 0 1200 120" id="wegsvg">
@@ -871,25 +938,25 @@ body.pause .env{animation-play-state:paused}
 
     <ol class="stationen" id="stationen">
       <li class="station auf">
-        <span class="nr">01 · Ankauf</span>
-        <h3>Ankauf</h3>
-        <p>Wir kaufen mit und ohne Baurecht. Der Preis steht vor der Prüfung, nicht danach.</p>
+        <span class="nr" data-t="st1.nr">01 · Ankauf</span>
+        <h3 data-t="st1.t">Ankauf</h3>
+        <p data-t="st1.p">Wir kaufen mit und ohne Baurecht. Der Preis steht vor der Prüfung, nicht danach.</p>
       </li>
       <li class="station auf">
-        <span class="nr">02 · Baurecht</span>
-        <h3>Baurecht</h3>
-        <p>Die Baurechtsprüfung führen wir selbst. Sie warten nicht auf unsere Finanzierung.</p>
+        <span class="nr" data-t="st2.nr">02 · Baurecht</span>
+        <h3 data-t="st2.t">Baurecht</h3>
+        <p data-t="st2.p">Die Baurechtsprüfung führen wir selbst. Sie warten nicht auf unsere Finanzierung.</p>
       </li>
       <li class="station auf">
-        <span class="nr">03 · Übergabe</span>
-        <h3>Übergabe</h3>
-        <p>Gebaut wird von uns, gehalten wird von uns. Über 1.000 Einheiten sind übergeben.</p>
+        <span class="nr" data-t="st3.nr">03 · Übergabe</span>
+        <h3 data-t="st3.t">Übergabe</h3>
+        <p data-t="st3.p">Gebaut wird von uns, gehalten wird von uns. Über 1.000 Einheiten sind übergeben.</p>
       </li>
     </ol>
 
     <p class="halten auf">
-      <span>Der Abschluss hält, weil wir ihn</span>
-      <button class="hold" id="hold" type="button" aria-describedby="hold-hinweis">halten</button><span>.</span>
+      <span data-t="hold.satz">Der Abschluss hält, weil wir ihn</span>
+      <button class="hold" id="hold" type="button" aria-describedby="hold-hinweis" data-t="hold.btn">halten</button><span>.</span>
       <span class="hinweis" id="hold-hinweis">Gedrückt halten, bis die Linie steht.</span>
     </p>
   </section>
@@ -897,15 +964,15 @@ body.pause .env{animation-play-state:paused}
   <!-- ============ Ankaufsprofil ============ -->
   <section class="abschnitt ankauf" id="ankauf" tabindex="-1" aria-labelledby="ankauf-t">
     <div class="kopfzeile">
-      <h2 id="ankauf-t">Ankaufsprofil</h2>
-      <span class="zahl">was wir suchen</span>
+      <h2 id="ankauf-t" data-t="ank.t">Ankaufsprofil</h2>
+      <span class="zahl" data-t="ank.z">was wir suchen</span>
     </div>
-    <p class="lede auf">Wohn- und Gewerbeflächen in München und Umland, dazu Nürnberg, Landshut und Chemnitz. Grundstücke mit und ohne Baurecht. Bestandsobjekte zur Weiterentwicklung. Auch schwierige Lagen, auch mit Abbruch.</p>
+    <p class="lede auf" data-t="ank.lede">Wohn- und Gewerbeflächen in München und Umland, dazu Nürnberg, Landshut und Chemnitz. Grundstücke mit und ohne Baurecht. Bestandsobjekte zur Weiterentwicklung. Auch schwierige Lagen, auch mit Abbruch.</p>
     <ul class="kriterien auf" aria-label="Kriterien">
-      <li>ab 1.000&nbsp;m² Grundstücksfläche</li>
-      <li>ab 20 Einheiten</li>
-      <li>München und Umland</li>
-      <li>Ankauf auch ohne Baurecht</li>
+      <li data-t="krit.1">ab 1.000&nbsp;m² Grundstücksfläche</li>
+      <li data-t="krit.2">ab 20 Einheiten</li>
+      <li data-t="krit.3">München und Umland</li>
+      <li data-t="krit.4">Ankauf auch ohne Baurecht</li>
     </ul>
   </section>
 
@@ -913,25 +980,25 @@ body.pause .env{animation-play-state:paused}
   <section class="abschnitt fragen" id="fragen" tabindex="-1" aria-labelledby="fragen-t">
     <div class="raster">
       <div>
-        <div class="kopfzeile eng3"><h2 id="fragen-t">Fragen</h2></div>
-        <p class="mono unter">vier Antworten, die Eigentümer uns zuerst stellen</p>
+        <div class="kopfzeile eng3"><h2 id="fragen-t" data-t="fr.t">Fragen</h2></div>
+        <p class="mono unter" data-t="fr.z">vier Antworten, die Eigentümer uns zuerst stellen</p>
       </div>
       <div class="faq auf">
         <details>
-          <summary>Was passiert, wenn der Bauvorbescheid nicht kommt? <span class="m">Antwort</span></summary>
-          <p class="a">Dann tragen wir das Risiko, nicht Sie. Wir kaufen auch ohne Baurecht und führen die Prüfung auf unsere Kosten.</p>
+          <summary data-t="fr.q1">Was passiert, wenn der Bauvorbescheid nicht kommt? <span class="m">Antwort</span></summary>
+          <p class="a" data-t="fr.a1">Dann tragen wir das Risiko, nicht Sie. Wir kaufen auch ohne Baurecht und führen die Prüfung auf unsere Kosten.</p>
         </details>
         <details>
-          <summary>Können Sie vom Vertrag zurücktreten? <span class="m">Antwort</span></summary>
-          <p class="a">Über 1.000 übergebene Einheiten seit 2007, und keine geplatzte Transaktion. Rücktrittsklauseln zu unseren Gunsten verhandeln wir nicht hinein.</p>
+          <summary data-t="fr.q2">Können Sie vom Vertrag zurücktreten? <span class="m">Antwort</span></summary>
+          <p class="a" data-t="fr.a2">Über 1.000 übergebene Einheiten seit 2007, und keine geplatzte Transaktion. Rücktrittsklauseln zu unseren Gunsten verhandeln wir nicht hinein.</p>
         </details>
         <details>
-          <summary>Wie lange dauert das? <span class="m">Antwort</span></summary>
-          <p class="a">Die Baurechtsprüfung dauert, je nach Gemeinde, Monate bis Jahre. Was wir Ihnen vorher sagen, gilt: der Preis und der Zeitpunkt Ihrer Zahlung.</p>
+          <summary data-t="fr.q3">Wie lange dauert das? <span class="m">Antwort</span></summary>
+          <p class="a" data-t="fr.a3">Die Baurechtsprüfung dauert, je nach Gemeinde, Monate bis Jahre. Was wir Ihnen vorher sagen, gilt: der Preis und der Zeitpunkt Ihrer Zahlung.</p>
         </details>
         <details>
-          <summary>Mein Nachbar müsste mitverkaufen. Geht das? <span class="m">Antwort</span></summary>
-          <p class="a">Ja. Wir haben mehrfach mehrere Eigentümer gleichzeitig an einen Tisch gebracht. Sprechen Sie uns an, bevor Sie mit dem Nachbarn sprechen.</p>
+          <summary data-t="fr.q4">Mein Nachbar müsste mitverkaufen. Geht das? <span class="m">Antwort</span></summary>
+          <p class="a" data-t="fr.a4">Ja. Wir haben mehrfach mehrere Eigentümer gleichzeitig an einen Tisch gebracht. Sprechen Sie uns an, bevor Sie mit dem Nachbarn sprechen.</p>
         </details>
       </div>
     </div>
@@ -941,7 +1008,7 @@ body.pause .env{animation-play-state:paused}
   <section class="abschnitt kontakt" id="kontakt" tabindex="-1" aria-labelledby="kontakt-t">
     <div class="raster">
       <div class="auf">
-        <div class="kopfzeile eng5"><h2 id="kontakt-t">Kontakt</h2></div>
+        <div class="kopfzeile eng5"><h2 id="kontakt-t" data-t="ko.t">Kontakt</h2></div>
         <p class="anschrift">
           <strong>Munich Residential GmbH</strong><br>
           Gewerbeallee 3<br>
@@ -952,24 +1019,24 @@ body.pause .env{animation-play-state:paused}
       </div>
       <form class="form auf" id="form">
         <div class="feld">
-          <label for="f-name">Ihr Name</label>
+          <label for="f-name" data-t="ko.l1">Ihr Name</label>
           <input id="f-name" name="name" type="text" autocomplete="name" required>
         </div>
         <div class="feld">
-          <label for="f-kontakt">E-Mail oder Telefon</label>
+          <label for="f-kontakt" data-t="ko.l2">E-Mail oder Telefon</label>
           <input id="f-kontakt" name="kontakt" type="text" autocomplete="email" required>
         </div>
         <div class="feld">
-          <label for="f-ort">Wo liegt das Grundstück?</label>
+          <label for="f-ort" data-t="ko.l3">Wo liegt das Grundstück?</label>
           <input id="f-ort" name="ort" type="text">
         </div>
         <div class="feld">
-          <label for="f-text">Was sollen wir wissen?</label>
+          <label for="f-text" data-t="ko.l4">Was sollen wir wissen?</label>
           <textarea id="f-text" name="text" rows="4"></textarea>
         </div>
-        <button class="senden" type="submit">Grundstück anbieten</button>
-        <p class="formnote">Der Knopf öffnet Ihr eigenes E-Mail-Programm mit einer fertigen Nachricht an info@munich-residential.com. Ihre Angaben werden nirgends gespeichert.</p>
-        <p class="formdone" id="formdone" role="status">Ihre Nachricht ist an info@munich-residential.com adressiert. Wir melden uns.</p>
+        <button class="senden" type="submit" data-t="ko.senden">Grundstück anbieten</button>
+        <p class="formnote" data-t="ko.note">Der Knopf öffnet Ihr eigenes E-Mail-Programm mit einer fertigen Nachricht an info@munich-residential.com. Ihre Angaben werden nirgends gespeichert.</p>
+        <p class="formdone" id="formdone" role="status" data-t="ko.done">Ihre Nachricht ist an info@munich-residential.com adressiert. Wir melden uns.</p>
       </form>
     </div>
   </section>
@@ -979,24 +1046,24 @@ body.pause .env{animation-play-state:paused}
   <div class="raster">
     <div class="logo">
       <img src="assets/logo-mr.png" alt="Munich Residential" width="829" height="502" loading="lazy" decoding="async">
-      <p>Projektentwicklung, Bau und Bestand.<br>München und Umland, Nürnberg, Landshut, Chemnitz.</p>
+      <p data-t="fuss.claim">Projektentwicklung, Bau und Bestand.<br>München und Umland, Nürnberg, Landshut, Chemnitz.</p>
     </div>
     <div>
-      <h2>Anschrift</h2>
+      <h2 data-t="fuss.h1">Anschrift</h2>
       <p>Munich Residential GmbH<br>Gewerbeallee 3<br>82343 Pöcking</p>
     </div>
     <div>
-      <h2>Kontakt</h2>
+      <h2 data-t="fuss.h2">Kontakt</h2>
       <p><a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a><br><a href="mailto:info@munich-residential.com">info@munich-residential.com</a></p>
     </div>
     <div>
-      <h2>Rechtliches</h2>
-      <p><a href="#/impressum">Impressum</a><br><a href="#/datenschutz">Datenschutz</a></p>
+      <h2 data-t="fuss.h3">Rechtliches</h2>
+      <p><a href="#/impressum" data-t="fuss.imp">Impressum</a><br><a href="#/datenschutz" data-t="fuss.ds">Datenschutz</a></p>
     </div>
   </div>
   <div class="unten">
     <span>© <span id="jahr">2026</span> Munich Residential GmbH</span>
-    <span>Das Bild im Kopf der Seite zeigt unser Objekt Leibstraße in Haar. Die Kamerafahrt wurde aus einem Luftbild berechnet, das Gebäude ist echt. Alle Projektbilder zeigen echte Objekte oder deren Visualisierung, so gekennzeichnet. Lageplan: Satellitenbild Sentinel-2 cloudless (EOX IT Services GmbH, CC BY 4.0), Grenzen, Flüsse und Seen aus Natural Earth (gemeinfrei), Stadtgrenze, Isar und Mittlerer Ring aus OpenStreetMap (© OpenStreetMap-Mitwirkende, ODbL).</span>
+    <span data-t="fuss.hinweis">Das Bild im Kopf der Seite zeigt unser Objekt Leibstraße in Haar. Die Kamerafahrt wurde aus einem Luftbild berechnet, das Gebäude ist echt. Alle Projektbilder zeigen echte Objekte oder deren Visualisierung, so gekennzeichnet. Lageplan: Satellitenbild Sentinel-2 cloudless (EOX IT Services GmbH, CC BY 4.0), Grenzen, Flüsse und Seen aus Natural Earth (gemeinfrei), Stadtgrenze, Isar und Mittlerer Ring aus OpenStreetMap (© OpenStreetMap-Mitwirkende, ODbL).</span>
   </div>
 </footer>
 
@@ -1008,11 +1075,12 @@ body.pause .env{animation-play-state:paused}
 <dialog class="ansicht" id="ansicht" aria-labelledby="ansicht-t">
   <div class="innen">
     <div class="ak">
-      <a href="#arbeiten" id="ansicht-zurueck" class="zurueck">← Verzeichnis</a>
+      <a href="#arbeiten" id="ansicht-zurueck" class="zurueck" data-t="ans.zurueck">← Verzeichnis</a>
       <div class="rechts" id="ansicht-blaettern">
-        <button type="button" id="ansicht-vor" aria-label="Vorheriges Objekt">←<span class="lang"> Vorheriges</span></button>
-        <button type="button" id="ansicht-weiter" aria-label="Nächstes Objekt"><span class="lang">Nächstes </span>→</button>
-        <button type="button" id="ansicht-zu">Schließen</button>
+        <button type="button" id="ansicht-teilen" data-t="ans.teilen">Link kopieren</button>
+        <button type="button" id="ansicht-vor" aria-label="Vorheriges Objekt" data-t="ans.vor">←<span class="lang"> Vorheriges</span></button>
+        <button type="button" id="ansicht-weiter" aria-label="Nächstes Objekt" data-t="ans.weiter"><span class="lang">Nächstes </span>→</button>
+        <button type="button" id="ansicht-zu" data-t="ans.zu">Schließen</button>
       </div>
     </div>
     <div id="ansicht-inhalt"></div>
@@ -1022,6 +1090,7 @@ body.pause .env{animation-play-state:paused}
 <!-- Rechtstexte, im Dokument, damit sie ohne Skript lesbar bleiben -->
 <template id="t-impressum">
   <article class="recht">
+    <p class="mono unter recht-en" data-t="recht.hinweis"></p>
     <h2 id="ansicht-t">Impressum</h2>
     <p><strong>Munich Residential GmbH</strong><br>Gewerbeallee 3<br>82343 Pöcking</p>
     <p>Telefon <a href="tel:+4981514463120">08151&nbsp;446&nbsp;3120</a><br>E-Mail <a href="mailto:info@munich-residential.com">info@munich-residential.com</a></p>
@@ -1042,6 +1111,7 @@ body.pause .env{animation-play-state:paused}
 
 <template id="t-datenschutz">
   <article class="recht">
+    <p class="mono unter recht-en" data-t="recht.hinweis"></p>
     <h2 id="ansicht-t">Datenschutz</h2>
     <p>Diese Seite erhebt keine personenbezogenen Daten. Sie setzt keine Cookies, nutzt keine Analysewerkzeuge und lädt beim Aufruf nichts von fremden Servern. Schriften und Bilder liegen auf demselben Server wie die Seite.</p>
     <h3>Verantwortliche Stelle</h3>
@@ -1060,9 +1130,9 @@ body.pause .env{animation-play-state:paused}
 
 <template id="t-404">
   <article class="recht">
-    <h2 id="ansicht-t">Diese Adresse gibt es nicht.</h2>
-    <p>Unter dieser Adresse liegt kein Objekt und keine Seite. Das Verzeichnis führt alle 21 Objekte.</p>
-    <p><a class="linktext" href="#arbeiten">Zum Verzeichnis</a></p>
+    <h2 id="ansicht-t" data-t="t404.t">Diese Adresse gibt es nicht.</h2>
+    <p data-t="t404.p">Unter dieser Adresse liegt kein Objekt und keine Seite. Das Verzeichnis führt alle 21 Objekte.</p>
+    <p><a class="linktext" href="#arbeiten" data-t="t404.link">Zum Verzeichnis</a></p>
   </article>
 </template>
 <script>
@@ -1154,6 +1224,20 @@ var PROJEKTE = [
    text:['Nachverdichtung im Innenhof der Ludwigsvorstadt: Stadthäuser in hellem Klinker hinter dem Altbaubestand an der Straße.']}
 ];
 var STATUS = {'im-bau':'Im Bau','in-planung':'In Planung','fertiggestellt':'Fertiggestellt'};
+/* Bildband: die elf Aufnahmen, die groß stehen dürfen (Höhe ab 500 px) */
+var BILDBAND = [
+  {slug:'leibstrasse',f:'galerie/leibstrasse-01',w:1456,h:818},
+  {slug:'pettenkoferstrasse',f:'projekte/21_pettenkoferstrasse_muenchen',w:1148,h:1064},
+  {slug:'zeisigweg',f:'projekte/20_zeisigweg_freising',w:1280,h:852},
+  {slug:'ringbergstrasse',f:'projekte/08_ringbergstrasse_muenchen',w:1024,h:682},
+  {slug:'zeisigweg',f:'galerie/zeisigweg-04',w:1280,h:852},
+  {slug:'edisonstrasse',f:'projekte/09_edisonstrasse_nuernberg',w:1024,h:682},
+  {slug:'pettenkoferstrasse',f:'galerie/pettenkofer-02',w:952,h:1268},
+  {slug:'philipp-helmer-strasse',f:'projekte/10_philipp-helmer-strasse_olching',w:1024,h:682},
+  {slug:'zeisigweg',f:'galerie/zeisigweg-08',w:1280,h:852},
+  {slug:'muenchner-freiheit',f:'projekte/11_muenchner-freiheit_schwabing',w:590,h:506},
+  {slug:'hansastrasse',f:'projekte/01_hansastrasse_muenchen',w:590,h:506}
+];
 var GRUPPEN = {muenchen:'München',umland:'Umland',nuernberg:'Nürnberg',landshut:'Landshut',chemnitz:'Chemnitz'};
 /* Karte: Umriss und Isar, grob und bewusst. Reihenfolge lon, lat. */
 var UMRISS = [[8.6,54.9],[9.9,54.8],[10.9,54.0],[11.5,54.0],[12.5,54.4],[13.4,54.7],[14.2,53.9],[14.3,53.2],[14.6,52.6],[14.7,52.0],[15.0,51.4],[14.8,50.9],[14.3,51.0],[13.0,50.5],[12.3,50.2],[12.5,49.7],[13.8,48.8],[13.0,48.3],[12.8,47.7],[12.2,47.7],[11.0,47.4],[10.2,47.3],[9.6,47.5],[8.6,47.6],[7.6,47.6],[7.6,48.3],[8.2,49.0],[6.4,49.5],[6.1,50.1],[6.0,50.8],[6.0,51.8],[6.8,51.9],[7.1,52.2],[7.0,52.6],[7.2,53.3],[7.0,53.6],[8.1,53.7],[8.9,53.9],[8.6,54.3]];
@@ -1164,6 +1248,89 @@ var ANSICHTEN = [
   {id:'st',titel:'München Stadt',lonL:11.42,lonR:11.75,latB:48.06,latT:48.22,km:5}
 ];
 var GEO = {"land":[[[9.524,47.524],[9.183,47.671],[8.881,47.656],[8.831,47.704],[8.728,47.7],[8.573,47.776],[8.436,47.731],[8.403,47.688],[8.413,47.663],[8.571,47.638],[8.43,47.592],[8.198,47.607],[7.927,47.564],[7.698,47.57],[7.565,47.607],[7.529,47.674],[7.539,47.774],[7.593,47.906],[7.608,48.003],[7.584,48.064],[7.617,48.157],[7.706,48.28],[7.838,48.636],[8.14,48.886],[8.135,48.974],[7.611,49.062],[7.525,49.086],[7.451,49.152],[7.037,49.113],[7.001,49.18],[6.891,49.208],[6.735,49.161],[6.534,49.395],[6.458,49.443],[6.344,49.453],[6.378,49.6],[6.485,49.708],[6.487,49.798],[6.256,49.872],[6.138,49.974],[6.108,50.094],[6.175,50.233],[6.364,50.316],[6.341,50.452],[6.179,50.523],[6.168,50.545],[6.236,50.597],[5.994,50.75],[6.048,50.905],[5.858,51.03],[5.939,51.041],[6.13,51.147],[6.082,51.18],[6.076,51.224],[6.199,51.45],[6.089,51.638],[5.949,51.762],[5.949,51.803],[6.167,51.881],[6.356,51.825],[6.742,51.911],[6.802,51.98],[6.716,52.036],[6.725,52.08],[6.977,52.206],[7.02,52.266],[7.035,52.38],[7.002,52.419],[6.749,52.464],[6.692,52.53],[6.711,52.618],[6.748,52.634],[7.013,52.634],[7.117,52.887],[7.179,52.966],[7.197,53.282],[7.053,53.376],[7.107,53.557],[7.206,53.655],[7.629,53.697],[8.009,53.691],[8.167,53.543],[8.108,53.468],[8.245,53.445],[8.334,53.606],[8.493,53.514],[8.495,53.394],[8.538,53.557],[8.506,53.671],[8.528,53.781],[8.619,53.875],[8.898,53.836],[9.206,53.856],[9.322,53.813],[9.585,53.6],[9.784,53.555],[9.631,53.6],[9.312,53.859],[8.978,53.926],[8.904,54],[8.907,54.261],[8.78,54.313],[8.645,54.295],[8.626,54.354],[8.648,54.398],[8.952,54.468],[8.957,54.538],[8.682,54.792],[8.67,54.903],[8.903,54.897],[9.255,54.808],[9.616,54.855],[9.892,54.781],[10.022,54.674],[10.029,54.581],[9.869,54.472],[10.143,54.488],[10.212,54.409],[10.36,54.438],[10.732,54.316],[11.013,54.379],[11.064,54.281],[11.009,54.181],[10.811,54.075],[10.855,54.01],[10.918,53.995],[11.104,54.009],[11.4,53.945],[11.796,54.145],[12.111,54.168],[12.575,54.467],[13.029,54.411],[13.147,54.283],[13.448,54.141],[13.724,54.153],[13.822,54.019],[13.866,53.853],[14.025,53.767],[14.259,53.73],[14.415,53.283],[14.411,53.199],[14.369,53.106],[14.139,52.933],[14.129,52.878],[14.514,52.646],[14.619,52.529],[14.555,52.36],[14.616,52.278],[14.68,52.25],[14.705,52.11],[14.753,52.082],[14.675,51.905],[14.602,51.832],[14.725,51.662],[14.725,51.524],[14.936,51.435],[15.017,51.253],[14.964,51.095],[14.767,50.818],[14.614,50.856],[14.624,50.915],[14.546,50.994],[14.32,51.038],[14.256,51.002],[14.369,50.899],[13.899,50.761],[13.557,50.705],[13.436,50.601],[13.375,50.622],[13.238,50.577],[13.181,50.51],[13.016,50.49],[12.943,50.406],[12.765,50.431],[12.549,50.393],[12.453,50.35],[12.277,50.181],[12.135,50.311],[12.099,50.311],[12.09,50.269],[12.208,50.098],[12.512,49.896],[12.391,49.74],[12.632,49.461],[12.813,49.329],[12.917,49.33],[13.141,49.158],[13.289,49.097],[13.401,48.978],[13.548,48.96],[13.77,48.816],[13.815,48.767],[13.785,48.587],[13.675,48.523],[13.487,48.582],[13.375,48.361],[12.897,48.204],[12.76,48.107],[12.76,48.076],[12.954,47.891],[12.954,47.808],[12.898,47.722],[13.034,47.699],[13.054,47.655],[13.014,47.478],[12.809,47.542],[12.771,47.639],[12.686,47.669],[12.483,47.637],[12.209,47.718],[12.186,47.62],[11.717,47.583],[11.393,47.487],[11.298,47.425],[11.042,47.393],[10.981,47.398],[10.873,47.52],[10.439,47.552],[10.369,47.366],[10.313,47.313],[10.183,47.279],[10.2,47.363],[10.066,47.393],[10.06,47.449],[9.972,47.505],[9.749,47.576],[9.651,47.526],[9.524,47.524]]],"laender":[[[[14.398,51.013],[14.288,51.037],[14.238,50.982],[14.382,50.921],[14.347,50.88],[13.96,50.802],[13.835,50.724],[13.557,50.707],[13.448,50.597],[13.369,50.628],[13.232,50.582],[13.16,50.497],[13.01,50.493],[12.953,50.404],[12.817,50.443],[12.51,50.389],[12.336,50.259],[12.3,50.161],[12.169,50.303],[11.989,50.349],[11.897,50.423],[11.989,50.546],[12.145,50.563],[12.187,50.626],[12.302,50.652],[12.322,50.674],[12.241,50.722],[12.289,50.763],[12.258,50.793],[12.647,50.892],[12.484,51.058],[12.223,51.089],[12.153,51.17],[12.132,51.292],[12.186,51.344],[12.156,51.446],[12.235,51.562],[12.662,51.601],[12.891,51.67],[13.169,51.571],[13.21,51.496],[13.184,51.387],[13.411,51.421],[13.534,51.364],[13.766,51.348],[13.97,51.359],[14.106,51.506],[14.221,51.536],[14.339,51.51],[14.595,51.562],[14.945,51.449],[15.022,51.237],[14.785,50.82],[14.613,50.846],[14.629,50.921],[14.55,50.912],[14.574,50.975],[14.482,51.037],[14.398,51.013]]],[[[12.101,50.314],[12.08,50.243],[12.175,50.183],[12.247,50.045],[12.451,49.981],[12.524,49.905],[12.384,49.743],[12.496,49.67],[12.644,49.429],[12.778,49.333],[13,49.295],[13.179,49.118],[13.3,49.094],[13.459,48.945],[13.609,48.946],[13.816,48.766],[13.802,48.612],[13.717,48.522],[13.455,48.573],[13.406,48.377],[12.863,48.197],[12.739,48.113],[12.991,47.847],[12.892,47.724],[13.064,47.674],[13.037,47.493],[12.943,47.47],[12.779,47.555],[12.813,47.612],[12.762,47.667],[12.497,47.629],[12.424,47.692],[12.239,47.679],[12.242,47.732],[12.177,47.706],[12.207,47.646],[12.174,47.605],[11.62,47.59],[11.551,47.514],[11.413,47.506],[11.384,47.445],[11.237,47.394],[11.194,47.429],[10.979,47.391],[10.859,47.531],[10.584,47.562],[10.483,47.533],[10.429,47.577],[10.428,47.396],[10.306,47.302],[10.16,47.271],[10.209,47.372],[10.083,47.359],[10.072,47.439],[9.946,47.541],[9.833,47.535],[9.782,47.588],[9.677,47.523],[9.554,47.533],[9.865,47.675],[10.127,47.677],[10.079,47.79],[10.13,47.817],[10.085,47.966],[10.139,48.094],[9.981,48.381],[10.064,48.471],[10.319,48.533],[10.294,48.703],[10.372,48.664],[10.495,48.699],[10.432,48.756],[10.468,48.921],[10.357,49.032],[10.274,49.05],[10.23,49.103],[10.263,49.148],[10.148,49.203],[10.122,49.37],[10.172,49.382],[10.112,49.442],[10.128,49.511],[10.085,49.544],[10.028,49.483],[9.936,49.482],[9.913,49.579],[9.839,49.548],[9.882,49.611],[9.795,49.721],[9.653,49.688],[9.649,49.783],[9.34,49.783],[9.314,49.732],[9.424,49.711],[9.423,49.651],[9.294,49.633],[9.259,49.579],[9.111,49.575],[9.073,49.611],[9.141,49.787],[9.027,49.907],[9.053,49.982],[8.977,50.053],[9.012,50.099],[9.235,50.144],[9.507,50.108],[9.508,50.236],[9.661,50.234],[9.749,50.306],[9.779,50.414],[9.981,50.437],[10.126,50.563],[10.328,50.489],[10.401,50.397],[10.552,50.359],[10.609,50.231],[10.721,50.207],[10.739,50.248],[10.846,50.247],[10.715,50.322],[10.789,50.386],[11.113,50.365],[11.143,50.301],[11.255,50.275],[11.249,50.473],[11.347,50.519],[11.427,50.513],[11.421,50.443],[11.526,50.379],[11.932,50.417],[12.101,50.314]]],[[[6.101,50.063],[6.147,50.214],[6.426,50.332],[6.395,50.382],[6.458,50.341],[6.586,50.377],[6.795,50.356],[6.76,50.471],[6.874,50.462],[6.939,50.555],[7.199,50.638],[7.34,50.629],[7.387,50.704],[7.599,50.733],[7.77,50.839],[7.758,50.911],[7.86,50.922],[7.846,50.879],[7.97,50.837],[8.056,50.691],[8.134,50.684],[8.164,50.586],[8.115,50.529],[8.004,50.521],[8.019,50.455],[7.973,50.4],[8.121,50.269],[7.922,50.2],[7.922,50.109],[7.859,50.119],[7.771,50.053],[7.878,49.973],[8.213,50.044],[8.335,49.96],[8.416,49.778],[8.477,49.768],[8.361,49.664],[8.443,49.452],[8.505,49.431],[8.48,49.297],[8.387,49.232],[8.357,49.11],[8.23,48.966],[7.932,49.035],[7.635,49.038],[7.476,49.152],[7.295,49.205],[7.391,49.361],[7.252,49.431],[7.309,49.49],[7.271,49.578],[6.942,49.628],[6.605,49.53],[6.349,49.525],[6.403,49.656],[6.5,49.712],[6.503,49.796],[6.223,49.887],[6.101,50.063]]],[[[6.345,49.455],[6.349,49.525],[6.605,49.53],[6.942,49.628],[7.271,49.578],[7.309,49.49],[7.252,49.431],[7.391,49.361],[7.287,49.231],[7.372,49.166],[7.274,49.105],[7.08,49.142],[7.043,49.108],[7.009,49.182],[6.914,49.207],[6.833,49.209],[6.822,49.148],[6.714,49.159],[6.512,49.425],[6.345,49.455]]],[[[8.824,54.906],[9.195,54.85],[9.244,54.802],[9.451,54.81],[9.58,54.866],[9.583,54.83],[9.824,54.757],[9.948,54.78],[10.018,54.701],[9.929,54.674],[10.039,54.667],[10.027,54.56],[9.84,54.475],[10.143,54.492],[10.204,54.461],[10.142,54.324],[10.318,54.443],[10.731,54.31],[10.935,54.38],[11.136,54.386],[11.067,54.359],[11.067,54.184],[10.753,54.05],[10.961,53.912],[10.885,53.919],[10.751,53.841],[10.759,53.748],[10.946,53.677],[10.954,53.566],[10.83,53.57],[10.823,53.516],[10.641,53.451],[10.57,53.364],[10.328,53.433],[10.187,53.525],[10.223,53.634],[10.165,53.685],[10.192,53.727],[9.692,53.576],[9.551,53.635],[9.532,53.711],[9.436,53.749],[9.395,53.831],[8.949,53.913],[8.833,54.036],[8.997,54.03],[9.018,54.098],[8.953,54.15],[8.861,54.125],[8.813,54.18],[8.84,54.256],[8.963,54.318],[8.678,54.269],[8.603,54.312],[8.696,54.359],[8.635,54.365],[8.648,54.406],[8.886,54.418],[9.011,54.482],[8.888,54.602],[8.826,54.598],[8.818,54.674],[8.689,54.735],[8.648,54.818],[8.661,54.896],[8.824,54.906]],[[8.963,54.524],[8.888,54.468],[8.813,54.482],[8.963,54.524]],[[11.256,54.479],[11.314,54.414],[11.113,54.415],[11.006,54.468],[11.121,54.536],[11.256,54.479]],[[8.332,54.694],[8.401,54.633],[8.292,54.667],[8.36,54.715],[8.332,54.694]],[[8.498,54.756],[8.594,54.722],[8.552,54.685],[8.395,54.715],[8.498,54.756]],[[8.36,54.948],[8.388,54.894],[8.654,54.894],[8.307,54.865],[8.284,54.742],[8.298,54.913],[8.374,55.035],[8.463,55.051],[8.395,55.044],[8.43,55.03],[8.36,54.948]],[[8.635,54.543],[8.701,54.548],[8.619,54.493],[8.635,54.543]],[[7.904,54.18],[7.904,54.18]]],[[[7.072,52.841],[7.184,52.966],[7.195,53.245],[7.255,53.32],[7.367,53.303],[7.038,53.349],[7.051,53.513],[7.142,53.537],[7.101,53.598],[7.305,53.685],[7.951,53.722],[8.031,53.708],[8.053,53.636],[8.168,53.553],[8.059,53.502],[8.086,53.456],[8.205,53.411],[8.315,53.475],[8.292,53.529],[8.231,53.525],[8.271,53.613],[8.552,53.544],[8.49,53.486],[8.504,53.358],[8.513,53.496],[8.643,53.532],[8.631,53.604],[8.513,53.617],[8.486,53.7],[8.573,53.858],[8.652,53.892],[8.861,53.831],[9.275,53.865],[9.567,53.6],[9.764,53.548],[9.857,53.433],[10.351,53.432],[10.71,53.368],[10.739,53.308],[11.089,53.144],[11.156,53.174],[11.344,53.066],[11.581,53.043],[11.409,52.905],[11.253,52.876],[11.015,52.912],[10.759,52.835],[10.801,52.722],[10.977,52.616],[10.946,52.563],[11.002,52.498],[10.939,52.462],[11.073,52.372],[10.999,52.34],[11.085,52.231],[11.021,52.194],[11.048,52.14],[10.949,52.1],[10.963,52.06],[10.57,52.007],[10.645,51.957],[10.578,51.805],[10.698,51.637],[10.631,51.607],[10.65,51.562],[10.375,51.586],[10.358,51.536],[10.15,51.432],[9.949,51.382],[9.898,51.419],[9.861,51.372],[9.796,51.408],[9.713,51.363],[9.785,51.339],[9.722,51.29],[9.535,51.367],[9.636,51.404],[9.595,51.518],[9.686,51.572],[9.654,51.608],[9.373,51.647],[9.461,51.865],[9.322,51.856],[9.326,51.916],[9.255,51.922],[9.286,51.973],[9.171,51.986],[9.189,52.079],[9.143,52.129],[8.996,52.134],[8.988,52.188],[9.073,52.239],[8.987,52.26],[8.995,52.322],[9.128,52.408],[9.132,52.477],[9.081,52.498],[8.961,52.409],[8.827,52.389],[8.711,52.399],[8.704,52.48],[8.643,52.524],[8.497,52.507],[8.424,52.446],[8.301,52.451],[8.441,52.354],[8.492,52.176],[8.401,52.112],[8.267,52.134],[7.97,52.039],[7.892,52.09],[8.017,52.17],[7.901,52.205],[7.973,52.315],[7.906,52.377],[7.71,52.407],[7.681,52.462],[7.601,52.474],[7.562,52.372],[7.301,52.272],[7.053,52.238],[7.012,52.267],[7.048,52.365],[6.973,52.451],[6.695,52.476],[6.672,52.542],[6.744,52.56],[6.702,52.619],[7.018,52.626],[7.072,52.841]],[[8.564,53.212],[8.496,53.224],[8.617,53.177],[8.705,53.05],[8.915,53.025],[8.99,53.094],[8.936,53.163],[8.564,53.212]],[[6.798,53.604],[6.722,53.591],[6.757,53.563],[6.66,53.599],[6.798,53.604]],[[7.133,53.708],[7.347,53.723],[7.133,53.708]],[[7.367,53.728],[7.436,53.728],[7.367,53.728]],[[8.12,53.721],[8.196,53.728],[8.12,53.721]],[[7.517,53.762],[7.627,53.751],[7.473,53.732],[7.517,53.762]],[[7.661,53.762],[7.813,53.783],[7.661,53.762]],[[7.874,53.776],[7.956,53.783],[7.874,53.776]]],[[[6.772,52.109],[7.027,52.239],[7.301,52.272],[7.562,52.372],[7.609,52.476],[7.97,52.318],[7.901,52.205],[8.017,52.17],[7.892,52.09],[7.974,52.038],[8.267,52.134],[8.401,52.112],[8.492,52.176],[8.441,52.354],[8.301,52.451],[8.424,52.446],[8.497,52.507],[8.643,52.524],[8.704,52.48],[8.711,52.399],[8.827,52.389],[8.961,52.409],[9.091,52.497],[9.134,52.475],[9.128,52.408],[8.995,52.322],[8.987,52.26],[9.073,52.239],[8.988,52.188],[8.996,52.134],[9.143,52.129],[9.189,52.079],[9.171,51.986],[9.286,51.973],[9.255,51.922],[9.326,51.916],[9.322,51.856],[9.461,51.865],[9.372,51.656],[9.44,51.649],[9.333,51.607],[9.336,51.554],[9.212,51.457],[9.109,51.443],[9.015,51.509],[8.901,51.476],[8.935,51.391],[8.654,51.344],[8.576,51.27],[8.723,51.269],[8.752,51.178],[8.706,51.106],[8.525,51.093],[8.545,51.021],[8.466,50.917],[8.197,50.827],[8.133,50.78],[8.175,50.742],[8.134,50.684],[8.056,50.691],[7.97,50.837],[7.789,50.93],[7.768,50.836],[7.676,50.81],[7.694,50.776],[7.387,50.704],[7.34,50.629],[7.199,50.638],[6.939,50.555],[6.874,50.462],[6.76,50.471],[6.798,50.357],[6.586,50.377],[6.458,50.341],[6.398,50.383],[6.427,50.334],[6.373,50.323],[6.337,50.481],[6.171,50.518],[6.249,50.614],[6.159,50.622],[6.081,50.713],[6.012,50.709],[5.969,50.795],[6.064,50.908],[6,50.929],[6.004,50.974],[5.875,50.965],[5.858,51.019],[6.147,51.152],[6.061,51.171],[6.057,51.212],[6.208,51.388],[6.193,51.509],[6.086,51.596],[6.099,51.644],[5.939,51.732],[5.964,51.777],[5.928,51.807],[6.156,51.842],[6.093,51.885],[6.127,51.897],[6.345,51.821],[6.378,51.86],[6.744,51.908],[6.809,51.98],[6.673,52.05],[6.772,52.109]]],[[[9.55,47.534],[9.183,47.67],[8.906,47.652],[8.798,47.72],[8.717,47.695],[8.713,47.757],[8.644,47.791],[8.617,47.757],[8.583,47.8],[8.391,47.692],[8.458,47.64],[8.607,47.656],[8.561,47.589],[8.233,47.622],[8.042,47.561],[7.82,47.595],[7.683,47.544],[7.518,47.675],[7.621,47.971],[7.573,48.095],[7.751,48.341],[7.81,48.615],[8.09,48.808],[8.357,49.11],[8.387,49.232],[8.48,49.297],[8.505,49.431],[8.443,49.452],[8.417,49.579],[8.566,49.527],[8.617,49.545],[8.599,49.61],[8.676,49.623],[8.718,49.542],[8.89,49.506],[8.829,49.466],[8.811,49.407],[8.846,49.396],[8.954,49.503],[9.127,49.508],[9.075,49.572],[9.253,49.578],[9.294,49.633],[9.423,49.651],[9.424,49.711],[9.314,49.732],[9.328,49.778],[9.649,49.783],[9.632,49.697],[9.797,49.72],[9.882,49.611],[9.839,49.548],[9.913,49.579],[9.936,49.482],[10.028,49.483],[10.085,49.544],[10.128,49.511],[10.112,49.442],[10.172,49.382],[10.122,49.37],[10.148,49.203],[10.263,49.148],[10.23,49.103],[10.274,49.05],[10.459,48.939],[10.432,48.756],[10.495,48.699],[10.372,48.664],[10.294,48.703],[10.319,48.533],[10.064,48.471],[9.981,48.381],[10.139,48.094],[10.085,47.966],[10.13,47.817],[10.079,47.79],[10.127,47.677],[9.865,47.675],[9.55,47.534]]],[[[14.608,52.596],[14.645,52.577],[14.632,52.497],[14.545,52.382],[14.584,52.291],[14.712,52.236],[14.686,52.121],[14.761,52.077],[14.687,51.912],[14.583,51.825],[14.732,51.658],[14.707,51.541],[14.159,51.527],[13.961,51.357],[13.534,51.364],[13.411,51.421],[13.188,51.385],[13.2,51.524],[13.062,51.615],[13.178,51.697],[13.158,51.782],[13.237,51.855],[13.066,51.853],[12.667,51.994],[12.608,51.965],[12.421,52.012],[12.208,52.178],[12.248,52.252],[12.207,52.307],[12.295,52.516],[12.123,52.553],[12.226,52.673],[12.208,52.862],[11.897,52.902],[11.626,53.05],[11.344,53.066],[11.274,53.118],[11.528,53.121],[11.53,53.195],[11.6,53.237],[11.839,53.226],[11.816,53.25],[12.012,53.3],[12.064,53.356],[12.192,53.369],[12.43,53.268],[13.001,53.168],[13.146,53.258],[13.23,53.233],[13.282,53.288],[13.469,53.302],[13.553,53.405],[13.809,53.485],[13.798,53.542],[13.921,53.427],[14.243,53.427],[14.224,53.36],[14.103,53.273],[14.249,53.259],[14.391,53.334],[14.442,53.252],[14.357,53.067],[14.144,52.96],[14.165,52.896],[14.124,52.851],[14.608,52.596]],[[13.626,52.487],[13.648,52.539],[13.474,52.664],[13.364,52.624],[13.289,52.657],[13.217,52.587],[13.152,52.598],[13.157,52.501],[13.092,52.415],[13.426,52.381],[13.458,52.417],[13.654,52.342],[13.751,52.45],[13.626,52.487]]],[[[14.264,53.7],[14.391,53.334],[14.249,53.259],[14.103,53.273],[14.224,53.36],[14.243,53.427],[13.921,53.427],[13.781,53.544],[13.809,53.485],[13.553,53.405],[13.469,53.302],[13.282,53.288],[13.23,53.233],[13.146,53.258],[12.975,53.165],[12.43,53.268],[12.192,53.369],[12.064,53.356],[12.012,53.3],[11.816,53.25],[11.839,53.226],[11.6,53.237],[11.53,53.195],[11.528,53.121],[11.274,53.118],[11.156,53.174],[11.089,53.144],[10.739,53.308],[10.71,53.368],[10.601,53.372],[10.641,53.451],[10.823,53.516],[10.83,53.57],[10.954,53.566],[10.943,53.681],[10.758,53.749],[10.763,53.865],[10.961,53.912],[10.906,53.961],[11.175,54.018],[11.243,53.945],[11.334,53.961],[11.458,53.906],[11.519,54.036],[11.69,54.155],[12.088,54.194],[12.115,54.098],[12.095,54.146],[12.143,54.18],[12.109,54.183],[12.342,54.304],[12.534,54.488],[12.921,54.433],[12.438,54.388],[12.369,54.269],[12.458,54.256],[12.41,54.269],[12.479,54.332],[12.681,54.411],[12.718,54.414],[12.684,54.372],[12.855,54.358],[13.034,54.434],[13.115,54.28],[13.289,54.234],[13.349,54.18],[13.322,54.167],[13.403,54.174],[13.484,54.091],[13.479,54.125],[13.712,54.174],[13.808,54.105],[13.746,54.036],[13.906,53.943],[13.817,53.853],[14.037,53.755],[14.25,53.76],[14.213,53.708],[14.264,53.7]],[[14.21,53.938],[14.201,53.878],[13.84,53.85],[13.932,53.899],[13.904,53.995],[13.973,53.989],[13.959,53.941],[14.048,53.941],[14.051,54.005],[13.946,54.067],[13.891,54.01],[13.856,54.002],[13.864,54.05],[13.774,54.023],[13.815,54.101],[13.753,54.153],[13.815,54.174],[14.21,53.938]],[[11.376,53.982],[11.498,54.023],[11.458,53.961],[11.447,53.997],[11.376,53.982]],[[11.528,54.075],[11.616,54.112],[11.528,54.075]],[[13.143,54.598],[13.061,54.468],[13.102,54.596],[13.143,54.598]],[[13.698,54.392],[13.766,54.345],[13.723,54.278],[13.651,54.297],[13.712,54.332],[13.617,54.318],[13.691,54.352],[13.5,54.345],[13.36,54.275],[13.418,54.266],[13.407,54.228],[13.312,54.251],[13.335,54.284],[13.15,54.29],[13.178,54.31],[13.115,54.338],[13.267,54.386],[13.157,54.427],[13.273,54.482],[13.143,54.543],[13.298,54.52],[13.369,54.585],[13.349,54.524],[13.377,54.565],[13.431,54.493],[13.507,54.488],[13.521,54.571],[13.441,54.557],[13.369,54.612],[13.253,54.565],[13.293,54.642],[13.231,54.653],[13.391,54.688],[13.445,54.68],[13.383,54.636],[13.425,54.585],[13.671,54.566],[13.575,54.472],[13.61,54.414],[13.698,54.392]]],[[[8.557,53.52],[8.513,53.617],[8.631,53.604],[8.639,53.517],[8.557,53.52]],[[8.519,53.226],[8.936,53.163],[8.99,53.094],[8.915,53.025],[8.705,53.05],[8.617,53.177],[8.519,53.226]]],[[[9.764,53.548],[9.832,53.544],[9.741,53.573],[9.768,53.629],[9.816,53.593],[10.187,53.728],[10.165,53.685],[10.223,53.634],[10.183,53.529],[10.328,53.433],[9.913,53.416],[9.817,53.457],[9.764,53.548]]],[[[9.949,51.382],[9.947,51.304],[10.233,51.18],[10.199,51.116],[10.126,51.136],[10.169,51.115],[10.141,51.059],[10.205,51.032],[10.191,50.997],[10.051,51.007],[10.041,50.941],[9.952,50.936],[10.056,50.883],[9.949,50.815],[9.878,50.644],[10.06,50.666],[10.055,50.517],[9.918,50.414],[9.779,50.414],[9.749,50.306],[9.661,50.234],[9.508,50.236],[9.507,50.108],[9.235,50.144],[9.012,50.099],[8.977,50.053],[9.053,49.982],[9.027,49.907],[9.141,49.787],[9.073,49.611],[9.127,49.508],[8.954,49.503],[8.94,49.447],[8.814,49.403],[8.89,49.506],[8.718,49.542],[8.676,49.623],[8.599,49.61],[8.617,49.545],[8.566,49.527],[8.417,49.579],[8.362,49.691],[8.477,49.768],[8.424,49.767],[8.335,49.96],[8.228,50.038],[7.878,49.973],[7.771,50.053],[7.859,50.119],[7.922,50.109],[7.922,50.2],[8.122,50.272],[7.973,50.4],[8.019,50.455],[8.004,50.521],[8.115,50.529],[8.164,50.586],[8.12,50.65],[8.175,50.744],[8.134,50.781],[8.283,50.879],[8.364,50.862],[8.464,50.914],[8.545,51.021],[8.525,51.093],[8.706,51.106],[8.752,51.178],[8.723,51.269],[8.576,51.27],[8.682,51.362],[8.935,51.391],[8.901,51.476],[9.015,51.509],[9.109,51.443],[9.212,51.457],[9.336,51.554],[9.333,51.607],[9.467,51.655],[9.621,51.631],[9.686,51.572],[9.595,51.518],[9.639,51.409],[9.535,51.367],[9.569,51.342],[9.726,51.291],[9.785,51.339],[9.713,51.363],[9.796,51.408],[9.949,51.382]]],[[[9.95,51.303],[9.93,51.372],[10.291,51.491],[10.375,51.586],[10.645,51.561],[10.649,51.62],[10.803,51.633],[10.946,51.595],[10.912,51.565],[10.973,51.418],[11.367,51.357],[11.452,51.271],[11.333,51.216],[11.42,51.16],[11.433,51.096],[11.668,51.101],[11.739,51.015],[11.861,51.023],[11.998,50.949],[12.201,50.928],[12.275,51.01],[12.265,51.084],[12.329,51.088],[12.484,51.058],[12.647,50.892],[12.258,50.793],[12.289,50.763],[12.241,50.722],[12.322,50.674],[12.302,50.652],[12.187,50.626],[12.145,50.563],[11.989,50.546],[11.872,50.403],[11.526,50.379],[11.421,50.443],[11.427,50.513],[11.347,50.519],[11.249,50.473],[11.255,50.275],[11.143,50.301],[11.113,50.365],[10.789,50.386],[10.715,50.322],[10.846,50.247],[10.739,50.248],[10.721,50.207],[10.617,50.224],[10.591,50.326],[10.397,50.4],[10.328,50.489],[10.126,50.563],[10.047,50.517],[10.057,50.668],[9.88,50.637],[9.949,50.815],[10.056,50.883],[9.953,50.939],[10.041,50.941],[10.051,51.007],[10.191,50.997],[10.205,51.032],[10.141,51.059],[10.169,51.115],[10.126,51.136],[10.199,51.116],[10.233,51.18],[9.95,51.303]]],[[[10.713,51.631],[10.584,51.78],[10.645,51.957],[10.57,52.007],[10.963,52.06],[10.949,52.1],[11.048,52.14],[11.021,52.194],[11.085,52.231],[10.999,52.34],[11.073,52.372],[10.939,52.462],[11.002,52.498],[10.946,52.563],[10.977,52.616],[10.801,52.722],[10.759,52.835],[11.015,52.912],[11.253,52.876],[11.409,52.905],[11.626,53.05],[11.897,52.902],[12.214,52.855],[12.19,52.736],[12.226,52.673],[12.123,52.553],[12.295,52.516],[12.206,52.302],[12.248,52.252],[12.199,52.194],[12.365,52.04],[12.562,51.972],[12.667,51.994],[13.066,51.853],[13.237,51.855],[13.158,51.782],[13.178,51.697],[13.062,51.615],[12.862,51.668],[12.195,51.529],[12.156,51.446],[12.185,51.331],[12.133,51.289],[12.153,51.17],[12.265,51.084],[12.276,51.013],[12.201,50.928],[11.998,50.949],[11.861,51.023],[11.739,51.015],[11.668,51.101],[11.43,51.097],[11.42,51.16],[11.333,51.216],[11.452,51.271],[11.367,51.357],[10.973,51.418],[10.912,51.565],[10.942,51.599],[10.713,51.631]]],[[[13.474,52.664],[13.648,52.539],[13.626,52.487],[13.751,52.45],[13.701,52.37],[13.644,52.342],[13.626,52.384],[13.458,52.417],[13.426,52.381],[13.092,52.414],[13.157,52.501],[13.155,52.6],[13.217,52.587],[13.289,52.657],[13.364,52.624],[13.474,52.664]]]],"fluesse":{"Rhein":[[[9.183,47.671],[9.554,47.511]],[[9.128,47.671],[9.028,47.695],[8.881,47.656]],[[9.128,47.671],[9.183,47.671]],[[9.409,46.835],[9.496,46.863],[9.553,46.931],[9.477,47.06],[9.512,47.108],[9.487,47.21],[9.639,47.395],[9.65,47.452],[9.554,47.511]]],"Oder":[[[17.618,49.739],[17.762,49.719],[17.879,49.637],[17.946,49.627],[18.184,49.749],[18.228,49.842],[18.351,49.939],[18.221,50.096],[18.262,50.261],[17.955,50.502],[17.967,50.624],[17.851,50.754],[17.592,50.857],[17.495,50.859],[17.316,50.95],[17.316,50.998],[17.253,51.047],[17.193,51.042],[17.132,51.104],[17.033,51.116],[16.833,51.258],[16.491,51.228],[16.426,51.296],[16.48,51.373],[16.448,51.418],[16.487,51.522],[16.456,51.566],[16.262,51.681],[16.107,51.665],[15.76,51.77],[15.734,51.803],[15.796,51.885],[15.761,51.898],[15.796,51.936],[15.773,51.979],[15.686,51.974],[15.645,52.035],[15.216,52.075],[14.887,52.056],[14.696,52.107],[14.712,52.236],[14.584,52.291],[14.539,52.422],[14.632,52.497],[14.609,52.518],[14.644,52.577],[14.382,52.738],[14.124,52.851],[14.164,52.896],[14.144,52.96],[14.356,53.067],[14.387,53.202],[14.626,53.502],[14.596,53.598]]],"Elbe":[[[10.065,53.463],[10.041,53.534],[9.826,53.55]],[[10.065,53.463],[9.819,53.54]],[[10.066,53.461],[10.065,53.463]],[[12.502,51.879],[12.373,51.851],[12.307,51.892],[12.227,51.862],[12.021,51.872],[11.89,51.974],[11.89,52.024],[11.746,52.029],[11.66,52.112],[11.718,52.207],[11.704,52.238],[11.786,52.331],[11.94,52.379],[11.989,52.436],[11.973,52.536],[12.042,52.757],[12.019,52.875],[11.832,52.928],[11.851,52.955],[11.763,52.995],[11.694,52.984],[11.622,53.022],[11.625,53.05],[11.438,53.084],[11.344,53.066],[11.156,53.174],[11.089,53.144],[10.739,53.308],[10.71,53.368],[10.569,53.364],[10.35,53.432],[10.17,53.406],[10.065,53.463]],[[12.502,51.879],[12.502,51.879]],[[13.191,51.474],[13.061,51.508],[13.009,51.564],[13.027,51.597],[12.849,51.672],[12.809,51.788],[12.835,51.824],[12.502,51.879]],[[15.918,50.37],[15.932,50.35],[15.82,50.241],[15.796,50.11],[15.844,50.075],[15.778,50.049],[15.244,50.023],[15.19,50.04],[15.145,50.13],[15.065,50.178],[14.684,50.182],[14.485,50.298],[14.456,50.394],[14.36,50.47],[14.25,50.432],[14.213,50.52],[14.055,50.528],[14.028,50.583],[14.075,50.609],[14.046,50.648],[14.198,50.699],[14.189,50.755],[14.24,50.802],[14.216,50.902],[14.062,50.926],[14.089,50.946],[14.07,50.96],[13.897,50.966],[13.804,51.066],[13.562,51.117],[13.403,51.214],[13.413,51.254],[13.38,51.299],[13.24,51.352],[13.256,51.381],[13.208,51.408],[13.184,51.474]]],"Donau":[[[12.509,48.928],[12.507,48.931]],[[12.509,48.928],[12.507,48.924]],[[8.179,48.094],[8.435,47.973],[8.47,47.929],[8.764,47.938],[8.895,48.041],[8.942,48.019],[9.05,48.091],[9.377,48.073],[9.553,48.245],[9.697,48.24],[9.916,48.328],[10.046,48.438],[10.37,48.498],[10.43,48.57],[10.571,48.601],[10.806,48.716],[11.648,48.782],[11.749,48.835],[11.793,48.897],[12.021,48.934],[11.998,48.96],[12.04,48.994],[12.033,49.028],[12.312,49.015],[12.349,49],[12.329,48.972],[12.465,48.965],[12.527,48.945],[12.509,48.928]],[[17.206,48.061],[17.158,48.086],[17.152,48.136],[16.988,48.177],[16.75,48.129],[16.55,48.155],[16.419,48.227],[16.297,48.385],[15.946,48.363],[15.834,48.409],[15.608,48.427],[15.467,48.413],[15.412,48.366],[15.384,48.281],[15.324,48.244],[15.088,48.183],[14.88,48.242],[14.675,48.182],[14.582,48.24],[14.396,48.266],[14.308,48.328],[14.049,48.329],[14,48.422],[13.801,48.468],[13.624,48.566],[13.235,48.618],[13.083,48.719],[13.011,48.725],[13.027,48.767],[12.955,48.836],[12.77,48.836],[12.748,48.88],[12.678,48.905],[12.575,48.89],[12.509,48.928]]],"Mosel":[[[6.922,48.015],[6.774,47.958],[6.695,48.018],[6.607,48.031],[6.606,48.089],[6.456,48.156],[6.393,48.306],[6.257,48.404],[6.312,48.462],[6.263,48.534],[6.018,48.651],[5.914,48.647],[5.894,48.672],[6.003,48.748],[6.136,48.772],[6.085,48.834],[6.092,48.877],[6.054,48.897],[6.03,48.993],[6.085,49.082],[6.204,49.158],[6.153,49.356],[6.346,49.452],[6.351,49.567],[6.418,49.639],[6.403,49.656],[6.51,49.713],[6.613,49.719],[6.709,49.823],[6.804,49.795],[6.853,49.795],[6.847,49.842],[6.899,49.82],[6.901,49.883],[6.935,49.864],[6.969,49.907],[7.06,49.921],[7.01,49.978],[7.101,49.984],[7.124,49.954],[7.118,50.052],[7.175,50.024],[7.113,50.103],[7.188,50.083],[7.236,50.11],[7.23,50.151],[7.178,50.137],[7.171,50.158],[7.36,50.185],[7.449,50.233],[7.463,50.309],[7.606,50.364]]],"Weser":[[[10.978,50.487],[10.875,50.412],[10.646,50.453],[10.609,50.507],[10.418,50.543],[10.368,50.624],[10.35,50.749],[10.29,50.803],[9.957,50.863],[10.11,51.011],[10.211,50.998],[10.266,51.076],[10.34,51.083],[10.275,51.089],[10.294,51.11],[10.237,51.138],[10.195,51.126],[10.152,51.19],[9.996,51.218],[9.984,51.248],[10.011,51.261],[9.95,51.323],[9.642,51.425],[9.642,51.474],[9.587,51.522],[9.616,51.551],[9.539,51.611],[9.56,51.645],[9.375,51.649],[9.382,51.776],[9.46,51.884],[9.408,51.909],[9.512,51.933],[9.508,51.998],[9.443,51.994],[9.375,52.09],[9.264,52.161],[9.064,52.198],[8.898,52.172],[8.833,52.22],[8.923,52.255],[8.929,52.327],[9.026,52.426],[9.026,52.488],[9.087,52.481],[9.08,52.529],[9.124,52.604],[9.203,52.659],[9.183,52.701],[9.231,52.727],[9.159,52.808],[9.223,52.851],[9.183,52.858],[9.211,52.872],[9.176,52.899],[9.184,52.96],[8.89,53.026],[8.867,53.064],[8.513,53.2],[8.484,53.245],[8.504,53.358]]],"Inn":[[[9.746,46.403],[9.756,46.438],[10.096,46.706],[10.105,46.768],[10.392,46.841],[10.654,47.062],[10.639,47.117],[10.572,47.138],[10.588,47.174],[11.027,47.311],[11.369,47.275],[11.537,47.302],[12.044,47.512],[12.205,47.637],[12.129,47.797],[12.163,47.987],[12.239,48.067],[12.219,48.075],[12.266,48.123],[12.253,48.144],[12.458,48.198],[12.493,48.218],[12.472,48.24],[12.818,48.275],[12.931,48.212],[13.032,48.264],[13.274,48.307],[13.419,48.392],[13.459,48.517],[13.439,48.561],[13.487,48.582]]],"Main":[[[11.54,49.857],[11.616,49.842],[11.629,49.952],[11.568,49.952],[11.432,50.075],[11.107,50.201],[10.963,50.113],[10.909,50.003],[10.859,49.976],[10.855,49.921],[10.491,50.034],[10.375,50.014],[10.28,50.055],[10.228,50.041],[10.175,49.992],[10.19,49.906],[10.162,49.88],[10.218,49.857],[10.171,49.856],[10.213,49.803],[10.157,49.786],[10.121,49.692],[10.149,49.678],[10.117,49.667],[10.051,49.675],[9.875,49.813],[9.812,49.931],[9.706,50.038],[9.586,50.011],[9.561,49.969],[9.603,49.872],[9.58,49.817],[9.61,49.797],[9.34,49.783],[9.248,49.705],[9.139,49.812],[9.157,49.886],[9.107,49.952],[9.142,49.973],[9.068,49.984],[9.026,50.045],[8.983,50.05],[8.991,50.075],[8.888,50.13],[8.549,50.096],[8.421,50.006],[8.292,49.993]]],"Ems":[[[8.773,51.88],[8.443,51.795],[8.305,51.853],[8.32,51.906],[8.147,51.974],[8.004,51.953],[7.808,51.983],[7.613,52.087],[7.588,52.128],[7.634,52.166],[7.552,52.18],[7.509,52.245],[7.359,52.334],[7.326,52.392],[7.339,52.433],[7.243,52.604],[7.292,52.701],[7.243,52.809],[7.313,52.877],[7.292,52.94],[7.319,53.026],[7.292,53.094],[7.362,53.118],[7.368,53.173],[7.429,53.221],[7.367,53.303]]]},"seen":[{"name":"Bodensee","pts":[[9.719,47.547],[9.744,47.52],[9.69,47.52],[9.67,47.498],[9.649,47.499],[9.635,47.512],[9.608,47.499],[9.553,47.512],[9.495,47.488],[9.398,47.544],[9.371,47.581],[9.207,47.647],[9.183,47.671],[9.206,47.672],[9.206,47.682],[9.183,47.704],[9.162,47.747],[9.131,47.768],[9.073,47.787],[9.032,47.821],[9.072,47.817],[9.176,47.766],[9.211,47.76],[9.227,47.725],[9.322,47.682],[9.403,47.675],[9.488,47.654],[9.507,47.642],[9.538,47.599],[9.719,47.547]]},{"name":"Müritz","pts":[[12.767,53.437],[12.787,53.406],[12.784,53.389],[12.743,53.375],[12.707,53.348],[12.698,53.338],[12.718,53.344],[12.707,53.33],[12.692,53.338],[12.698,53.368],[12.683,53.4],[12.657,53.403],[12.657,53.413],[12.635,53.397],[12.629,53.425],[12.582,53.427],[12.666,53.515],[12.698,53.509],[12.665,53.49],[12.723,53.451],[12.767,53.437]]},{"name":"Schweriner See","pts":[[11.453,53.757],[11.496,53.781],[11.534,53.79],[11.492,53.77],[11.499,53.737],[11.485,53.714],[11.488,53.699],[11.458,53.701],[11.482,53.664],[11.485,53.643],[11.512,53.618],[11.506,53.608],[11.457,53.61],[11.424,53.626],[11.454,53.653],[11.458,53.687],[11.438,53.687],[11.443,53.701],[11.428,53.727],[11.453,53.757]]}],"stadt":[[[11.5614,48.0838],[11.554,48.085],[11.5499,48.0747],[11.5454,48.0681],[11.5441,48.0683],[11.5436,48.0735],[11.5418,48.0746],[11.5424,48.0779],[11.5338,48.0777],[11.5315,48.0762],[11.5282,48.069],[11.5239,48.0684],[11.523,48.0665],[11.5188,48.0673],[11.5156,48.0634],[11.5115,48.0644],[11.5088,48.0616],[11.5042,48.0624],[11.5026,48.0669],[11.5036,48.0693],[11.4872,48.0763],[11.4866,48.0754],[11.488,48.075],[11.4871,48.0738],[11.4858,48.0742],[11.487,48.0764],[11.4734,48.0822],[11.4729,48.0812],[11.4719,48.0818],[11.4733,48.0822],[11.4709,48.0832],[11.4763,48.0888],[11.4721,48.0901],[11.4741,48.0954],[11.4709,48.0994],[11.4749,48.1046],[11.4697,48.1058],[11.463,48.1053],[11.4634,48.1145],[11.4651,48.1147],[11.4657,48.1185],[11.465,48.1282],[11.4637,48.1299],[11.4595,48.1309],[11.4601,48.132],[11.4534,48.1331],[11.4498,48.1329],[11.4481,48.1312],[11.4475,48.1336],[11.4381,48.1346],[11.4386,48.1354],[11.4364,48.1367],[11.43,48.1376],[11.4263,48.1365],[11.4226,48.1325],[11.4129,48.1275],[11.4023,48.1252],[11.3944,48.1255],[11.393,48.1285],[11.3896,48.1279],[11.3887,48.1297],[11.3894,48.1317],[11.3882,48.1346],[11.3922,48.1367],[11.3895,48.1412],[11.3913,48.1419],[11.3891,48.1479],[11.3872,48.1473],[11.3855,48.1497],[11.3832,48.1497],[11.3829,48.1531],[11.3739,48.1536],[11.3739,48.1555],[11.3749,48.156],[11.3698,48.1568],[11.3712,48.1584],[11.3608,48.1581],[11.3628,48.163],[11.3654,48.1643],[11.3678,48.1685],[11.3697,48.1743],[11.369,48.1764],[11.3711,48.1783],[11.3811,48.1793],[11.3853,48.1776],[11.3933,48.1845],[11.3913,48.1856],[11.3923,48.1896],[11.3885,48.1908],[11.3908,48.2005],[11.4188,48.2028],[11.4324,48.2058],[11.4576,48.2088],[11.4618,48.2145],[11.4703,48.2185],[11.4911,48.2231],[11.4889,48.2235],[11.4878,48.2321],[11.49,48.2348],[11.4895,48.238],[11.4915,48.2382],[11.4919,48.2397],[11.4907,48.2454],[11.5012,48.2481],[11.5133,48.2457],[11.5254,48.2413],[11.5311,48.2313],[11.5417,48.2288],[11.5443,48.2293],[11.5468,48.2271],[11.5823,48.2286],[11.5872,48.224],[11.5875,48.2135],[11.6018,48.2134],[11.6018,48.2169],[11.605,48.2175],[11.6062,48.2192],[11.6116,48.2191],[11.6057,48.2268],[11.6075,48.2273],[11.6071,48.2282],[11.6089,48.2284],[11.6075,48.2273],[11.6094,48.2256],[11.6129,48.2256],[11.6142,48.2279],[11.6225,48.2276],[11.6224,48.2287],[11.6246,48.2292],[11.639,48.226],[11.6383,48.2242],[11.6392,48.2218],[11.6505,48.217],[11.6505,48.2134],[11.6481,48.2098],[11.6391,48.2038],[11.6378,48.1979],[11.6293,48.1843],[11.6315,48.1831],[11.6277,48.1773],[11.6314,48.1779],[11.6372,48.1764],[11.6359,48.1749],[11.6376,48.1743],[11.6459,48.1737],[11.6655,48.1762],[11.6611,48.1797],[11.6622,48.1829],[11.6868,48.1804],[11.689,48.1828],[11.692,48.1825],[11.6956,48.18],[11.6907,48.1782],[11.6961,48.1743],[11.6933,48.1706],[11.6858,48.1718],[11.6867,48.1697],[11.6857,48.1675],[11.6739,48.1565],[11.6798,48.1533],[11.6782,48.1443],[11.7101,48.1482],[11.7135,48.1455],[11.7109,48.1446],[11.7128,48.1432],[11.7101,48.1419],[11.7142,48.1387],[11.718,48.1377],[11.7205,48.1391],[11.7229,48.1371],[11.7197,48.1355],[11.7204,48.1343],[11.7153,48.1328],[11.7145,48.134],[11.7123,48.1334],[11.7144,48.1314],[11.7117,48.1301],[11.7162,48.1282],[11.712,48.123],[11.7107,48.124],[11.7043,48.1214],[11.6977,48.1253],[11.6942,48.1231],[11.6976,48.1212],[11.694,48.1193],[11.7107,48.1156],[11.7089,48.1142],[11.7146,48.1108],[11.7127,48.1049],[11.7093,48.1026],[11.6889,48.0949],[11.6891,48.094],[11.6871,48.0935],[11.6887,48.0922],[11.6828,48.0918],[11.681,48.0838],[11.6857,48.0775],[11.6737,48.0788],[11.6656,48.0782],[11.633,48.0843],[11.633,48.086],[11.6238,48.0881],[11.6117,48.0881],[11.612,48.087],[11.6065,48.0868],[11.6035,48.0851],[11.6018,48.0873],[11.5926,48.0851],[11.5886,48.0934],[11.5869,48.0939],[11.5614,48.0838]]],"isar":[[[11.412,47.375],[11.407,47.376]],[[11.407,47.376],[11.407,47.375]],[[11.407,47.375],[11.365,47.377]],[[11.365,47.377],[11.337,47.379]],[[11.337,47.379],[11.311,47.374],[11.29,47.38]],[[11.29,47.38],[11.285,47.38]],[[11.285,47.38],[11.267,47.386]],[[11.267,47.386],[11.263,47.391]],[[11.263,47.391],[11.267,47.398],[11.256,47.411],[11.258,47.431]],[[11.258,47.431],[11.268,47.437],[11.275,47.458],[11.281,47.464],[11.281,47.471],[11.273,47.472],[11.28,47.477],[11.279,47.495],[11.283,47.501]],[[11.283,47.501],[11.296,47.518]],[[11.296,47.518],[11.309,47.531],[11.33,47.531],[11.336,47.537]],[[11.336,47.537],[11.348,47.539]],[[11.348,47.539],[11.375,47.544]],[[11.375,47.544],[11.39,47.551],[11.428,47.553],[11.433,47.558]],[[11.433,47.558],[11.464,47.563],[11.488,47.561]],[[11.488,47.561],[11.489,47.561]],[[11.489,47.561],[11.505,47.561]],[[11.505,47.561],[11.52,47.572],[11.547,47.578],[11.552,47.583]],[[11.552,47.583],[11.551,47.586]],[[11.551,47.586],[11.551,47.588]],[[11.551,47.588],[11.55,47.588]],[[11.55,47.588],[11.548,47.591],[11.56,47.601],[11.583,47.608],[11.582,47.615],[11.592,47.621],[11.589,47.629],[11.593,47.633],[11.593,47.64],[11.584,47.643],[11.583,47.651],[11.589,47.656],[11.573,47.67],[11.572,47.684],[11.559,47.702],[11.562,47.709],[11.559,47.715],[11.565,47.72],[11.561,47.726],[11.567,47.73],[11.561,47.737],[11.566,47.742],[11.557,47.754],[11.557,47.761],[11.55,47.764]],[[11.55,47.764],[11.542,47.765],[11.541,47.769]],[[11.541,47.769],[11.54,47.778]],[[11.54,47.778],[11.551,47.784],[11.542,47.79],[11.552,47.809],[11.54,47.812],[11.529,47.833],[11.511,47.838],[11.521,47.846],[11.512,47.853],[11.509,47.863],[11.497,47.867],[11.481,47.882],[11.477,47.882],[11.478,47.888],[11.458,47.894],[11.451,47.9],[11.45,47.908]],[[11.45,47.908],[11.446,47.917]],[[11.446,47.917],[11.434,47.937]],[[11.434,47.937],[11.434,47.938]],[[11.434,47.938],[11.443,47.945]],[[11.443,47.945],[11.449,47.951]],[[11.449,47.951],[11.457,47.951],[11.476,47.967],[11.472,47.987],[11.479,47.99],[11.475,47.993],[11.481,47.998],[11.477,48.002],[11.486,48.012]],[[11.486,48.012],[11.5,48.027]],[[11.5,48.027],[11.508,48.028],[11.509,48.035],[11.527,48.056],[11.539,48.059],[11.542,48.067],[11.541,48.079],[11.55,48.091]],[[11.55,48.091],[11.55,48.102]],[[11.55,48.102],[11.551,48.103]],[[11.551,48.103],[11.553,48.105]],[[11.553,48.105],[11.558,48.107]],[[11.558,48.107],[11.56,48.118],[11.578,48.128]],[[11.578,48.128],[11.593,48.139]],[[11.593,48.139],[11.599,48.149]],[[11.599,48.149],[11.616,48.169]],[[11.616,48.169],[11.617,48.169]],[[11.617,48.169],[11.634,48.19],[11.641,48.205]],[[11.641,48.205],[11.649,48.21],[11.652,48.22],[11.66,48.223],[11.674,48.241]],[[11.674,48.241],[11.684,48.251],[11.68,48.264],[11.688,48.271]],[[11.688,48.271],[11.699,48.293],[11.699,48.32],[11.713,48.332],[11.714,48.338]],[[11.714,48.338],[11.714,48.345],[11.727,48.355],[11.724,48.363],[11.735,48.37],[11.736,48.377],[11.748,48.394]],[[11.748,48.394],[11.75,48.396]],[[11.75,48.396],[11.769,48.406],[11.792,48.403]],[[11.792,48.403],[11.83,48.406],[11.856,48.417],[11.876,48.418],[11.882,48.421]],[[11.882,48.421],[11.904,48.433],[11.917,48.432]],[[11.917,48.432],[11.935,48.444]],[[11.935,48.444],[11.948,48.456],[11.947,48.461]],[[11.947,48.461],[11.947,48.466]],[[11.947,48.466],[11.955,48.473]],[[11.955,48.473],[11.951,48.496],[11.957,48.5]],[[11.957,48.5],[11.975,48.503],[11.985,48.496],[12.008,48.497],[12.04,48.507],[12.068,48.507],[12.088,48.517],[12.111,48.521]],[[12.111,48.521],[12.145,48.534]],[[12.145,48.534],[12.148,48.536]],[[12.148,48.536],[12.157,48.541]],[[12.157,48.541],[12.177,48.549],[12.182,48.56]],[[12.182,48.56],[12.189,48.567],[12.246,48.593],[12.325,48.605],[12.358,48.62],[12.431,48.624],[12.471,48.632],[12.51,48.635]],[[12.51,48.635],[12.525,48.636],[12.535,48.644],[12.554,48.644],[12.565,48.65],[12.59,48.65],[12.606,48.66],[12.66,48.667]],[[12.66,48.667],[12.66,48.667]],[[12.66,48.667],[12.676,48.675],[12.718,48.68],[12.747,48.688]],[[12.747,48.688],[12.773,48.69],[12.783,48.695],[12.8,48.694],[12.81,48.704],[12.836,48.711],[12.846,48.721],[12.845,48.728],[12.852,48.736],[12.852,48.744],[12.876,48.767],[12.913,48.784],[12.944,48.779],[12.963,48.793],[12.967,48.802],[12.978,48.803]],[[11.407,47.376],[11.406,47.376]],[[11.406,47.376],[11.406,47.376]],[[11.406,47.376],[11.406,47.376]],[[11.503,47.561],[11.508,47.563]],[[11.55,47.584],[11.549,47.585]],[[11.549,47.585],[11.547,47.588]],[[11.547,47.588],[11.547,47.59]],[[11.441,47.928],[11.441,47.934]],[[11.441,47.934],[11.44,47.934]],[[11.44,47.934],[11.438,47.934]],[[11.437,47.931],[11.434,47.935]],[[11.436,47.932],[11.434,47.934]],[[11.44,47.928],[11.438,47.934]],[[11.442,47.945],[11.444,47.95],[11.451,47.952]],[[11.443,47.946],[11.443,47.947]],[[11.435,47.93],[11.436,47.932]],[[11.436,47.935],[11.437,47.935]],[[11.551,48.103],[11.555,48.104]],[[11.555,48.104],[11.556,48.106]],[[11.552,48.104],[11.555,48.104]],[[11.575,48.127],[11.584,48.129],[11.593,48.139]],[[12.148,48.537],[12.182,48.56]],[[12.148,48.536],[12.148,48.537]],[[11.553,48.105],[11.558,48.107]],[[11.438,47.932],[11.433,47.935]]],"isarStadt":[[[11.5003,48.0267],[11.5058,48.0273],[11.5078,48.0284],[11.5083,48.0295],[11.5082,48.032],[11.5089,48.0349],[11.5108,48.0369],[11.5163,48.0405],[11.5169,48.0425],[11.5164,48.0445],[11.517,48.0458],[11.5216,48.048],[11.5247,48.0535],[11.5268,48.0558],[11.5292,48.0571],[11.5362,48.0576],[11.5392,48.0591],[11.5425,48.0672],[11.5423,48.069],[11.5409,48.0717],[11.5414,48.0736],[11.5408,48.0758],[11.5406,48.0788],[11.5449,48.0858],[11.5498,48.0913]],[[11.5498,48.0913],[11.5503,48.0929],[11.5501,48.1017]],[[11.5501,48.1017],[11.551,48.1031]],[[11.551,48.1031],[11.5528,48.1054]],[[11.5528,48.1054],[11.5541,48.1064],[11.5582,48.1073]],[[11.5582,48.1073],[11.5593,48.108],[11.5605,48.1099],[11.5605,48.1112],[11.5594,48.1128],[11.5592,48.116],[11.5604,48.1178],[11.5644,48.1209],[11.5782,48.1283]],[[11.5782,48.1283],[11.5852,48.1318],[11.5907,48.1374],[11.5933,48.1388]],[[11.5933,48.1388],[11.5957,48.1429],[11.5969,48.1476],[11.5987,48.1493]],[[11.5987,48.1493],[11.6164,48.1688]],[[11.6164,48.1688],[11.6166,48.169]],[[11.6166,48.169],[11.6312,48.1856],[11.6341,48.1898],[11.6393,48.1992],[11.6396,48.2028],[11.6407,48.2049]],[[11.6407,48.2049],[11.6493,48.21],[11.651,48.2133],[11.6515,48.215],[11.6513,48.2178],[11.6523,48.22],[11.655,48.2215],[11.6604,48.2233],[11.6612,48.2242],[11.6619,48.2281],[11.6631,48.23],[11.6649,48.2314],[11.67,48.2336],[11.6717,48.2352],[11.6724,48.2363],[11.6736,48.2411]],[[11.551,48.1031],[11.5534,48.1034],[11.5545,48.1044]],[[11.5545,48.1044],[11.5561,48.1059]],[[11.5519,48.1041],[11.5545,48.1044]],[[11.5755,48.1269],[11.5843,48.129],[11.5885,48.1337],[11.5916,48.136],[11.5933,48.1388]],[[11.5528,48.1054],[11.5561,48.1059],[11.5582,48.1073]]],"ring":[[[11.58,48.107],[11.577,48.111],[11.565,48.113],[11.528,48.11],[11.518,48.112],[11.517,48.118],[11.521,48.125],[11.534,48.134],[11.539,48.172],[11.544,48.176],[11.565,48.176],[11.575,48.178],[11.588,48.177],[11.6,48.172],[11.596,48.163],[11.616,48.15],[11.615,48.129],[11.62,48.125],[11.621,48.122],[11.617,48.114],[11.612,48.11],[11.617,48.114],[11.621,48.124],[11.615,48.129],[11.616,48.151],[11.605,48.157]],[[11.558,48.176],[11.539,48.175],[11.534,48.134],[11.521,48.126],[11.517,48.118],[11.517,48.113],[11.519,48.11],[11.528,48.11],[11.566,48.113],[11.577,48.111],[11.58,48.107]],[[11.6,48.161],[11.596,48.165],[11.6,48.172],[11.59,48.177],[11.574,48.178],[11.559,48.176]],[[11.612,48.11],[11.596,48.107],[11.6,48.108]],[[11.582,48.104],[11.583,48.105]],[[11.615,48.137],[11.615,48.136]],[[11.584,48.105],[11.596,48.107]]],"seenBy":[{"name":"Pilsensee","pts":[[11.1967,48.0318],[11.1976,48.0348],[11.1921,48.0335],[11.1781,48.0226],[11.1761,48.0167],[11.1827,48.0138],[11.1883,48.0156],[11.1904,48.0201],[11.1984,48.026],[11.1963,48.0289],[11.1967,48.0318]]},{"name":"Starnberger See","pts":[[11.3069,47.9478],[11.3127,47.9562],[11.3269,47.9706],[11.341,47.9951],[11.3545,47.998],[11.3591,47.9948],[11.359,47.98],[11.35,47.971],[11.3417,47.9483],[11.3323,47.9302],[11.3308,47.9189],[11.3337,47.9086],[11.3345,47.8959],[11.3318,47.8716],[11.3342,47.8682],[11.3387,47.8396],[11.3353,47.8313],[11.3376,47.8269],[11.335,47.8229],[11.3303,47.8212],[11.3138,47.8209],[11.2914,47.8311],[11.29,47.8347],[11.2919,47.837],[11.2934,47.8506],[11.3005,47.8552],[11.3019,47.8599],[11.2987,47.8662],[11.2898,47.8726],[11.289,47.8789],[11.2851,47.8829],[11.286,47.887],[11.2833,47.8875],[11.2759,47.8842],[11.2701,47.8896],[11.2714,47.8938],[11.2759,47.8967],[11.2753,47.9016],[11.2837,47.9083],[11.2835,47.912],[11.2886,47.9136],[11.2892,47.9184],[11.295,47.9224],[11.3024,47.9393],[11.302,47.942],[11.3077,47.9442],[11.3069,47.9478]]},{"name":"Ammersee","pts":[[11.1495,47.9458],[11.1496,47.9423],[11.1466,47.9409],[11.1473,47.9389],[11.1465,47.9402],[11.1445,47.9392],[11.1439,47.9362],[11.1397,47.9417],[11.1411,47.9445],[11.1388,47.943],[11.1369,47.9442],[11.1363,47.9421],[11.139,47.9414],[11.1421,47.9369],[11.1408,47.9375],[11.1415,47.9362],[11.1394,47.9355],[11.1348,47.9376],[11.1384,47.9411],[11.1325,47.9412],[11.1317,47.9439],[11.1274,47.9418],[11.1236,47.9431],[11.1223,47.9458],[11.124,47.9509],[11.1219,47.9511],[11.1187,47.9446],[11.1163,47.9489],[11.1099,47.9496],[11.1074,47.9548],[11.1096,47.9596],[11.1086,47.9633],[11.104,47.9679],[11.1045,47.9713],[11.099,47.9808],[11.1006,47.9868],[11.0979,48.0058],[11.101,48.0112],[11.0965,48.0147],[11.0956,48.0196],[11.0997,48.0265],[11.0969,48.031],[11.0985,48.0349],[11.0972,48.0403],[11.0998,48.0449],[11.0989,48.0505],[11.1028,48.0559],[11.1023,48.0598],[11.1093,48.0688],[11.1154,48.0694],[11.1269,48.0766],[11.1352,48.0758],[11.1386,48.0653],[11.1291,48.0451],[11.1357,48.0146],[11.142,48.0049],[11.1464,48.0041],[11.1489,48.0006],[11.1534,47.9994],[11.1607,48.0041],[11.166,48.0032],[11.1681,48.0008],[11.1659,47.997],[11.1705,47.9914],[11.1558,47.9818],[11.1496,47.9742],[11.1495,47.9458]]},{"name":"Wörthsee","pts":[[11.1668,48.0609],[11.1738,48.0627],[11.174,48.065],[11.1929,48.0728],[11.1999,48.0697],[11.2,48.0669],[11.1878,48.0585],[11.1809,48.0486],[11.1757,48.0452],[11.1682,48.0446],[11.161,48.0514],[11.1613,48.056],[11.1668,48.0609]]},{"name":"Speichersee","pts":[[11.7659,48.2231],[11.7643,48.2244],[11.7244,48.2192],[11.7125,48.2135],[11.709,48.2097],[11.7173,48.2093],[11.7269,48.2117],[11.7298,48.2106],[11.7295,48.2132],[11.7318,48.2118],[11.7653,48.2143],[11.7668,48.2163],[11.7659,48.2231]]},{"name":"Speichersee","pts":[[11.7659,48.2234],[11.7751,48.2254],[11.7982,48.2214],[11.796,48.2175],[11.7924,48.2156],[11.768,48.2145],[11.7659,48.2234]]}]};
+/* ---------------- Englische Fassung ----------------
+   EN: statische Texte je data-t-Schlüssel (innerHTML). TX: Texte, die das Skript baut. */
+var EN = {
+  'skip': 'Skip to content',
+  'nav.arbeiten': 'Works', 'nav.haus': 'Firm', 'nav.ankauf': 'Acquisition', 'nav.kontakt': 'Contact',
+  'menu.knopf': 'Menu', 'menu.zu': 'Close',
+  'menu.arbeiten': 'Works <span>21 projects</span>', 'menu.lage': 'Site map <span>satellite</span>', 'menu.haus': 'Firm <span>since 2007</span>',
+  'menu.ankauf': 'Acquisition <span>sites</span>', 'menu.kontakt': 'Contact <span>Pöcking</span>',
+  'hero.sr': 'Camera flight over the Leibstraße housing complex in Haar: planted courtyard, playground, photovoltaics on the roofs. The flight was computed from an aerial photograph.',
+  'hero.b1': 'We build in Munich.', 'hero.b2': 'Site. Permit. Handover.', 'hero.b3': 'Over 1,000 units delivered.', 'hero.b4': 'The deal holds.',
+  'hero.sub': 'Munich Residential develops, builds and holds residential and commercial property in Munich and its region. Since 2007.',
+  'hero.cta': 'Offer a site', 'hero.film': 'Scrolling moves the camera',
+  'haus.t': 'The Firm', 'haus.z': 'Pöcking near Munich · since 2007',
+  'haus.p1': 'In 2007 two second-generation family firms joined their work: the Krulich Immobiliengruppe and the Firmengruppe Opfergeld. Since then we have developed, built and held residential and commercial property in Munich and its region.',
+  'haus.p2': 'We buy sites with and without planning permission. We carry out the planning review ourselves. We build as developer and keep part of the buildings in our own portfolio.',
+  'haus.p3': 'The work is in the index below. Every project has a number, a place and a status.',
+  'fakten.1': 'Founded', 'fakten.2': 'Experience', 'fakten.v2': '90 years', 'fakten.3': 'Units delivered', 'fakten.4': 'Area developed', 'fakten.5': 'Project volume', 'fakten.v5': 'EUR 250 m', 'fakten.6': 'Portfolio',
+  'reg.orte': 'By place', 'reg.stand': 'By status', 'reg.hinweis': 'Click filters the index.',
+  'band.t': 'Photographs', 'band.z': 'eleven photographs, scroll sideways', 'band.zurueck': '← Back', 'band.weiter': 'Next →',
+  'arb.t': 'Works',
+  'f.alle': 'All', 'f.imbau': 'Under construction', 'f.planung': 'In planning', 'f.fertig': 'Completed', 'f.muenchen': 'Munich', 'f.umland': 'Region', 'f.nuernberg': 'Nuremberg', 'f.landshut': 'Landshut', 'f.chemnitz': 'Chemnitz',
+  'a.liste': 'List', 'a.raster': 'Grid',
+  'lage.t': 'Site map', 'lage.z': '21 projects, each at its address',
+  'kk.de': 'Germany <span class="aktiv">view</span>', 'kk.mu': 'Munich and region <span class="aktiv">view</span>', 'kk.st': 'Munich city <span class="aktiv">view</span>',
+  'lage.quelle': 'Satellite image: Sentinel-2 cloudless by EOX IT Services GmbH, contains modified Copernicus Sentinel data 2020, CC BY 4.0. Borders, rivers, lakes: Natural Earth. City boundary, Isar, Mittlerer Ring: OpenStreetMap, ODbL.',
+  'weg.t': 'From site to handover', 'weg.z': 'three steps, one risk: ours',
+  'weg.lede': 'Between purchase contract and handover lie months to years. We carry that time.',
+  'st1.nr': '01 · Purchase', 'st1.t': 'Purchase', 'st1.p': 'We buy with and without planning permission. The price is fixed before the review, not after.',
+  'st2.nr': '02 · Permit', 'st2.t': 'Permit', 'st2.p': 'We run the planning review ourselves. You do not wait for our financing.',
+  'st3.nr': '03 · Handover', 'st3.t': 'Handover', 'st3.p': 'We build it, we hold it. Over 1,000 units have been handed over.',
+  'hold.satz': 'The deal holds because we', 'hold.btn': 'hold it',
+  'ank.t': 'Acquisition profile', 'ank.z': 'what we look for',
+  'ank.lede': 'Residential and commercial space in Munich and its region, plus Nuremberg, Landshut and Chemnitz. Sites with and without planning permission. Existing buildings for redevelopment. Difficult locations too, demolition included.',
+  'krit.1': 'from 1,000&nbsp;m² of land', 'krit.2': 'from 20 units', 'krit.3': 'Munich and region', 'krit.4': 'purchase without planning permission',
+  'fr.t': 'Questions', 'fr.z': 'four answers owners ask us for first',
+  'fr.q1': 'What happens if the preliminary permit does not come? <span class="m">Answer</span>', 'fr.a1': 'Then we carry the risk, not you. We buy without permission and run the review at our expense.',
+  'fr.q2': 'Can you withdraw from the contract? <span class="m">Answer</span>', 'fr.a2': 'Over 1,000 units delivered since 2007, and no transaction that fell through. We do not negotiate withdrawal clauses in our favour.',
+  'fr.q3': 'How long does it take? <span class="m">Answer</span>', 'fr.a3': 'The planning review takes months to years, depending on the municipality. What we tell you beforehand stands: the price and the date of your payment.',
+  'fr.q4': 'My neighbour would have to sell too. Is that possible? <span class="m">Answer</span>', 'fr.a4': 'Yes. We have brought several owners to one table more than once. Talk to us before you talk to the neighbour.',
+  'ko.t': 'Contact', 'ko.l1': 'Your name', 'ko.l2': 'Email or phone', 'ko.l3': 'Where is the site?', 'ko.l4': 'What should we know?', 'ko.senden': 'Offer a site',
+  'ko.note': 'The button opens your own email program with a prepared message to info@munich-residential.com. Nothing you enter is stored anywhere.',
+  'ko.done': 'Your message is addressed to info@munich-residential.com. We will get back to you.',
+  'fuss.claim': 'Development, construction and portfolio.<br>Munich and region, Nuremberg, Landshut, Chemnitz.',
+  'fuss.h1': 'Address', 'fuss.h2': 'Contact', 'fuss.h3': 'Legal', 'fuss.imp': 'Legal notice', 'fuss.ds': 'Privacy',
+  'fuss.hinweis': 'The image at the top shows our Leibstraße project in Haar. The camera flight was computed from an aerial photograph; the building is real. All project images show real buildings or their visualisation, marked as such. Site map: satellite image Sentinel-2 cloudless (EOX IT Services GmbH, CC BY 4.0), borders, rivers and lakes from Natural Earth (public domain), city boundary, Isar and Mittlerer Ring from OpenStreetMap (© OpenStreetMap contributors, ODbL).',
+  'ans.zurueck': '← Index', 'ans.vor': '←<span class="lang"> Previous</span>', 'ans.weiter': '<span class="lang">Next </span>→', 'ans.zu': 'Close', 'ans.teilen': 'Copy link',
+  't404.t': 'This address does not exist.', 't404.p': 'There is no project and no page at this address. The index lists all 21 projects.', 't404.link': 'To the index',
+  'recht.hinweis': 'Legal texts are provided in German, as required by German law.'
+};
+var TX = {
+  de: {
+    objekt: function(n){ return n + (n === 1 ? ' Objekt' : ' Objekte'); },
+    status: {'im-bau':'Im Bau','in-planung':'In Planung','fertiggestellt':'Fertiggestellt'},
+    gruppe: {muenchen:'München',umland:'Umland',nuernberg:'Nürnberg',landshut:'Landshut',chemnitz:'Chemnitz'},
+    muUmland: 'München und Umland', muStadt: 'München', zoom: 'Klick zoomt hinein',
+    hinweis: {de: 'Ein Quadrat je Ort. Klick zoomt nach München oder filtert das Verzeichnis.', mu: 'Ein Quadrat je Objekt. Klick öffnet das Objekt, „Stadt“ zoomt weiter hinein.', st: 'München innerhalb der Stadtgrenze. Überfahren zeigt das Bild, Klick öffnet das Objekt.'},
+    ansicht: {de: 'Deutschland', mu: 'München und Umland', st: 'München Stadt'},
+    blatt: ['Ort','Nutzung','Status','Jahr','Fläche','Einheiten','Architektur'],
+    fehlt: {nutzung:'Nutzung', jahr:'Fertigstellungsjahr', flaeche:'Fläche in m²', einheiten:'Zahl der Einheiten', architekt:'Architekturbüro'}, fehltWort: 'FEHLT',
+    foto: 'Fotografie des gebauten Objekts.', vis: 'Visualisierung, das Objekt ist noch nicht gebaut.', schaetzung: 'Status ist eine Einschätzung aus dem Bildmaterial.',
+    bildVor: '← Bild', bildWeiter: 'Bild →', bildVon: ' / ',
+    holdFertig: 'Der Abschluss steht.', holdHinweis: 'Gedrückt halten, bis die Linie steht.',
+    titel: 'Munich Residential GmbH · Projektentwicklung in München', firma: 'Munich Residential GmbH',
+    kopiert: 'Link kopiert', sprache: 'EN', spracheLabel: 'Switch to English',
+    orte: 'Nach Orten', stand: 'Nach Stand'
+  },
+  en: {
+    objekt: function(n){ return n + (n === 1 ? ' project' : ' projects'); },
+    status: {'im-bau':'Under construction','in-planung':'In planning','fertiggestellt':'Completed'},
+    gruppe: {muenchen:'Munich',umland:'Region',nuernberg:'Nuremberg',landshut:'Landshut',chemnitz:'Chemnitz'},
+    muUmland: 'Munich and region', muStadt: 'Munich', zoom: 'click zooms in',
+    hinweis: {de: 'One square per place. Click zooms to Munich or filters the index.', mu: 'One square per project. Click opens the project, “city” zooms further in.', st: 'Munich within the city boundary. Hover shows the image, click opens the project.'},
+    ansicht: {de: 'Germany', mu: 'Munich and region', st: 'Munich city'},
+    blatt: ['Place','Use','Status','Year','Area','Units','Architecture'],
+    fehlt: {nutzung:'use', jahr:'year of completion', flaeche:'area in m²', einheiten:'number of units', architekt:'architects'}, fehltWort: 'MISSING',
+    foto: 'Photograph of the completed building.', vis: 'Visualisation, the building is not yet built.', schaetzung: 'Status is an estimate from the images.',
+    bildVor: '← Image', bildWeiter: 'Image →', bildVon: ' / ',
+    holdFertig: 'The deal holds.', holdHinweis: 'Press and hold until the line is complete.',
+    titel: 'Munich Residential GmbH · Property development in Munich', firma: 'Munich Residential GmbH',
+    kopiert: 'Link copied', sprache: 'DE', spracheLabel: 'Zur deutschen Fassung',
+    orte: 'By place', stand: 'By status'
+  }
+};
 /* ---------------- Ausgabe aus den Daten ----------------
    Läuft im Bauskript (Node) und im Browser mit demselben Code, damit die
    Liste ohne Skript im Dokument steht und mit Skript dieselbe bleibt. */
@@ -1177,6 +1344,23 @@ function zeileHTML(p){
       '<span class="meta">' + esc(p.ort) + ' · ' + STATUS[p.status] + '</span>' +
       '<span class="bild"><picture><source type="image/webp" srcset="assets/projekte/' + p.bild + '.webp"><img src="assets/projekte/' + p.bild + '.jpg" alt="' + esc(p.alt) + '" width="' + p.w + '" height="' + p.h + '" loading="lazy" decoding="async"></picture></span>' +
     '</a></li>';
+}
+function registerHTML(){
+  var orte = ['muenchen','umland','nuernberg','landshut','chemnitz'], stand = ['im-bau','in-planung','fertiggestellt'];
+  var zaehl = function(k, f){ return PROJEKTE.filter(function(p){ return p[f] === k; }).length; };
+  var reihe = function(liste, feld, attr, namen){
+    return '<ol class="reg">' + liste.map(function(k){ var n = zaehl(k, feld); if (!n) return ''; return '<li style="--n:' + n + '"><button type="button" data-' + attr + '="' + k + '"><span class="rname" data-t="' + (attr === 'o' ? 'f.' + k : 'f.' + ({'im-bau':'imbau','in-planung':'planung','fertiggestellt':'fertig'})[k]) + '">' + namen[k] + '</span><span class="rz">' + n + '</span></button></li>'; }).join('') + '</ol>';
+  };
+  return '<div class="rk"><span data-t="reg.orte">Nach Orten</span><span data-t="reg.hinweis">Klick filtert das Verzeichnis.</span></div>' + reihe(orte, 'gruppe', 'o', GRUPPEN) +
+    '<div class="rk"><span data-t="reg.stand">Nach Stand</span></div>' + reihe(stand, 'status', 'f', STATUS);
+}
+function bildbandHTML(){
+  return BILDBAND.map(function(b){ var p = PROJEKTE.filter(function(x){ return x.slug === b.slug; })[0]; if (!p) return '';
+    var g = (p.gal || []).filter(function(x){ return 'galerie/' + x.f.replace(/\.jpg$/, '') === b.f; })[0];
+    var alt = g ? g.alt : p.alt;
+    return '<li><a href="#/arbeiten/' + p.slug + '"><picture><source type="image/webp" srcset="assets/' + b.f + '.webp"><img src="assets/' + b.f + '.jpg" alt="' + esc(alt) + '" width="' + b.w + '" height="' + b.h + '" loading="lazy" decoding="async"></picture>' +
+      '<span class="u"><span class="nr">' + nr(p) + '</span><span>' + esc(p.name) + ', ' + esc(p.ort) + '</span></span></a></li>';
+  }).join('');
 }
 function zeitSVG(){
   var J0 = 2007, J1 = new Date().getFullYear(), schritt = 110, rand = 60, y = 120;
@@ -1218,6 +1402,8 @@ var $$ = function(s, r){ return [].slice.call((r || document).querySelectorAll(s
 var rm = matchMedia('(prefers-reduced-motion: reduce)');
 var fein = matchMedia('(hover: hover) and (pointer: fine)');
 var vonSlug = {}; PROJEKTE.forEach(function(p, i){ p.i = i; vonSlug[p.slug] = p; });
+var sprache = 'de';
+function tx(k){ var v = TX[sprache][k]; return v === undefined ? TX.de[k] : v; }
 
 /* ---------------- Menü (Telefon) ---------------- */
 var menue = $('#menue'), menueKnopf = $('#menue-knopf'), menueLetzter = null;
@@ -1287,7 +1473,7 @@ function filtere(){
     var passt = (fStatus === 'alle' || z.dataset.status === fStatus) && (!fOrt || z.dataset.gruppe === fOrt);
     z.classList.toggle('weg', !passt); if (passt) n++;
   });
-  zaehler.textContent = n + (n === 1 ? ' Objekt' : ' Objekte');
+  zaehler.textContent = tx('objekt')(n);
   liste.setAttribute('aria-label', 'Werkverzeichnis, ' + n + ' Objekte');
   karteFilter();
   if (rm.matches) return;
@@ -1315,6 +1501,7 @@ $('.ansichten').addEventListener('click', function(e){
   $$('button', b.parentNode).forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
   var vor = messe();
   liste.classList.toggle('raster', b.dataset.a === 'raster');
+  $('.archiv').classList.toggle('raster-an', b.dataset.a === 'raster');
   if (rm.matches) return;
   var nach = messe();
   zeilen.forEach(function(z){ var a = vor[z.dataset.slug], c = nach[z.dataset.slug]; if (!a || !c) return;
@@ -1424,12 +1611,12 @@ function zeichneOrte(){
     var gruppen = {};
     PROJEKTE.forEach(function(p){
       var k = drin(ANSICHTEN[1], p) ? 'mu' : p.gruppe;
-      (gruppen[k] = gruppen[k] || { k: k, n: 0, lat: 0, lon: 0, name: k === 'mu' ? 'München und Umland' : GRUPPEN[p.gruppe] }).n++;
+      (gruppen[k] = gruppen[k] || { k: k, n: 0, lat: 0, lon: 0, name: k === 'mu' ? tx('muUmland') : tx('gruppe')[p.gruppe] }).n++;
       gruppen[k].lat += p.lat; gruppen[k].lon += p.lon;
     });
     Object.keys(gruppen).forEach(function(k){ var g = gruppen[k];
       eintraege.push({ x: sx(g.lon / g.n), y: sy(g.lat / g.n), txt: g.name, zahl: String(g.n), gross: true, k: k,
-        tip: g.name + ', ' + g.n + (g.n === 1 ? ' Objekt' : ' Objekte'),
+        tip: g.name + ', ' + tx('objekt')(g.n),
         tun: function(){ if (k === 'mu') setze('mu'); else { fOrt = k; $$('button[data-o]', filterEl).forEach(function(x){ x.setAttribute('aria-pressed', String(x.dataset.o === k)); }); filtere(); springeZu('arbeiten'); } } });
     });
   } else {
@@ -1440,8 +1627,8 @@ function zeichneOrte(){
         name: p.name + (v.id === 'st' && p.ort.replace(/^München-?/, '') ? ', ' + p.ort.replace(/^München-?/, '') : ''),
         tip: p.name + ', ' + p.ort + ' · ' + nr(p), tun: function(){ location.hash = '#/arbeiten/' + p.slug; } });
     });
-    if (kern.n) eintraege.push({ x: sx(kern.lon / kern.n), y: sy(kern.lat / kern.n), txt: 'München', zahl: String(kern.n), gross: true,
-      tip: 'München Stadt, ' + kern.n + ' Objekte, Klick zoomt hinein', tun: function(){ setze('st'); } });
+    if (kern.n) eintraege.push({ x: sx(kern.lon / kern.n), y: sy(kern.lat / kern.n), txt: tx('muStadt'), zahl: String(kern.n), gross: true,
+      tip: tx('ansicht').st + ', ' + tx('objekt')(kern.n) + ', ' + tx('zoom'), tun: function(){ setze('st'); } });
   }
   // Beschriftungen: vier Seiten durchprobieren, die erste freie nehmen
   var belegt = [];
@@ -1458,7 +1645,7 @@ function zeichneOrte(){
     e.an = g || 'start';
   });
   eintraege.forEach(function(e, i){
-    var g = el('g', { 'class': 'ort' + (e.gross ? ' gross' : ''), tabindex: '0', role: 'button', 'aria-label': e.tip });
+    var g = el('g', { 'class': 'ort' + (e.gross ? ' gross' : ''), tabindex: '0', role: 'button', 'aria-label': e.txt + (e.zahl ? ' ' + e.zahl : '') + ': ' + e.tip });
     if (e.slug) g.dataset.slug = e.slug;
     var r = (e.gross ? 7 : 5) * FK, ab = 14 * FK;
     g.appendChild(el('rect', { 'class': 'halo', x: e.x - r - 5 * FK, y: e.y - r - 5 * FK, width: r * 2 + 10 * FK, height: r * 2 + 10 * FK }));
@@ -1479,7 +1666,7 @@ function zeichneOrte(){
   });
   // Legende rechts: dieselben Einträge als Liste
   legende.innerHTML = eintraege.map(function(e){
-    return '<li><button type="button"><span class="lname">' + esc(e.name || e.txt) + '</span><span class="lnr">' + esc(e.zahl ? e.zahl + (e.zahl === '1' ? ' Objekt' : ' Objekte') : (e.p ? nr(e.p) : '')) + '</span></button></li>';
+    return '<li><button type="button"><span class="lname">' + esc(e.name || e.txt) + '</span><span class="lnr">' + esc(e.zahl ? tx('objekt')(+e.zahl) : (e.p ? nr(e.p) : '')) + '</span></button></li>';
   }).join('');
   $$('button', legende).forEach(function(b, i){ var e = eintraege[i];
     b.addEventListener('mouseenter', function(){ markiere(i, true); kf.textContent = e.tip; kkZeige(e); });
@@ -1512,7 +1699,7 @@ function zeichneOrte(){
   deko.appendChild(el('line', { 'class': 'massstab', x1: x0, y1: y0 - 5 * FK, x2: x0, y2: y0 + 5 * FK }));
   deko.appendChild(el('line', { 'class': 'massstab', x1: x0 + b, y1: y0 - 5 * FK, x2: x0 + b, y2: y0 + 5 * FK }));
   var ms = el('text', { 'class': 'ms', x: x0 + b / 2, y: y0 - 10 * FK, 'text-anchor': 'middle' }); ms.textContent = v.km + ' km'; deko.appendChild(ms);
-  var titel = el('text', { 'class': 'ms', x: 24 * FK, y: H - 22 * FK }); titel.textContent = v.titel; deko.appendChild(titel);
+  var titel = el('text', { 'class': 'ms', x: 24 * FK, y: H - 22 * FK }); titel.textContent = tx('ansicht')[v.id]; deko.appendChild(titel);
   karteFilter();
 }
 function markiere(i, an){ var l = legende.children[i], p = orte.children[i]; if (l) l.classList.toggle('an', an); if (p) p.classList.toggle('warm', an); }
@@ -1531,8 +1718,7 @@ function setze(id){
   if (n){ rahmen.setAttribute('x', px(n.lonL)); rahmen.setAttribute('y', py(n.latT)); rahmen.setAttribute('width', px(n.lonR) - px(n.lonL)); rahmen.setAttribute('height', py(n.latB) - py(n.latT)); rahmen.style.opacity = ''; }
   else rahmen.style.opacity = '0';
   $$('.kk button', karte).forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === id)); });
-  v.hinweis = id === 'de' ? 'Ein Quadrat je Ort. Klick zoomt nach München oder filtert das Verzeichnis.' :
-    (id === 'mu' ? 'Ein Quadrat je Objekt. Klick öffnet das Objekt, „Stadt“ zoomt weiter hinein.' : 'München innerhalb der Stadtgrenze. Überfahren zeigt das Bild, Klick öffnet das Objekt.');
+  v.hinweis = tx('hinweis')[id];
   kf.textContent = v.hinweis;
   orte.classList.add('weg'); legende.classList.add('weg');
   setTimeout(function(){ zeichneOrte(); orte.classList.remove('weg'); legende.classList.remove('weg'); }, rm.matches ? 0 : 340);
@@ -1559,6 +1745,7 @@ panelZeige(PROJEKTE[0].slug);
 
 /* ---------------- Zeitleiste: Tastatur und Ziehen ---------------- */
 var bahn = $('#zeit-bahn');
+if (bahn) {
 if (!bahn.children.length) bahn.innerHTML = zeitSVG();
 bahn.addEventListener('keydown', function(e){
   var s = e.key === 'ArrowRight' ? 220 : (e.key === 'ArrowLeft' ? -220 : (e.key === 'Home' ? -1e6 : (e.key === 'End' ? 1e6 : 0)));
@@ -1569,11 +1756,12 @@ bahn.addEventListener('keydown', function(e){
   window.addEventListener('pointermove', function(e){ if (x0 === null) return; bahn.scrollLeft = s0 - (e.clientX - x0); });
   window.addEventListener('pointerup', function(){ x0 = null; bahn.style.cursor = ''; });
 })();
+}
 
 /* ---------------- Ansichten und Routen ---------------- */
 var ans = $('#ansicht'), ansInhalt = $('#ansicht-inhalt'), ansVor = $('#ansicht-vor'), ansWeiter = $('#ansicht-weiter'), ansBlaettern = $('#ansicht-blaettern');
 var ansOffen = null, ansLetzter = null, ansRoute = null, hauptteile = ['#top', 'main', '#fuss', '.hero', '#rand'];
-function fehlt(v, was){ return v ? esc(v) : '<span class="fehlt">[[FEHLT: ' + was + ']]</span>'; }
+function fehlt(v, was){ return v ? esc(v) : '<span class="fehlt">[[' + tx('fehltWort') + ': ' + tx('fehlt')[was] + ']]</span>'; }
 function projektHTML(p, bi){
   var bilder = [{ f: 'projekte/' + p.bild + '.jpg', w: p.w, h: p.h, alt: p.alt }].concat((p.gal || []).map(function(g){ return { f: 'galerie/' + g.f, w: g.w, h: g.h, alt: g.alt }; }));
   bi = Math.max(0, Math.min(bilder.length - 1, bi || 0)); var b = bilder[bi];
@@ -1581,20 +1769,20 @@ function projektHTML(p, bi){
     '<div class="bilder"><figure style="--bw:' + b.w + 'px">' +
       '<picture><source type="image/webp" srcset="assets/' + b.f.replace(/.jpg$/, '.webp') + '"><img src="assets/' + b.f + '" alt="' + esc(b.alt) + '" width="' + b.w + '" height="' + b.h + '" decoding="async"></picture>' +
       '<figcaption><span>' + esc(b.alt) + '</span><span>' + (bi + 1) + ' / ' + bilder.length + '</span></figcaption></figure>' +
-      (bilder.length > 1 ? '<div class="blaettern"><button type="button" data-bild="-1"' + (bi === 0 ? ' disabled' : '') + '>← Bild</button><button type="button" data-bild="1"' + (bi === bilder.length - 1 ? ' disabled' : '') + '>Bild →</button></div>' : '') +
+      (bilder.length > 1 ? '<div class="blaettern"><button type="button" data-bild="-1"' + (bi === 0 ? ' disabled' : '') + '>' + tx('bildVor') + '</button><button type="button" data-bild="1"' + (bi === bilder.length - 1 ? ' disabled' : '') + '>' + tx('bildWeiter') + '</button></div>' : '') +
     '</div>' +
     '<div class="daten"><span class="nr">' + nr(p) + '</span><h2 id="ansicht-t">' + esc(p.name) + '</h2>' +
       '<ul class="blatt">' +
-        '<li><span class="l">Ort</span><span>' + esc(p.ort) + '</span></li>' +
-        '<li><span class="l">Nutzung</span><span>' + fehlt(p.nutzung, 'Nutzung') + '</span></li>' +
-        '<li><span class="l">Status</span><span>' + STATUS[p.status] + '</span></li>' +
-        '<li><span class="l">Jahr</span><span>' + fehlt(p.jahr, 'Fertigstellungsjahr') + '</span></li>' +
-        '<li><span class="l">Fläche</span><span>' + fehlt(p.flaeche, 'Fläche in m²') + '</span></li>' +
-        '<li><span class="l">Einheiten</span><span>' + fehlt(p.einheiten, 'Zahl der Einheiten') + '</span></li>' +
-        '<li><span class="l">Architektur</span><span>' + fehlt(p.architekt, 'Architekturbüro') + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[0] + '</span><span>' + esc(p.ort) + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[1] + '</span><span>' + fehlt(p.nutzung, 'nutzung') + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[2] + '</span><span>' + tx('status')[p.status] + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[3] + '</span><span>' + fehlt(p.jahr, 'jahr') + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[4] + '</span><span>' + fehlt(p.flaeche, 'flaeche') + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[5] + '</span><span>' + fehlt(p.einheiten, 'einheiten') + '</span></li>' +
+        '<li><span class="l">' + tx('blatt')[6] + '</span><span>' + fehlt(p.architekt, 'architekt') + '</span></li>' +
       '</ul>' +
       (p.text ? '<div class="satz">' + p.text.map(function(t){ return '<p>' + esc(t) + '</p>'; }).join('') + '</div>' : '') +
-      '<p class="art">' + (p.art === 'Foto' ? 'Fotografie des gebauten Objekts.' : 'Visualisierung, das Objekt ist noch nicht gebaut.') + ' Status ist eine Einschätzung aus dem Bildmaterial.</p>' +
+      '<p class="art">' + (p.art === 'Foto' ? tx('foto') : tx('vis')) + ' ' + tx('schaetzung') + '</p>' +
     '</div></div>';
 }
 function uebergang(fn){
@@ -1615,7 +1803,8 @@ function oeffneAnsicht(html, route, blaettern){
     hauptteile.forEach(function(s){ var e = $(s); if (e) e.inert = true; });
     ans.scrollTop = 0;
     ansRoute = route;
-    document.title = ($('#ansicht-t') ? $('#ansicht-t').textContent + ' · ' : '') + 'Munich Residential GmbH';
+    uebersetze(ansInhalt); $('#ansicht-teilen').hidden = !blaettern;
+    document.title = ($('#ansicht-t') ? $('#ansicht-t').textContent + ' · ' : '') + tx('firma');
     if (!war) $('#ansicht-zu').focus();
   };
   uebergang(tausch);
@@ -1626,7 +1815,7 @@ function schliesseAnsicht(){
     ans.classList.remove('offen'); ans.removeAttribute('open');
     document.body.classList.remove('ansicht-offen');
     hauptteile.forEach(function(s){ var e = $(s); if (e) e.inert = false; });
-    document.title = 'Munich Residential GmbH · Projektentwicklung in München';
+    document.title = tx('titel');
     if (ansLetzter && ansLetzter.focus) ansLetzter.focus({ preventScroll: true });
     ansLetzter = null; ansRoute = null;
   };
@@ -1704,6 +1893,8 @@ $$('.auf, .klip').forEach(function(x){ io.observe(x); });
 function rng(seed){ var s = seed >>> 0; return function(){ s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 function split(elm, mode, spread, emWord){
   var text = elm.textContent.trim(), rnd = rng(text.length * 977 + 13);
+  // Urtext merken, bevor er in Spannen zerlegt wird: die Sprachumschaltung setzt ihn zurück
+  if (elm.dataset.t && elm.dataset.de === undefined) elm.dataset.de = text;
   var sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = text;
   var vis = document.createElement('span'); vis.setAttribute('aria-hidden', 'true');
   var words = text.split(' '), total = text.length, ci = 0;
@@ -1799,7 +1990,7 @@ function paintHold(){
   stationen.forEach(function(s, i){ s.classList.toggle('an', hp >= (i + 1) / 3 - 0.02); });
   punkte.forEach(function(c, i){ c.classList.toggle('an', hp >= i / 2 - 0.001 && hp > 0); });
   hold.classList.toggle('fertig', hp >= 1);
-  $('#hold-hinweis').textContent = hp >= 1 ? 'Der Abschluss steht.' : 'Gedrückt halten, bis die Linie steht.';
+  $('#hold-hinweis').textContent = hp >= 1 ? tx('holdFertig') : tx('holdHinweis');
 }
 function holdTick(now){
   var dt = Math.min(100, now - (holdLast || now)); holdLast = now;
@@ -1827,6 +2018,73 @@ function pinToFinalStates(){
 function unpinFinalStates(){ if (holdPinned && !rm.matches){ holdPinned = false; latched = false; holding = false; hp = 0; paintHold(); } }
 rm.addEventListener('change', function(e){ if (e.matches) pinToFinalStates(); else applyHeroMode(); });
 if (rm.matches) pinToFinalStates();
+
+/* ---------------- Register: Klick filtert das Verzeichnis ---------------- */
+$$('.reg button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var f = $('#filter'), z = b.dataset.o ? f.querySelector('button[data-o="' + b.dataset.o + '"]') : f.querySelector('button[data-f="' + b.dataset.f + '"]');
+    if (b.dataset.o && fOrt === b.dataset.o) { /* schon aktiv */ } else if (z) z.click();
+    if (b.dataset.o){ var alle = f.querySelector('button[data-f="alle"]'); if (fStatus !== 'alle') alle.click(); }
+    springeZu('arbeiten');
+  });
+});
+
+/* ---------------- Bildband: Ziehen, Tasten, Knöpfe ---------------- */
+var streifen = $('#streifen');
+if (streifen){
+  var sx0 = null, ss0 = 0, gezogen = false;
+  streifen.addEventListener('pointerdown', function(e){ if (e.pointerType !== 'mouse') return; sx0 = e.clientX; ss0 = streifen.scrollLeft; gezogen = false; streifen.style.cursor = 'grabbing'; });
+  window.addEventListener('pointermove', function(e){ if (sx0 === null) return; var dx = e.clientX - sx0; if (Math.abs(dx) > 4) gezogen = true; streifen.scrollLeft = ss0 - dx; });
+  window.addEventListener('pointerup', function(){ sx0 = null; streifen.style.cursor = ''; });
+  streifen.addEventListener('click', function(e){ if (gezogen){ e.preventDefault(); gezogen = false; } }, true);
+  streifen.addEventListener('keydown', function(e){
+    var s = e.key === 'ArrowRight' ? 1 : (e.key === 'ArrowLeft' ? -1 : 0); if (!s) return;
+    e.preventDefault(); streifen.scrollBy({ left: s * streifen.clientWidth * 0.7, behavior: rm.matches ? 'auto' : 'smooth' });
+  });
+  $$('.streifen-nav button').forEach(function(b){ b.addEventListener('click', function(){ streifen.scrollBy({ left: (+b.dataset.d) * streifen.clientWidth * 0.7, behavior: rm.matches ? 'auto' : 'smooth' }); }); });
+}
+
+/* ---------------- Link zu diesem Objekt kopieren ---------------- */
+var BASIS = 'https://vincenthattenkofer-byte.github.io/munich-residential/';
+$('#ansicht-teilen').addEventListener('click', function(){
+  var slug = (ansRoute || '').split('/')[2]; if (!slug) return;
+  var url = BASIS + 'arbeiten/' + slug + '/', b = this, alt = b.innerHTML;
+  var fertig = function(){ b.classList.add('kopiert'); b.textContent = tx('kopiert'); setTimeout(function(){ b.classList.remove('kopiert'); b.innerHTML = alt; }, 2000); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(fertig, fertig); else { prompt('Link', url); }
+});
+
+/* ---------------- Sprache: Deutsch und Englisch ---------------- */
+function setzeSprache(l, still){
+  sprache = (l === 'en') ? 'en' : 'de';
+  document.documentElement.lang = sprache;
+  try { localStorage.setItem('mr-sprache', sprache); } catch (e) {}
+  uebersetze(document);
+  // Zeilen des Verzeichnisses
+  zeilen.forEach(function(z){ var p = vonSlug[z.dataset.slug]; var m = $('.meta', z); if (p && m) m.textContent = p.ort + ' · ' + tx('status')[p.status]; });
+  // Zähler, Karte, Halten, Kopf
+  var n = zeilen.filter(function(z){ return !z.classList.contains('weg'); }).length;
+  zaehler.textContent = tx('objekt')(n);
+  if (typeof zeichneOrte === 'function'){ ansicht.hinweis = tx('hinweis')[ansicht.id]; kf.textContent = ansicht.hinweis; zeichneOrte(); }
+  paintHold();
+  $$('[data-split]').forEach(function(x){ var band = x.closest('.band'); split(x, x.dataset.split, parseFloat(band && band.dataset.spread) || 0.5, x.dataset.em); });
+  $$('.sprache').forEach(function(b){ b.textContent = tx('sprache'); b.setAttribute('aria-label', tx('spracheLabel')); });
+  document.title = ans.classList.contains('offen') && $('#ansicht-t') ? $('#ansicht-t').textContent + ' · ' + tx('firma') : tx('titel');
+  if (!still && ans.classList.contains('offen')) route();
+}
+function uebersetze(root){
+  $$('[data-t]', root).forEach(function(el){
+    var k = el.dataset.t;
+    if (el.dataset.de === undefined) el.dataset.de = el.innerHTML;
+    var neu = sprache === 'en' ? (EN[k] !== undefined ? EN[k] : el.dataset.de) : el.dataset.de;
+    if (el.innerHTML !== neu) el.innerHTML = neu;
+  });
+}
+$$('.sprache').forEach(function(b){ b.addEventListener('click', function(){ setzeSprache(sprache === 'en' ? 'de' : 'en'); }); });
+(function(){
+  var g = null; try { g = localStorage.getItem('mr-sprache'); } catch (e) {}
+  if (!g && /^en\b/i.test(navigator.language || '')) g = 'en';
+  if (g === 'en') setzeSprache('en', true);
+})();
 
 /* ---------------- Formular: mailto, und die Seite sagt es ---------------- */
 $('#form').addEventListener('submit', function(e){

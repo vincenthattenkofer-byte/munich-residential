@@ -60,5 +60,17 @@
 - html-validate ohne Befund. grep: 0 Gedankenstriche außer `MR—0xx`, 0 Wörter der Verbotsliste,
   0 Ausrufezeichen, 0 `!important`, 0 Schatten, 0 Rundungen, eine `h1`.
 
+### Zweite Runde (18. September 2026, Abend)
+- **Bildband:** bildschirmbreite, seitlich scrollende Bildstrecke mit elf Aufnahmen zwischen „Das Haus“
+  und „Arbeiten“; ziehen, Pfeiltasten, zwei Textknöpfe; Klick öffnet das Objekt.
+- **Raster als Startansicht** im Verzeichnis, die Liste ein Klick entfernt; das Bildpanel gilt nur der Liste.
+- **Eigene Seite je Objekt** unter `arbeiten/<slug>/` mit Titel, Beschreibung und Vorschaubild für
+  WhatsApp, LinkedIn und Suchmaschinen; leitet Menschen in die Projektansicht, Maschinen lesen die Seite.
+  Dazu `sitemap.xml`, `robots.txt` und „Link kopieren“ in der Projektansicht.
+- **Register nach Orten und Stand** ersetzt die Zeitleiste, solange keine Fertigstellungsjahre vorliegen;
+  Klick filtert das Verzeichnis. Die Zeitleiste erscheint automatisch, sobald ein Jahr eingetragen ist.
+- **Englische Fassung:** Umschalter EN/DE in Leiste und Menü, alle Texte übersetzt (Rechtstexte bleiben
+  deutsch, mit Hinweis), Wahl gespeichert, Browsersprache als Vorgabe beim ersten Besuch.
+
 ### Dokumente
 - `ASSETS.md`, `AUDIT.md` (44 Punkte), `PLAN.md`, `OFFENE-PUNKTE.md`, `CHANGELOG.md`.

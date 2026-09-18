@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vincenthattenkofer-byte.github.io/munich-residential/sitemap.xml
