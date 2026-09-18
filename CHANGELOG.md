@@ -1,6 +1,6 @@
 # CHANGELOG.md
 
-## 2026-09-18 · Komplettüberarbeitung (Branch `ueberarbeitung`)
+## 2026-09-18 · Komplettüberarbeitung (Branch `ueberarbeitung`, auf `main` veröffentlicht)
 
 ### Entfernt
 - Google Fonts. Drei WOFF2 liegen in `fonts/`, Ersatzschriften mit `size-adjust`.
@@ -27,8 +27,10 @@
   Jahr stehen gesammelt am Ende („Fertigstellungsjahr offen").
 - **Arbeiten:** dunkle Fläche. Liste mit `MR—001`, Name, Ort · Status. Filter nach Status und
   Ort, Wechsel per FLIP. Zeigervorschau mit Trägheit (nur Maus). Listen- und Rasteransicht.
-  Pfeiltasten wandern, Enter öffnet. Selbst gezeichnete SVG-Karte (Umriss, Isar, Quadrate mit
-  Mono-Nummer) in drei Stufen: Deutschland, Umland, Stadt. Hover koppelt Karte und Liste.
+  Pfeiltasten wandern, Enter öffnet. SVG-Karte aus echten Geodaten (Deutschland mit Bundesländern,
+  Flüssen und Seen; Umland mit Isar, Seen und Stadtgrenze; Stadt mit Stadtgrenze, Isar und
+  Mittlerem Ring), Quadrate mit Mono-Nummer, Orientierungsnamen, in drei Stufen. Hover koppelt
+  Karte und Liste. Quellen: Natural Earth (gemeinfrei), OpenStreetMap (ODbL), im Fuß genannt.
 - **Projektansicht** mit eigener Adresse `#/arbeiten/<slug>`: Bild oder Bildfolge in nativer
   Größe, Mono-Datenblatt mit `[[FEHLT]]`, Vor und Zurück, Escape, Browser-Zurück, Fokusfang,
   `inert` auf dem Rest, View Transitions mit Fallback.

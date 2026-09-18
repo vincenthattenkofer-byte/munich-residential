@@ -29,4 +29,6 @@ GitHub Pages stellt die Änderung nach etwa einer Minute live.
 
 Das Bild im Kopf der Seite zeigt das Objekt Leibstraße in Haar; die Kamerafahrt wurde aus dem
 Luftbild berechnet. Alle Projektbilder zeigen echte Objekte oder deren Visualisierung, so
-gekennzeichnet. Schriften: Archivo, Instrument Sans, IBM Plex Mono (SIL Open Font License).
+gekennzeichnet. Lageplan: Grenzen, Flüsse und Seen aus Natural Earth (gemeinfrei), Stadtgrenze, Isar
+und Mittlerer Ring aus OpenStreetMap (© OpenStreetMap-Mitwirkende, ODbL). Schriften: Archivo,
+Instrument Sans, IBM Plex Mono (SIL Open Font License).

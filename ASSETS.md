@@ -90,5 +90,5 @@ Nur der Latin-Teilsatz (deckt Umlaute, ß, €, m² ab). Keine Anfrage an Google
 | A 05_duplikate/* | JPG-Doubletten der PNG-Fassungen |
 | A 03_logos/* (drei Dateien) | JPEG mit PNG-Endung, ohne Alphakanal; die 112-px-Fassung zu klein |
 | bisherige assets/station-*.jpg | waren KI-generierte Stimmungsbilder, entfernt |
-| bisherige assets/karte-*.jpg (Sentinel-2) | Satellitenkacheln, durch die selbst gezeichnete SVG-Karte ersetzt; liegen in der Git-Historie (Commit d96c71f) |
+| bisherige assets/karte-*.jpg (Sentinel-2) | Satellitenkacheln, durch die SVG-Karte aus Vektordaten ersetzt (Natural Earth, OpenStreetMap; 44 KB in `index.html`); liegen in der Git-Historie (Commit d96c71f) |
 | B drive-neu/dokumente/* | vertrauliche Angebotsunterlagen Dritter, nur intern, nie veröffentlichen |

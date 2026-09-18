@@ -58,10 +58,11 @@ rückt das Objekt automatisch auf die Zeitleiste im Abschnitt „Das Haus".
 
 15. **21 statt 19 Objekte.** Der Auftrag nennt 19; Zeisigweg (Freising) und Pettenkoferstraße
     (München) kamen mit echten Fotos aus dem Drive dazu und sind im Verzeichnis MR—020 und MR—021.
-16. **Karte ohne Satellitenbild.** Der Auftrag verlangt eine selbst gezeichnete, abstrahierte
-    SVG-Karte ohne Kartendienst. Die frühere Fassung mit Sentinel-2-Kacheln, die der Auftraggeber
-    mündlich gewünscht hatte, liegt in der Git-Historie (Commit d96c71f). Umriss und Isar sind
-    grob und bewusst so; die Objektpunkte sitzen auf echten Koordinaten aus der Adresssuche.
+16. **Karte aus echten Geodaten, ohne Kartendienst.** Grenzen, Bundesländer, Flüsse und Seen aus
+    Natural Earth (gemeinfrei), Stadtgrenze München, Isar und Mittlerer Ring aus OpenStreetMap
+    (ODbL, Nennung im Fuß). Alles liegt als vereinfachte Vektoren in der Datei (44 KB), beim Laden
+    wird nichts nachgeladen. Die frühere Fassung mit Sentinel-2-Kacheln liegt in der Git-Historie
+    (Commit d96c71f). Die Objektpunkte sitzen auf echten Koordinaten aus der Adresssuche.
 17. **PNG-Quellen als JPG.** Sieben Altbilder lagen als PNG vor, sind aber Fotos ohne Transparenz.
     Sie liegen jetzt als JPG (halbe Dateigröße, gleiche Qualität). Die Originale bleiben in
     `munich-residential-assets/`.
