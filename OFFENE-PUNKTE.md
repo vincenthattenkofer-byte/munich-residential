@@ -76,5 +76,9 @@ rückt das Objekt automatisch auf die Zeitleiste im Abschnitt „Das Haus".
 21. **Kontaktformular per mailto.** Es gibt keinen Server. Der Knopf öffnet das E-Mail-Programm
     des Besuchers; die Seite sagt das. Wer echte Formularannahme will, braucht einen Dienst
     (Formspark, eigenes Skript) und dann einen Datenschutzabsatz dazu.
-22. **Projektansichten brauchen Skript.** Ohne JavaScript ist das Verzeichnis mit Bildern lesbar,
+22. **Guthaben bei Higgsfield ist auf 0 (Plan „free“).** Mit Guthaben würde ich als Erstes die
+    17 kleinen Projektbilder (590 und 1024 px) per KI-Upscaler auf 2K bringen; dann dürften sie
+    im Raster und in der Projektansicht doppelt so groß stehen. Ohne Guthaben bleibt die Grenze
+    1,3 × nativ.
+23. **Projektansichten brauchen Skript.** Ohne JavaScript ist das Verzeichnis mit Bildern lesbar,
     die Einzelansicht mit Datenblatt öffnet aber nicht (es gibt nur eine Datei).

@@ -79,7 +79,18 @@ zwei Fällen weiß auf weiß; unbrauchbar. Ein Vektor-Original (SVG, PDF, AI) gi
 
 Nur der Latin-Teilsatz (deckt Umlaute, ß, €, m² ab). Keine Anfrage an Google Fonts.
 
-## 6. Nicht verwendet, mit Grund
+## 6. Lageplan (`assets/`)
+
+| Datei | Maße | Ausschnitt (lon/lat) | Herkunft |
+|---|---|---|---|
+| sat-de.jpg / .webp | 2400 × 1137 | 1,9 bis 19,0 / 47,1 bis 55,2 | Sentinel-2 cloudless 2020, EOX IT Services GmbH, CC BY 4.0, per WMS geholt und lokal gespeichert |
+| sat-mu.jpg / .webp | 2400 × 917 | 10,7 bis 12,35 / 47,82 bis 48,45 | dito |
+| sat-st.jpg / .webp | 2000 × 1466 | 11,42 bis 11,75 / 48,06 bis 48,22 | dito |
+
+Die Vektorebenen (Umriss, Bundesländer, Flüsse, Seen, Stadtgrenze, Isar, Mittlerer Ring) liegen
+als vereinfachte Koordinaten (44 KB) in `index.html`. Quellen: Natural Earth, OpenStreetMap.
+
+## 7. Nicht verwendet, mit Grund
 
 | Datei | Grund |
 |---|---|
@@ -90,5 +101,5 @@ Nur der Latin-Teilsatz (deckt Umlaute, ß, €, m² ab). Keine Anfrage an Google
 | A 05_duplikate/* | JPG-Doubletten der PNG-Fassungen |
 | A 03_logos/* (drei Dateien) | JPEG mit PNG-Endung, ohne Alphakanal; die 112-px-Fassung zu klein |
 | bisherige assets/station-*.jpg | waren KI-generierte Stimmungsbilder, entfernt |
-| bisherige assets/karte-*.jpg (Sentinel-2) | Satellitenkacheln, durch die SVG-Karte aus Vektordaten ersetzt (Natural Earth, OpenStreetMap; 44 KB in `index.html`); liegen in der Git-Historie (Commit d96c71f) |
+| bisherige assets/karte-*.jpg (Sentinel-2) | ersetzt durch `assets/sat-de/mu/st.jpg` und `.webp` (siehe Abschnitt 7) |
 | B drive-neu/dokumente/* | vertrauliche Angebotsunterlagen Dritter, nur intern, nie veröffentlichen |
