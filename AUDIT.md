@@ -93,5 +93,6 @@ Abschnitt. Fundstellen beziehen sich auf `index.html` dieses Commits.
 | Weiß #F2F1ED über dem Film, schlechtester 2-Prozent-Bereich je Band | Kopf, Band 1 bis 4 | 4,93 / 5,28 / 5,89 / 5,72 : 1 | ja (Ziel 4,5) |
 | `.fehlt` #6A6E72 mit Deckkraft .55 auf `--canvas` | Platzhalter `[[FEHLT]]` | etwa 2,3 : 1 | nein, bewusst: ist kein Inhalt, sondern die Markierung einer Lücke; verschwindet, sobald der Wert eingetragen ist |
 
-Lighthouse (mobil, lokal, Chrome 152 headless): Barrierefreiheit 100, Best Practices 100, SEO 100.
-Leistung siehe CHANGELOG (LCP je Lauf 1,2 bis 4,0 s, abhängig von der Last der Prüfmaschine).
+Lighthouse 13.4 (Chrome 152 headless, lokaler Server mit gzip wie bei GitHub Pages):
+mobil Leistung 99, Barrierefreiheit 100, Best Practices 100, SEO 100; LCP 2,1 s simuliert (Ziel 2,0 s, knapp verfehlt;
+beobachtet 0,15 s), CLS 0, TBT 0 ms. Desktop 100 / 100 / 100 / 100, LCP 0,5 s.

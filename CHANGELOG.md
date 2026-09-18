@@ -12,8 +12,10 @@
 ### Neu
 - **Bilder in nativer Auflösung**, weiße Exportränder abgeschnitten (26/24 px bei 616er,
   12/17 px bei 1036er Bildern, 8/15 px bei den Drive-Fotos). Kein Bild größer als 1,3 × nativ.
-- **Logo** aus der Altseite in 829 px mit Alphakanal, in die Hausfarbe gefärbt, helle Fassung
-  für die Leiste über dem Film.
+- **Logo** aus der Altseite in 829 px mit Alphakanal, in die Hausfarbe gefärbt; über dem Film per
+  CSS-Filter hell (eine Datei statt zwei).
+- **WebP** zu jedem Projekt- und Galeriebild per `<picture>`, Telefon-Kopfbild in 820 px per
+  `image-set()` und Preload. Originale bleiben.
 - **Navigation:** Wortmarke, vier Textlinks, Haarlinie erst nach dem Scrollen, aktiver
   Abschnitt unterstrichen, mobil das Wort „Menü" mit Vollflächenmenü (Fokusfang, Escape).
   Skip-Link, Fokus nach Ankersprung auf den Abschnitt.
@@ -43,6 +45,17 @@
   Druckansicht als Werkverzeichnis, Randanzeige mit Abschnitt und Nummer, eine Easing-Kurve
   `cubic-bezier(.2,.7,.1,1)`, Dauern 0,4 / 0,6 / 0,9 s, nur transform, opacity, clip-path.
   Reduzierte Bewegung setzt die Dauern auf 0 und die Endzustände, live in beide Richtungen.
+
+### Prüfungen (18. September 2026)
+- Screenshots bei 320, 375, 768, 1024, 1440, 1920, 2560 px, je Abschnitt, außerdem ohne Skript,
+  mit reduzierter Bewegung, Menü, Projektansicht, Impressum, 404, Karte in drei Stufen, Raster, Druck.
+- Interaktionen per CDP: Filter, FLIP, Raster, Karte (0 Überlappungen), Pfeiltasten, Halten
+  (Loslassen gleitet zurück, vollendet bleibt), Routen, Escape, `inert`, 404, Auftritte 14/14,
+  kein seitliches Scrollen, Konsole leer, keine Fremdanfrage.
+- Lesbarkeit im Kopf, schlechtester Bereich je Band: 4,93 / 5,28 / 5,90 / 5,72 : 1.
+- Lighthouse (gzip-Server): mobil 99 / 100 / 100 / 100, LCP 2,1 s simuliert, CLS 0; Desktop 100 / 100 / 100 / 100.
+- html-validate ohne Befund. grep: 0 Gedankenstriche außer `MR—0xx`, 0 Wörter der Verbotsliste,
+  0 Ausrufezeichen, 0 `!important`, 0 Schatten, 0 Rundungen, eine `h1`.
 
 ### Dokumente
 - `ASSETS.md`, `AUDIT.md` (44 Punkte), `PLAN.md`, `OFFENE-PUNKTE.md`, `CHANGELOG.md`.

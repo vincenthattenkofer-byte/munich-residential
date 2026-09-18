@@ -35,6 +35,8 @@ nichts hochgerechnet. Maximale Anzeigebreite steht rechts.
 | 20 | 20_zeisigweg_freising.jpg | B 2022_01_IMGNT_01.jpg | 1288 × 868 | 1280 × 852 | Foto | 1664 px |
 | 21 | 21_pettenkoferstrasse_muenchen.jpg | B IMG_6691.jpeg | 1148 × 1064 | 1148 × 1064 | Foto | 1492 px |
 
+Zu jedem JPG liegt eine WebP-Fassung gleicher Maße (libwebp, Qualität 80, im Mittel ein Drittel kleiner); die Seite
+bietet sie per `<picture>` an, das JPG bleibt Original und Rückfall.
 Die PNG-Quellen wurden als JPG (Qualität 2) gespeichert, weil sie Fotos ohne Transparenz sind.
 Die Auftragsvorgabe „PNG bleibt PNG" ist damit bewusst abgewichen: Dateigröße halbiert,
 optisch kein Unterschied, Originale bleiben unter Quelle A erhalten.
@@ -55,14 +57,14 @@ optisch kein Unterschied, Originale bleiben unter Quelle A erhalten.
 |---|---|---|
 | hero-scrub.mp4 | 1728 × 996, 6 s, 5,5 MB | Kamerafahrt, aus dem Luftbild DJI_0030 (Leibstraße, Haar) berechnet. Das Gebäude ist echt, die Bewegung ist gerechnet. Nur auf großen Bildschirmen mit Maus geladen. |
 | hero-poster.jpg | 1600 × 922 | Erstes Bild der Kamerafahrt |
-| hero-ending.jpg | 1800 × 1038 | Letztes Bild, Standbild für Telefone und reduzierte Bewegung |
+| hero-ending.jpg | 1800 × 1038 | Letztes Bild, Standbild für Hochformat-Tablets und reduzierte Bewegung |
+| hero-ending-960.jpg / .webp | 820 × 473 | dasselbe Bild, für Telefone bis 720 px (67 KB / 57 KB), per `image-set()` und `<link rel="preload">` |
 
 ## 4. Logo (`assets/`)
 
 | Datei | Maße | Herkunft |
 |---|---|---|
-| logo-mr.png | 829 × 502 | von der Altseite geladen (`wp-content/uploads/2021/01/mr-logo-gruen-transparent.png`), PNG mit Alphakanal, per Alphakanal in die Hausfarbe #2A5B65 eingefärbt. Schärfste vorhandene Quelle. |
-| logo-mr-weiss.png | 829 × 502 | dieselbe Quelle, in --canvas #F2F1ED gefärbt, für die Leiste über dem Film |
+| logo-mr.png | 829 × 502 | von der Altseite geladen (`wp-content/uploads/2021/01/mr-logo-gruen-transparent.png`), PNG mit Alphakanal, per Alphakanal in die Hausfarbe #2A5B65 eingefärbt. Schärfste vorhandene Quelle. Über dem Film wird dieselbe Datei per CSS-Filter hell gestellt, die Marke ist einfarbig. |
 
 Die drei Logodateien in Quelle A (`03_logos/`) sind trotz Endung `.png` JPEGs ohne Alphakanal und in
 zwei Fällen weiß auf weiß; unbrauchbar. Ein Vektor-Original (SVG, PDF, AI) gibt es nicht. Siehe OFFENE-PUNKTE.
