@@ -238,6 +238,8 @@ html.js.bereit .poster,html:not(.js) .poster{clip-path:inset(0)}
   font-size:var(--t-2);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark);opacity:.6;
   text-align:right;line-height:1.7}
 .filmhinweis .fz{display:block}
+.filmhinweis .rollen{display:none;transition:opacity var(--d2) var(--ease)}
+.filmhinweis.weg .rollen{opacity:0}
 
 /* Ohne Skript zeigt der Kopf das Endbild und den statischen Text */
 html:not(.js) .hero{height:auto}
@@ -610,17 +612,40 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
 /* ============================================================
    Die fünf statischen Tore, wörtlich gleich im Skript
    ============================================================ */
+/* Tor 1 bis 4: Telefon, Hochformat-Tablet, liegendes Telefon.
+   Kein Film, aber dieselbe Abfolge: das Standbild bleibt stehen und wächst
+   langsam, die vier Sätze ziehen beim Scrollen darüber durch. Geladen wird
+   nur das Bild, kein Video. */
 @media (max-width:720px),
        (orientation:portrait) and (max-width:1024px),
        (orientation:portrait) and (pointer:coarse),
-       (orientation:landscape) and (pointer:coarse) and (max-height:560px),
-       (prefers-reduced-motion:reduce){
+       (orientation:landscape) and (pointer:coarse) and (max-height:560px){
+  .hero{height:440vh}
+  .stage{height:100vh;height:100svh}
+  .stage video,.filmhinweis .film{display:none}
+  .filmhinweis .rollen{display:block}
+  html.js .stage .poster,html:not(.js) .stage .poster{opacity:1;background-image:url('assets/hero-ending.jpg');
+    clip-path:none;transition:none;transform:scale(calc(1 + .09 * var(--z,0)));will-change:transform}
+  /* der Text steht hier unten, nicht links: der Abdunkler dreht sich mit */
+  .scrim{background:linear-gradient(to bottom,rgba(6,9,11,.55) 0%,rgba(6,9,11,.22) 10%,rgba(6,9,11,0) 22%),
+    linear-gradient(to top,rgba(6,9,11,.78) 0%,rgba(6,9,11,.6) 26%,rgba(6,9,11,.34) 50%,rgba(6,9,11,.1) 66%,rgba(6,9,11,0) 78%),
+    radial-gradient(ellipse 120% 90% at 50% 45%,rgba(8,11,13,0) 35%,rgba(8,11,13,.4) 100%)}
+  .band{top:auto;bottom:clamp(104px,17vh,188px);transform:none;width:min(46ch,86vw)}
+  .band .sub{max-width:40ch}
+}
+
+/* Tor 5: reduzierte Bewegung. Ein Bild, ein Satz, nichts bewegt sich. */
+@media (prefers-reduced-motion:reduce){
   .hero{height:auto}
   .stage{position:relative;height:min(94vh,760px)}
   .stage video,.filmhinweis{display:none}
-  html.js .stage .poster,html:not(.js) .stage .poster{opacity:1;background-image:url('assets/hero-ending.jpg');clip-path:none;transition:none}
+  html.js .stage .poster,html:not(.js) .stage .poster{opacity:1;background-image:url('assets/hero-ending.jpg');
+    clip-path:none;transition:none;transform:none}
   .bands{position:absolute;inset:auto 0 0 0;top:0}
   .band{display:none}
+  .scrim{background:linear-gradient(to bottom,rgba(6,9,11,.55) 0%,rgba(6,9,11,.22) 10%,rgba(6,9,11,0) 22%),
+    linear-gradient(to top,rgba(6,9,11,.78) 0%,rgba(6,9,11,.6) 26%,rgba(6,9,11,.34) 50%,rgba(6,9,11,.1) 66%,rgba(6,9,11,0) 78%),
+    radial-gradient(ellipse 120% 90% at 50% 45%,rgba(8,11,13,0) 35%,rgba(8,11,13,.4) 100%)}
   .band.static-hero{display:block;opacity:1;top:auto;bottom:clamp(28px,6vh,64px);transform:none;width:min(46ch,86vw)}
   .band.static-hero .w,.band.static-hero .c,
   .band.static-hero .sub,.band.static-hero .cta-row{opacity:1;transform:none}
@@ -781,7 +806,7 @@ body.pause .env{animation-play-state:paused}
         <p class="cta-row"><a class="cta linktext" href="#kontakt" data-t="hero.cta">Grundstück anbieten</a></p>
       </div>
     </div>
-    <p class="filmhinweis" aria-hidden="true"><span class="fz">Leibstraße, Haar · MR—016</span><span class="fz film" data-t="hero.film">Scrollen bewegt die Kamera</span></p>
+    <p class="filmhinweis" aria-hidden="true"><span class="fz">Leibstraße, Haar · MR—016</span><span class="fz film" data-t="hero.film">Scrollen bewegt die Kamera</span><span class="fz rollen" data-t="hero.rollen">Weiter scrollen</span></p>
   </div>
 </section>
 
@@ -1259,7 +1284,7 @@ var EN = {
   'hero.sr': 'Camera flight over the Leibstraße housing complex in Haar: planted courtyard, playground, photovoltaics on the roofs. The flight was computed from an aerial photograph.',
   'hero.b1': 'We build in Munich.', 'hero.b2': 'Site. Permit. Handover.', 'hero.b3': 'Over 1,000 units delivered.', 'hero.b4': 'The deal holds.',
   'hero.sub': 'Munich Residential develops, builds and holds residential and commercial property in Munich and its region. Since 2007.',
-  'hero.cta': 'Offer a site', 'hero.film': 'Scrolling moves the camera',
+  'hero.cta': 'Offer a site', 'hero.film': 'Scrolling moves the camera', 'hero.rollen': 'Keep scrolling',
   'haus.t': 'The Firm', 'haus.z': 'Pöcking near Munich · since 2007',
   'haus.p1': 'In 2007 two second-generation family firms joined their work: the Krulich Immobiliengruppe and the Firmengruppe Opfergeld. Since then we have developed, built and held residential and commercial property in Munich and its region.',
   'haus.p2': 'We buy sites with and without planning permission. We carry out the planning review ourselves. We build as developer and keep part of the buildings in our own portfolio.',
@@ -1915,6 +1940,7 @@ var VIDEO_URL = 'assets/hero-scrub.mp4', POSTER_URL = 'assets/hero-poster.jpg';
 var stage = $('#stage'), video = $('#hero-video'), posterEl = $('#poster');
 var bands = $$('.band').map(function(b){ return { el: b, a: parseFloat(b.dataset.a), b: parseFloat(b.dataset.b), ramp: parseFloat(b.dataset.ramp) || 0, op: -1, k: -1 }; });
 var target = 0, shown = 0, rafId = null, lastTick = 0, scrubOn = false, inited = false, loadStart = 0;
+var folgeOn = false, zLetzt = -1, hinweisWeg = false, filmhinweis = $('.filmhinweis');
 function heroProgress(){ var range = hero.offsetHeight - innerHeight; if (range <= 0) return 0; var y = -hero.getBoundingClientRect().top; return Math.min(1, Math.max(0, y / range)); }
 var seekBusy = false, pendingTime = null;
 function requestSeek(t){ if (!video.duration || isNaN(video.duration)) return; if (seekBusy){ pendingTime = t; return; } seekBusy = true; try { video.currentTime = t; } catch (e) { seekBusy = false; } }
@@ -1931,6 +1957,11 @@ function updateCaptions(p){
     if (Math.abs(op - bd.op) > 0.004){ bd.el.style.opacity = op.toFixed(3); bd.op = op; }
     if (Math.abs(k - bd.k) > 0.008){ bd.el.style.setProperty('--k', k.toFixed(3)); bd.k = k; }
   }
+  if (!folgeOn) return;
+  // ohne Film trägt das Bild die Bewegung: es wächst über den ganzen Weg um neun Prozent
+  var z = Math.round(p * 100) / 100;
+  if (z !== zLetzt){ posterEl.style.setProperty('--z', z); zLetzt = z; }
+  if ((p > 0.05) !== hinweisWeg){ hinweisWeg = p > 0.05; filmhinweis.classList.toggle('weg', hinweisWeg); }
 }
 function tick(now){
   var dt = Math.min(100, now - (lastTick || now)); lastTick = now;
@@ -1957,14 +1988,40 @@ function initHeroOnce(){
   var img = new Image(); img.onload = function(){ document.documentElement.classList.add('bereit'); start(); }; img.onerror = start; img.src = POSTER_URL;
   setTimeout(start, 4000);
 }
-/* die fünf Tore, wörtlich gleich im CSS */
-var GATES = ['(max-width: 720px)', '(orientation: portrait) and (max-width: 1024px)', '(orientation: portrait) and (pointer: coarse)',
-  '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)', '(prefers-reduced-motion: reduce)'];
+/* Die fünf Tore, wörtlich gleich im CSS, in zwei Gruppen:
+   Tor 1 bis 4 schalten auf „Folge“ (kein Film, Sätze ziehen beim Scrollen durch),
+   Tor 5 auf „starr“ (alles steht). Sonst läuft der Film. */
+var TORE = ['(max-width: 720px)', '(orientation: portrait) and (max-width: 1024px)', '(orientation: portrait) and (pointer: coarse)',
+  '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)'];
+var TOR_STARR = '(prefers-reduced-motion: reduce)';
+function betriebsart(){
+  if (matchMedia(TOR_STARR).matches) return 'starr';
+  return TORE.some(function(q){ return matchMedia(q).matches; }) ? 'folge' : 'film';
+}
 function enableScrub(){
   if (scrubOn) return; scrubOn = true; initHeroOnce();
   window.addEventListener('scroll', onScroll, { passive: true });
   bands.forEach(function(b){ b.op = -1; b.k = -1; });
   unpinFinalStates(); updateCaptions(heroProgress()); onScroll();
+}
+function enableFolge(){
+  if (folgeOn) return; folgeOn = true;
+  // kein Film: das Standbild kommt aus dem CSS, nichts wird nachgeladen
+  posterEl.style.backgroundImage = ''; stage.classList.remove('video-ready');
+  document.documentElement.classList.add('bereit');
+  // dieselbe einmalige Ladekurve wie beim Film: der erste Satz zieht von selbst ein
+  loadStart = performance.now();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  bands.forEach(function(b){ b.op = -1; b.k = -1; });
+  unpinFinalStates(); updateCaptions(heroProgress()); onScroll();
+}
+function disableFolge(){
+  if (!folgeOn) return; folgeOn = false;
+  window.removeEventListener('scroll', onScroll);
+  if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+  bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.op = -1; b.k = -1; });
+  posterEl.style.removeProperty('--z'); zLetzt = -1;
+  filmhinweis.classList.remove('weg'); hinweisWeg = false;
 }
 function disableScrub(){
   if (!scrubOn) return; scrubOn = false;
@@ -1974,11 +2031,16 @@ function disableScrub(){
   bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.op = -1; b.k = -1; });
   document.documentElement.classList.add('bereit');
 }
+var art = null;
 function applyHeroMode(){
-  if (GATES.some(function(q){ return matchMedia(q).matches; })){ disableScrub(); document.documentElement.classList.add('bereit'); }
-  else enableScrub();
+  var neu = betriebsart();
+  if (neu === art) return;
+  art = neu;
+  if (neu === 'film'){ disableFolge(); enableScrub(); }
+  else if (neu === 'folge'){ disableScrub(); enableFolge(); }
+  else pinToFinalStates();
 }
-GATES.forEach(function(q){ matchMedia(q).addEventListener('change', applyHeroMode); });
+TORE.concat([TOR_STARR]).forEach(function(q){ matchMedia(q).addEventListener('change', applyHeroMode); });
 
 /* ---------------- Halten ---------------- */
 var hold = $('#hold'), zug = $('#wegzug'), linieEl = $('.linie'), stationen = $$('.station'), punkte = $$('.linie .punkt');
@@ -2010,14 +2072,13 @@ function pinHoldDone(){ holding = false; if (holdRaf !== null){ cancelAnimationF
 
 /* ---------------- reduzierte Bewegung, live und in beide Richtungen ---------------- */
 function pinToFinalStates(){
-  disableScrub();
+  disableScrub(); disableFolge();
   bands.forEach(function(b){ b.el.style.setProperty('--k', '1'); b.k = 1; });
   $$('.auf, .klip').forEach(function(x){ x.classList.add('da'); });
   pinHoldDone();
 }
 function unpinFinalStates(){ if (holdPinned && !rm.matches){ holdPinned = false; latched = false; holding = false; hp = 0; paintHold(); } }
-rm.addEventListener('change', function(e){ if (e.matches) pinToFinalStates(); else applyHeroMode(); });
-if (rm.matches) pinToFinalStates();
+rm.addEventListener('change', applyHeroMode);
 
 /* ---------------- Register: Klick filtert das Verzeichnis ---------------- */
 $$('.reg button').forEach(function(b){

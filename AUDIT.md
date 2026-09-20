@@ -90,7 +90,9 @@ Abschnitt. Fundstellen beziehen sich auf `index.html` dieses Commits.
 | `--on-dark-secondary` #A9ADB1 auf `--ink` | Archiv, Nummern, Ort · Status, Filter | 7,9 : 1 | ja |
 | #8FC0CA auf `--ink` | aktiver Filter im Archiv, Kartenquadrat warm | 9,0 : 1 | ja |
 | `--accent-muted` #C6D2D5 auf `--ink` | Haarlinien im Archiv (nicht Text) | 11,5 : 1 | – |
-| Weiß #F2F1ED über dem Film, schlechtester 2-Prozent-Bereich je Band | Kopf, Band 1 bis 4 | 4,93 / 5,28 / 5,89 / 5,72 : 1 | ja (Ziel 4,5) |
+| Weiß #F2F1ED über dem Film, schlechtester 2-Prozent-Bereich je Band | Kopf am Desktop, Band 1 bis 4 | 4,93 / 5,28 / 5,89 / 5,72 : 1 | ja (Ziel 4,5) |
+| dasselbe auf dem Telefon (375 px, Scroll-Folge ohne Film) | Kopf, Band 1 bis 4 | 10,96 / 9,08 / 8,61 / 5,10 : 1 | ja |
+| dasselbe auf dem Hochformat-Tablet (768 px) | Kopf, Band 1 bis 4 | 8,40 / 8,50 / 8,60 / 4,68 : 1 | ja |
 | `.fehlt` #6A6E72 mit Deckkraft .55 auf `--canvas` | Platzhalter `[[FEHLT]]` | etwa 2,3 : 1 | nein, bewusst: ist kein Inhalt, sondern die Markierung einer Lücke; verschwindet, sobald der Wert eingetragen ist |
 
 Lighthouse 13.4 (Chrome 152 headless, lokaler Server mit gzip wie bei GitHub Pages):

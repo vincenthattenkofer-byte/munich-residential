@@ -72,5 +72,18 @@
 - **Englische Fassung:** Umschalter EN/DE in Leiste und Menü, alle Texte übersetzt (Rechtstexte bleiben
   deutsch, mit Hinweis), Wahl gespeichert, Browsersprache als Vorgabe beim ersten Besuch.
 
+### Dritte Runde (20. September 2026): Kopf auf dem Telefon
+- Auf Telefonen und Hochformat-Tablets stand im Kopf bisher nur ein Standbild mit dem letzten
+  Satz. Jetzt laufen dort **dieselben vier Sätze als Scroll-Folge** wie am Desktop: das Bild
+  bleibt stehen und wächst über den ganzen Weg um neun Prozent, die Sätze ziehen darüber durch.
+  Kein Film, kein zusätzlicher Ladeaufwand (gemessen: null Videoabrufe auf dem Telefon).
+- Der Abdunkler über dem Bild dreht sich mit: am Desktop läuft er durch die linke Textbahn,
+  auf dem Telefon von unten nach oben, weil der Text dort unten steht. Nachgemessen, schlechtester
+  Bereich je Satz: 10,96 / 9,08 / 8,61 / 5,10 zu 1 auf dem Telefon (Vorgabe 4,5).
+- Hinweis „Weiter scrollen“ unten rechts, verschwindet nach der ersten Bewegung.
+- Die fünf Tore sind jetzt zwei Gruppen: Tor 1 bis 4 schalten auf die Folge ohne Film,
+  Tor 5 (reduzierte Bewegung) weiterhin auf den starren Kopf mit einem Satz. Ohne Skript
+  bleibt es ebenfalls beim starren Kopf.
+
 ### Dokumente
 - `ASSETS.md`, `AUDIT.md` (44 Punkte), `PLAN.md`, `OFFENE-PUNKTE.md`, `CHANGELOG.md`.
