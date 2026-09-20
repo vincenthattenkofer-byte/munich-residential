@@ -630,8 +630,28 @@ body.ansicht-offen .top{opacity:0;pointer-events:none}
   .scrim{background:linear-gradient(to bottom,rgba(6,9,11,.55) 0%,rgba(6,9,11,.22) 10%,rgba(6,9,11,0) 22%),
     linear-gradient(to top,rgba(6,9,11,.78) 0%,rgba(6,9,11,.6) 26%,rgba(6,9,11,.34) 50%,rgba(6,9,11,.1) 66%,rgba(6,9,11,0) 78%),
     radial-gradient(ellipse 120% 90% at 50% 45%,rgba(8,11,13,0) 35%,rgba(8,11,13,.4) 100%)}
-  .band{top:auto;bottom:clamp(104px,17vh,188px);transform:none;width:min(46ch,86vw)}
+  .band{top:auto;bottom:clamp(104px,17vh,188px);width:min(46ch,86vw);
+    transform:translate3d(0,calc(var(--o,0) * -76px),0)}
   .band .sub{max-width:40ch}
+  /* Auf dem Telefon zieht die ganze Zeile ein, nicht jedes Wort einzeln:
+     drei bewegte Elemente je Satz statt vierzig. Das hält den Hauptthread frei. */
+  /* das Kissen hinter dem Text wurde bei jeder Bewegung neu gezeichnet und wird
+     nicht mehr gebraucht, seit der Verlauf von unten kommt */
+  .band::before{display:none}
+  .band .w,.band .c{opacity:1;transform:none}
+  .band h1,.band h2,.band .b{--kc:clamp(0,var(--k,0)*1.5,1);opacity:var(--kc);
+    transform:translate3d(0,calc((1 - var(--kc)) * 22px),0);will-change:transform,opacity}
+  .band .sub{--kc:clamp(0,(var(--k,0) - .22) * 2,1);opacity:calc(.9 * var(--kc));
+    transform:translate3d(0,calc((1 - var(--kc)) * 16px),0);will-change:transform,opacity}
+  .band .cta-row{--kc:clamp(0,(var(--k,0) - .46) * 2.2,1);opacity:var(--kc);
+    transform:translate3d(0,calc((1 - var(--kc)) * 16px),0);will-change:transform,opacity}
+  /* das Lichtwandern kostet eine bildschirmgroße Ebene und ist hier nicht zu sehen */
+  .env{display:none}
+}
+
+/* liegendes Telefon: weniger Höhe, also sitzt der Satz tiefer */
+@media (orientation:landscape) and (pointer:coarse) and (max-height:560px){
+  .band{bottom:clamp(48px,9vh,72px)}
 }
 
 /* Tor 5: reduzierte Bewegung. Ein Bild, ein Satz, nichts bewegt sich. */
@@ -1934,11 +1954,20 @@ function split(elm, mode, spread, emWord){
   });
   elm.textContent = ''; elm.appendChild(sr); elm.appendChild(vis);
 }
-$$('[data-split]').forEach(function(x){ var band = x.closest('.band'); split(x, x.dataset.split, parseFloat(band && band.dataset.spread) || 0.5, x.dataset.em); });
+/* In einzelne Wortspannen zerlegt wird nur für den Film. In der Folge auf dem
+   Telefon bleibt der Satz ein Stück Text: jede Bewegung muss sonst durch vierzig
+   Elemente je Satz laufen, auch wenn die stillstehen. */
+function kopfSaetze(){
+  $$('[data-split]').forEach(function(x){
+    if (x.dataset.roh === undefined && !x.firstElementChild) x.dataset.roh = x.textContent.trim();
+    if (scrubOn){ if (!x.firstElementChild){ var band = x.closest('.band'); split(x, x.dataset.split, parseFloat(band && band.dataset.spread) || 0.5, x.dataset.em); } }
+    else if (x.firstElementChild && x.dataset.roh !== undefined) x.textContent = x.dataset.roh;
+  });
+}
 
 var VIDEO_URL = 'assets/hero-scrub.mp4', POSTER_URL = 'assets/hero-poster.jpg';
 var stage = $('#stage'), video = $('#hero-video'), posterEl = $('#poster');
-var bands = $$('.band').map(function(b){ return { el: b, a: parseFloat(b.dataset.a), b: parseFloat(b.dataset.b), ramp: parseFloat(b.dataset.ramp) || 0, op: -1, k: -1 }; });
+var bands = $$('.band').map(function(b){ return { el: b, a: parseFloat(b.dataset.a), b: parseFloat(b.dataset.b), ramp: parseFloat(b.dataset.ramp) || 0, op: -1, k: -1, aus: -1 }; });
 var target = 0, shown = 0, rafId = null, lastTick = 0, scrubOn = false, inited = false, loadStart = 0;
 var folgeOn = false, zLetzt = -1, hinweisWeg = false, filmhinweis = $('.filmhinweis');
 function heroProgress(){ var range = hero.offsetHeight - innerHeight; if (range <= 0) return 0; var y = -hero.getBoundingClientRect().top; return Math.min(1, Math.max(0, y / range)); }
@@ -1947,19 +1976,34 @@ function requestSeek(t){ if (!video.duration || isNaN(video.duration)) return; i
 video.addEventListener('seeked', function(){ seekBusy = false; if (pendingTime !== null){ var t = pendingTime; pendingTime = null; requestSeek(t); } });
 video.addEventListener('error', function(){ seekBusy = false; pendingTime = null; failVideo(); });
 function smoothstep(p, e0, e1){ var t = Math.min(1, Math.max(0, (p - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
+/* Auf dem Telefon laufen die Sätze ineinander über: die Fenster überlappen sich,
+   also gibt es keine leere Stelle dazwischen, und der Einzug dauert einen ganzen
+   Wisch statt vierzig Pixel. */
+var FOLGE_TAKT = [{a:0, b:0.21}, {a:0.175, b:0.45}, {a:0.415, b:0.69}, {a:0.655, b:1}];
 function updateCaptions(p){
+  // gröbere Schwellen in der Folge: ein Schritt bewegt die Zeile um ein Drittel Pixel,
+  // das sieht niemand, spart aber die Hälfte der Stilberechnungen
+  var gOp = folgeOn ? 0.008 : 0.004, gK = folgeOn ? 0.015 : 0.008;
   for (var i = 0; i < bands.length; i++){
     var bd = bands[i], a = bd.a, b = bd.b, f = Math.min(0.02, (b - a) / 3);
+    if (folgeOn){ a = FOLGE_TAKT[i].a; b = FOLGE_TAKT[i].b; f = 0.035; }
     var inRamp = (i === 0) ? 1 : smoothstep(p, a, a + f), outRamp = (i === bands.length - 1) ? 1 : (1 - smoothstep(p, b - f, b));
-    var op = inRamp * outRamp, ramp = bd.ramp || Math.min(0.025, (b - a) * 0.35);
+    // der weichende Satz verblasst schneller als der kommende aufblendet,
+    // sonst stehen in der Mitte der Überblendung zwei gleich helle Sätze da
+    var op = folgeOn ? inRamp * outRamp * outRamp : inRamp * outRamp;
+    var ramp = folgeOn ? (b - a) * 0.4 : (bd.ramp || Math.min(0.025, (b - a) * 0.35));
     var k = Math.min(1, Math.max(0, (p - a) / ramp));
     if (i === 0 && loadStart){ var loadK = Math.min(1, (performance.now() - loadStart) / 900); k = Math.max(k, loadK); if (loadK < 1 && rafId === null) rafId = requestAnimationFrame(tick); }
-    if (Math.abs(op - bd.op) > 0.004){ bd.el.style.opacity = op.toFixed(3); bd.op = op; }
-    if (Math.abs(k - bd.k) > 0.008){ bd.el.style.setProperty('--k', k.toFixed(3)); bd.k = k; }
+    if (Math.abs(op - bd.op) > gOp){ bd.el.style.opacity = op.toFixed(3); bd.op = op; }
+    if (Math.abs(k - bd.k) > gK){ bd.el.style.setProperty('--k', k.toFixed(3)); bd.k = k; }
+    // der weichende Satz zieht nach oben ab, sonst stehen beide übereinander
+    var aus = folgeOn ? 1 - outRamp : 0;
+    if (folgeOn && Math.abs(aus - bd.aus) > 0.02){ bd.el.style.setProperty('--o', aus.toFixed(3)); bd.aus = aus; }
   }
   if (!folgeOn) return;
   // ohne Film trägt das Bild die Bewegung: es wächst über den ganzen Weg um neun Prozent
-  var z = Math.round(p * 100) / 100;
+  // gröbere Stufen: jede neue Größe zwingt das Bild zum Neuzeichnen
+  var z = Math.round(p * 50) / 50;
   if (z !== zLetzt){ posterEl.style.setProperty('--z', z); zLetzt = z; }
   if ((p > 0.05) !== hinweisWeg){ hinweisWeg = p > 0.05; filmhinweis.classList.toggle('weg', hinweisWeg); }
 }
@@ -1999,27 +2043,27 @@ function betriebsart(){
   return TORE.some(function(q){ return matchMedia(q).matches; }) ? 'folge' : 'film';
 }
 function enableScrub(){
-  if (scrubOn) return; scrubOn = true; initHeroOnce();
+  if (scrubOn) return; scrubOn = true; kopfSaetze(); initHeroOnce();
   window.addEventListener('scroll', onScroll, { passive: true });
-  bands.forEach(function(b){ b.op = -1; b.k = -1; });
+  bands.forEach(function(b){ b.op = -1; b.k = -1; b.aus = -1; });
   unpinFinalStates(); updateCaptions(heroProgress()); onScroll();
 }
 function enableFolge(){
-  if (folgeOn) return; folgeOn = true;
+  if (folgeOn) return; folgeOn = true; kopfSaetze();
   // kein Film: das Standbild kommt aus dem CSS, nichts wird nachgeladen
   posterEl.style.backgroundImage = ''; stage.classList.remove('video-ready');
   document.documentElement.classList.add('bereit');
   // dieselbe einmalige Ladekurve wie beim Film: der erste Satz zieht von selbst ein
   loadStart = performance.now();
   window.addEventListener('scroll', onScroll, { passive: true });
-  bands.forEach(function(b){ b.op = -1; b.k = -1; });
+  bands.forEach(function(b){ b.op = -1; b.k = -1; b.aus = -1; });
   unpinFinalStates(); updateCaptions(heroProgress()); onScroll();
 }
 function disableFolge(){
   if (!folgeOn) return; folgeOn = false;
   window.removeEventListener('scroll', onScroll);
   if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
-  bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.op = -1; b.k = -1; });
+  bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.el.style.removeProperty('--o'); b.op = -1; b.k = -1; b.aus = -1; });
   posterEl.style.removeProperty('--z'); zLetzt = -1;
   filmhinweis.classList.remove('weg'); hinweisWeg = false;
 }
@@ -2028,7 +2072,7 @@ function disableScrub(){
   window.removeEventListener('scroll', onScroll);
   if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
   // eingeschriebene Werte löschen, damit die CSS-Tore ohne Gewalt gewinnen
-  bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.op = -1; b.k = -1; });
+  bands.forEach(function(b){ b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.el.style.removeProperty('--o'); b.op = -1; b.k = -1; b.aus = -1; });
   document.documentElement.classList.add('bereit');
 }
 var art = null;
@@ -2072,7 +2116,7 @@ function pinHoldDone(){ holding = false; if (holdRaf !== null){ cancelAnimationF
 
 /* ---------------- reduzierte Bewegung, live und in beide Richtungen ---------------- */
 function pinToFinalStates(){
-  disableScrub(); disableFolge();
+  disableScrub(); disableFolge(); kopfSaetze();
   bands.forEach(function(b){ b.el.style.setProperty('--k', '1'); b.k = 1; });
   $$('.auf, .klip').forEach(function(x){ x.classList.add('da'); });
   pinHoldDone();
@@ -2127,7 +2171,8 @@ function setzeSprache(l, still){
   zaehler.textContent = tx('objekt')(n);
   if (typeof zeichneOrte === 'function'){ ansicht.hinweis = tx('hinweis')[ansicht.id]; kf.textContent = ansicht.hinweis; zeichneOrte(); }
   paintHold();
-  $$('[data-split]').forEach(function(x){ var band = x.closest('.band'); split(x, x.dataset.split, parseFloat(band && band.dataset.spread) || 0.5, x.dataset.em); });
+  $$('[data-split]').forEach(function(x){ x.removeAttribute('data-roh'); });
+  kopfSaetze();
   $$('.sprache').forEach(function(b){ b.textContent = tx('sprache'); b.setAttribute('aria-label', tx('spracheLabel')); });
   document.title = ans.classList.contains('offen') && $('#ansicht-t') ? $('#ansicht-t').textContent + ' · ' + tx('firma') : tx('titel');
   if (!still && ans.classList.contains('offen')) route();

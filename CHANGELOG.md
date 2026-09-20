@@ -85,5 +85,23 @@
   Tor 5 (reduzierte Bewegung) weiterhin auf den starren Kopf mit einem Satz. Ohne Skript
   bleibt es ebenfalls beim starren Kopf.
 
+### Vierte Runde (20. September 2026): der Kopf auf dem Telefon läuft flüssiger
+- **Die Sätze laufen ineinander über** statt zu erscheinen und zu verschwinden: die Fenster
+  überlappen sich, der weichende Satz zieht nach oben ab und verblasst schneller als der
+  kommende aufblendet. Der Einzug dauert jetzt einen ganzen Wisch statt vierzig Pixel.
+- **Weniger Arbeit je Bild.** Auf dem Telefon wird der Text nicht mehr in einzelne Wortspannen
+  zerlegt (nur der Film braucht das), das Kissen hinter dem Text entfällt zugunsten des
+  Verlaufs von unten, und das Lichtwandern über dem Papier bleibt dort aus. Gemessen bei
+  vierfach gedrosselter Rechenleistung, ein Durchlauf durch den ganzen Kopf:
+
+  | | vorher | jetzt |
+  |---|---|---|
+  | Stilberechnung | 87 ms | 65 ms |
+  | Neuberechnungen | 349 | 175 |
+  | Arbeit je Bild | 0,74 ms | 0,63 ms |
+
+- Auf dem liegenden Telefon sitzt der Satz tiefer, weil dort weniger Höhe da ist.
+- Lesbarkeit unverändert: 10,96 / 9,08 / 8,61 / 5,06 zu 1.
+
 ### Dokumente
 - `ASSETS.md`, `AUDIT.md` (44 Punkte), `PLAN.md`, `OFFENE-PUNKTE.md`, `CHANGELOG.md`.
